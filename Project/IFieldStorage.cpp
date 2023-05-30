@@ -41,7 +41,7 @@ void FieldStorage::SetValueRuntime(const Variant* in_buffer) const {
   if (instance_ == nullptr) return;
 
   MonoObject* runtime_object = MonoGCManager::GetReferencedObject(instance_);
-  MonoScriptUtilities::SetFieldVariant(runtime_object, field_info_, data_);
+  MonoScriptUtilities::SetFieldVariant(runtime_object, field_info_, *in_buffer);
 }
 
 bool FieldStorage::GetValueRuntime(Variant* out_buffer) const {

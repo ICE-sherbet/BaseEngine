@@ -2,13 +2,16 @@
 
 #include <mono/metadata/object.h>
 
+#include "CSharpScriptEngine.h"
+#include "MonoScriptUtilities.h"
+#include "ObjectEntity.h"
 namespace base_engine {
 template <typename T>
 void CopyUnbox(T& value, MonoObject* obj) {
   value = *static_cast<T*>(mono_object_unbox(obj));
 }
 
-Variant::Variant() {}
+Variant::Variant() : data_() { this->type_ = VariantType::kNil; }
 
 Variant::Variant(VariantType type) {
   this->type_ = type;
@@ -129,7 +132,7 @@ Variant::Variant(const double value) {
   data_.double_value = value;
 }
 
-Variant::Variant(const std::string& value) {
+Variant::Variant(const std::string& value) : data_() {
   this->type_ = VariantType::kString;
   new (data_.mem) std::string(value);
 }
@@ -197,9 +200,21 @@ Variant::Variant(MonoObject* object, const VariantType type) {
       break;
     case VariantType::MANAGED:
       break;
-    case VariantType::kAssetHandle:
-      //CopyUnbox(data_.uuid_value, object);
-      break;
+    case VariantType::kAssetHandle: {
+      //      CSharpScriptEngine::GetInstance()->GetMonoObjectClass()
+      auto GetClass = [](const std::string& name) {
+        return mono_class_from_name(
+            CSharpScriptEngine::GetInstance()->GetCoreImage(),
+            "BaseEngine_ScriptCore", name.c_str());
+      };
+      const auto clazz = mono_object_get_class(object);
+      MonoScriptUtilities::ResolveMonoClassName(clazz);
+      if (GetClass("Prefab") == clazz) {
+        const auto prefab_handle_object =
+            MonoScriptUtilities::GetFieldValueObject(object, "_Handle", false);
+        CopyUnbox(data_.uuid_value, prefab_handle_object);
+      }
+    } break;
     default:;
   }
 }

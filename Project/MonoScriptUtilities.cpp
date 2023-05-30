@@ -67,9 +67,10 @@ VariantType MonoScriptUtilities::GetVariantTypeFromMonoType(
       if (typeClass == GetClass("Vector2F")) return VariantType::VECTOR2F;
     }
     case MONO_TYPE_CLASS: {
-
+      if (typeClass == GetClass("Prefab")) return VariantType::kAssetHandle;
+      if (typeClass == GetClass("AssetHandle"))
+        return VariantType::kAssetHandle;
     }
-
   }
 }
 
@@ -102,11 +103,24 @@ void MonoScriptUtilities::SetFieldVariant(MonoObject* class_instance,
   MonoClassField* class_field = mono_class_get_field_from_name(
       object_class, field_info->field_info.name.c_str());
 
-  data.Visit([class_instance, class_field](auto value)
-  {
-    void* field_data = reinterpret_cast<void*>(&value);
-    mono_field_set_value(class_instance, class_field, field_data);
-  });
+  const auto field_instance = mono_field_get_value_object(
+      CSharpScriptEngine::GetInstance()->GetCoreDomain(), class_field,
+                                       class_instance);
+  
+  if (!field_instance) return;
+  const std::string name = mono_class_get_name(mono_object_get_class(field_instance));
+  if (name == "Prefab") {
+    data.Visit([class_instance, class_field](auto value) {
+      void* field_data = CSharpScriptEngine::GetInstance()->CreateManagedObject(
+          "BaseEngine_ScriptCore.Prefab", value);
+      mono_field_set_value(class_instance, class_field, field_data);
+    });
+  } else {
+    data.Visit([class_instance, class_field](auto value) {
+      void* field_data = reinterpret_cast<void*>(&value);
+      mono_field_set_value(class_instance, class_field, field_data);
+    });
+  }
 }
 
 Variant MonoScriptUtilities::GetFieldVariant(MonoObject* class_instance,
@@ -125,8 +139,9 @@ Variant MonoScriptUtilities::GetFieldVariant(MonoObject* class_instance,
     MonoClassField* class_field = mono_class_get_field_from_name(
         object_class, field_info->field_info.name.data());
 
-  	MonoObject* obj = mono_field_get_value_object(mono_domain_get(), class_field,
-                                                  class_instance);
+    MonoObject* obj = mono_field_get_value_object( CSharpScriptEngine::GetInstance()->GetCoreDomain(),
+                                                  class_field, class_instance);
+
     const Variant variant{obj, field_info->field_info.type};
     return variant;
   }

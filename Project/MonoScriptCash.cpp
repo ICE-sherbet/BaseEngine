@@ -63,7 +63,7 @@ void MonoScriptCacheStorage::GenerateCacheForAssembly(
 
     CacheClassMethods(assembly_info, managed_class);
     CacheClassFields(assembly_info, managed_class);
-
+    
     if (mono_class_is_subclass_of(
             managed_class.mono_class,
             GetManagedClassByName("BaseEngine_ScriptCore.Entity")->mono_class,
@@ -292,6 +292,7 @@ bool MonoScriptCacheStorage::CacheCoreClasses() {
   CacheCoreLibClass("Double");
   CacheCoreLibClass("Char");
   CacheCoreLibClass("String");
+
   CacheClass("System.Diagnostics.StackTrace",
              mono_class_from_name(mono_get_corlib(), "System.Diagnostics",
                                   "StackTrace"));
@@ -306,8 +307,10 @@ bool MonoScriptCacheStorage::CacheCoreClasses() {
     if (type == VariantType::MANAGED || type == VariantType::kNil) return;
     cache_->core_classes[type] = GetManagedClassByName(full_name)->id;
   };
+  CacheBeCoreLibClass("Prefab");
 
   CacheBeCoreLibClass("Entity");
+  CacheBeCoreLibClass("AssetHandle");
 
   // Math
   // Vector

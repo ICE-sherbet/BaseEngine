@@ -15,12 +15,14 @@ uint64_t SceneCreateEntity(MonoString* tag);
 uint64_t SceneCreateEntityByScript(MonoString* tag,MonoReflectionType* reflection_type);
 uint64_t SceneFindEntityByTag(MonoString* tag);
 void SceneDestroyEntity(uint64_t id);
+uint64_t SceneInstantiatePrefab(const AssetHandle* prefab_handle);
 struct SceneGlue {
   void operator()() const {
     BE_ADD_INTERNAL_CALL(SceneCreateEntity);
     BE_ADD_INTERNAL_CALL(SceneCreateEntityByScript);
     BE_ADD_INTERNAL_CALL(SceneFindEntityByTag);
     BE_ADD_INTERNAL_CALL(SceneDestroyEntity);
+    BE_ADD_INTERNAL_CALL(SceneInstantiatePrefab);
   }
 };
 }  // namespace base_engine::glue::internal_calls

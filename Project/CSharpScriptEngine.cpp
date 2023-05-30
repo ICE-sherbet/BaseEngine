@@ -55,25 +55,11 @@ void AddInternalCall() {
 void CSharpScriptEngine::LoadMonoAssembly() {
   MonoImageOpenStatus status;
 
-  AddInternalCall<TestMethod>();
-
   mono_state_.core_assembly_info_ = Ref<AssemblyInfo>::Create();
 
   mono_state_.core_assembly_info_->AssemblyImage =
       mono_image_open_full(kCoreMonoAssemblyPath, &status, 0);
-  if (false) {
-    const std::filesystem::path pdb_path = "BaseEngine_ScriptCore.pdb";
-    std::ifstream stream(pdb_path, std::ios::binary | std::ios::ate);
 
-    auto end = stream.tellg();
-    stream.seekg(0, std::ios::beg);
-    auto size = end - stream.tellg();
-
-    std::vector<mono_byte> buffer;
-    buffer.resize(size);
-    stream.read((char*)buffer.data(), buffer.size());
-    stream.close();
-  }
 
   mono_state_.core_assembly_info_->Assembly = mono_assembly_load_from_full(
       mono_state_.core_assembly_info_->AssemblyImage, kCoreMonoAssemblyPath,
@@ -99,7 +85,7 @@ void CSharpScriptEngine::ShutdownRuntime() {
   }
 
   scene_state_.script_instances.clear();
-  MonoGCManager::CollectGarbage();
+  MonoGCManager::CollectGarbage(false);
 }
 
 void CSharpScriptEngine::ShutdownRuntimeScriptEntity(ObjectEntity entity) {
@@ -236,7 +222,7 @@ void CSharpScriptEngine::ShutdownScriptEntity(ObjectEntity entity, bool erase) {
 }
 
 MonoDomain* CSharpScriptEngine::GetCoreDomain() const {
-  return mono_state_.root_domain_;
+  return mono_state_.domain_;
 }
 
 void CSharpScriptEngine::InitMono() {
@@ -245,30 +231,11 @@ void CSharpScriptEngine::InitMono() {
   mono_set_dirs("..\\vendor\\mono\\x86\\MonoAssembly\\bin\\",
                 "..\\vendor\\mono\\x86\\MonoAssembly\\etc\\");
 
-  if (false) {
-    std::string dllMap = R"(
-			<configuration>
-        		<dllmap dll="i:cygwin1.dll" target="@LIBC@" os="!windows" />
-        		<dllmap dll="libc" target="libc.so.6" os="!windows" />
-			</configuration>
-		)";
-
-    mono_config_parse_memory(dllMap.c_str());
-    std::string portString = std::to_string(2550);
-    std::string debuggerAgentArguments =
-        "--debugger-agent=transport=dt_socket,address=127.0.0.1:" + portString +
-        ",server=y,suspend=n,loglevel=3,logfile=logs/MonoDebugger.log";
-
-    // Enable mono soft debugger
-    const char* options[2] = {debuggerAgentArguments.c_str(),
-                              "--soft-breakpoints"};
-
-    mono_jit_parse_options(2, (char**)options);
-    mono_debug_init(MONO_DEBUG_FORMAT_MONO);
-  }
-
   mono_state_.root_domain_ = mono_jit_init("BaseEngine_ScriptCore");
-
+  std::string domain_name = "BE_Runtime";
+  mono_state_.domain_ = mono_domain_create_appdomain(domain_name.data(), nullptr);
+  mono_domain_set(mono_state_.domain_, true);
+  mono_domain_set_config(mono_state_.domain_, ".", "");
   LoadMonoAssembly();
 
   storage_ = std::make_unique<MonoScriptCacheStorage>();
@@ -277,6 +244,11 @@ void CSharpScriptEngine::InitMono() {
 
   glue_ = std::make_unique<MonoGlue>();
   glue_->RegisterGlue();
+  auto obj = CSharpScriptEngine::GetInstance()->CreateManagedObject(
+      CSharpScriptEngine::GetInstance()->GetManagedClassByName(
+          "System.Diagnostics.StackTrace"));
+  auto p = mono_object_get_class(obj);
+  int n = 3;
 }
 
 CSharpScriptEngine::~CSharpScriptEngine() = default;
@@ -347,7 +319,7 @@ void CSharpScriptEngine::InitRuntimeObject(MonoObject* mono_object) {
 MonoObject* CSharpScriptEngine::CreateManagedObject(
     const MonoClassTypeInfo* managed_class) {
   MonoObject* mono_object =
-      mono_object_new(mono_state_.root_domain_, managed_class->mono_class);
+      mono_object_new(mono_state_.domain_, managed_class->mono_class);
   return mono_object;
 }
 

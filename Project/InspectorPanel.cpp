@@ -179,8 +179,9 @@ void InspectorPanel::RenderScript(ObjectEntity& object) {
               object, field_id);
           if (storage == nullptr) continue;
           Variant variant = storage->GetValueVariant();
-          ImGuiHelper::VariantField(field->field_info.name, &variant);
-          storage->SetValueVariant(variant);
+          if (ImGuiHelper::VariantField(field->field_info.name, &variant))
+            storage->SetValueVariant(variant);
+
         }
       }
     }

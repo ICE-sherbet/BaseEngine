@@ -31,11 +31,9 @@ void BroadPhaseSystem::OnUpdate() {
       if (body_b.min.x > body_b.max.x) {
         break;
       }
-      if (!(mask_a.body_mask & mask_b.target_mask)) {
-        break;
-      }
-      if (!(mask_a.target_mask & mask_b.body_mask)) {
-        break;
+      if (!(mask_a.body_mask & mask_b.target_mask ||
+            mask_a.target_mask & mask_b.body_mask)) {
+        continue;
       }
 
       if (body_a.max.y >= body_b.min.y && body_b.max.y >= body_a.min.y) {

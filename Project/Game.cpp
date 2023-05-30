@@ -113,7 +113,7 @@ void Game::Update() {
   ProcessInput();
   UpdateGame();
   b_collision->Collide();
-  scene_->OnUpdate(0);
+  scene_->OnUpdate(Mof::CUtilities::GetFrameSecond());
 
   if (g_pInput->IsKeyPush(MOFKEY_B)) {
     g_pGraphics->SetScreenMode(false);

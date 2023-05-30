@@ -2,9 +2,9 @@ Assets:
   - Handle: 792951110303639287
     FilePath: Player2.prefab
     Type: Prefab
-  - Handle: 1512626052960648576
-    FilePath: RenderTest.png
-    Type: Texture
+  - Handle: 3044122888852536289
+    FilePath: PlayerBullet.prefab
+    Type: Prefab
   - Handle: 4210465566744799997
     FilePath: E_missile.png
     Type: Texture
@@ -22,9 +22,6 @@ Assets:
     Type: Audio
   - Handle: 12630102728575510015
     FilePath: PlayerT.png
-    Type: Texture
-  - Handle: 15553880483850276040
-    FilePath: Test01.png
     Type: Texture
   - Handle: 16620167309166039932
     FilePath: Enemy2.png

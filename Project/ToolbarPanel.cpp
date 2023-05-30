@@ -30,7 +30,8 @@ void ToolbarPanel::OnImGuiRender() {
   texture_ = resource->GetTexture();
   ImGui::Image(texture_, ImVec2{window_size.x, window_size.x * (9.0f / 16.0f)});
 
-  BaseEngineInput::can_input_ = ImGui::IsWindowFocused();
+  BaseEngineInput::can_input_ =
+      ImGui::IsWindowFocused(ImGuiFocusedFlags_RootAndChildWindows | ImGuiFocusedFlags_DockHierarchy);
   ImGui::End();
 }
 

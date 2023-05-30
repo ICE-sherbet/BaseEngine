@@ -46,8 +46,6 @@ Entities:
       Sprite: 12630102728575510015
       Color: {x: 1, y: 1, z: 1, w: 1}
       Pivot: {x: 0.5, y: 0.5}
-    AudioComponent:
-      Source: 6646136271268180830
     RigidBodyComponent:
       Restitution: 1
       Mass: 1
@@ -59,12 +57,11 @@ Entities:
     CircleComponent:
       Radius: 100
     ScriptComponent:
-      ClassHandle: 3957403488
-      Name: Demo.DemoBehavior.Player
+      ClassHandle: 1747920759
+      Name: Demo.DemoBehavior.Shooting.PlayerController
       Fields:
-        _speed: 10
-        _entities: 0
-        _worldStay: true
+        speed_: 10
+        bullet_prefab_: 3044122888852536289
   - Entity: 14536754888403409843
     TagComponent:
       Tag: Player2

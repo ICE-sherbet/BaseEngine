@@ -41,7 +41,7 @@ void MonoGCManager::Shutdown() {
 }
 
 void MonoGCManager::CollectGarbage(bool block_until_finalized) {
-  mono_gc_collect(mono_gc_max_generation());
+  mono_gc_collect(0);
   if (block_until_finalized) {
     while (mono_gc_pending_finalizers())
       ;
@@ -54,9 +54,6 @@ GCHandle MonoGCManager::CreateObjectReference(MonoObject* managedObject,
   GCHandle handle = weakReference
                         ? mono_gchandle_new_weakref_v2(managedObject, pinned)
                         : mono_gchandle_new_v2(managedObject, pinned);
-  handle.value = weakReference
-                     ? mono_gchandle_new_weakref_v2(managedObject, pinned)
-                     : mono_gchandle_new_v2(managedObject, pinned);
   if (track) {
     if (weakReference)
       s_GCState->WeakReferences[handle] = managedObject;

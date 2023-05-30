@@ -11,7 +11,7 @@ bool AssetReferenceField(const std::string& label, AssetHandle* asset_handle,
   std::string button_text = "Null";
   if (AssetManager::IsAssetHandleValid(*asset_handle)) {
     button_text = AssetManager::GetMutableMetadata(*asset_handle)
-                      .file_path.stem()
+                      .file_path
                       .string();
   }
   const bool clicked = ImGui::Button(button_text.c_str());
@@ -26,8 +26,13 @@ bool AssetReferenceField(const std::string& label, AssetHandle* asset_handle,
                         ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize)) {
     if (ImGui::BeginListBox(label.c_str())) {
       for (const auto& metadata : registry | std::views::values) {
-        if (metadata.type != asset_type) continue;
-        if (ImGui::Selectable(metadata.file_path.stem().string().c_str())) {
+        if (asset_type != AssetType::kNone && metadata.type != asset_type) continue;
+        std::string preview = metadata.file_path.string().c_str();
+      	if (metadata.type == AssetType::kScript)
+        {
+          preview = metadata.file_path.string();
+        }
+        if (ImGui::Selectable(preview.c_str())) {
           *asset_handle = metadata.handle;
           result = true;
           ImGui::CloseCurrentPopup();

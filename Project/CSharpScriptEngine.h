@@ -34,7 +34,7 @@ class CSharpScriptEngine {
 
   void LoadMonoAssembly();
 
-	void InitializeRuntime();
+  void InitializeRuntime();
   void ShutdownRuntime();
   void ShutdownRuntimeScriptEntity(ObjectEntity entity);
 
@@ -68,6 +68,18 @@ class CSharpScriptEngine {
   Ref<IFieldStorage> GetFieldStorage(ObjectEntity entity, uint32_t field_id);
 
   MonoObject* CreateManagedObject(const MonoClassTypeInfo* managed_class);
+  template <typename... TConstructorArgs>
+  MonoObject* CreateManagedObject(uint32_t classID,
+                                  TConstructorArgs&&... args) {
+    return CreateManagedObjectImpl(this->storage_->GetManagedClassById(classID),
+                                   std::forward<TConstructorArgs>(args)...);
+  }
+  template <typename... TConstructorArgs>
+  MonoObject* CreateManagedObject(const std::string& name,
+                                  TConstructorArgs&&... args) {
+    return CreateManagedObjectImpl(this->storage_->GetManagedClassByName(name),
+                                   std::forward<TConstructorArgs>(args)...);
+  }
 
   static void CallMethod(MonoObject* monoObject, MonoMethodInfo* managedMethod,
                          const void** parameters);
@@ -140,13 +152,6 @@ class CSharpScriptEngine {
   std::unique_ptr<MonoGlue> glue_ = nullptr;
 
   void InitRuntimeObject(MonoObject* mono_object);
-
-  template <typename... TConstructorArgs>
-  MonoObject* CreateManagedObject(uint32_t classID,
-                                  TConstructorArgs&&... args) {
-    return CreateManagedObjectImpl(this->storage_->GetManagedClassById(classID),
-                                   std::forward<TConstructorArgs>(args)...);
-  }
 
   template <typename... TConstructorArgs>
   MonoObject* CreateManagedObjectImpl(MonoClassTypeInfo* managedClass,

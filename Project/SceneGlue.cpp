@@ -9,7 +9,7 @@
 #include "MonoScriptUtilities.h"
 #include "ObjectEntity.h"
 #include "Script.h"
-
+#include "Prefab.h"
 namespace base_engine::glue::internal_calls {
 uint64_t SceneCreateEntity(MonoString* tag) {
   auto scene = CSharpScriptEngine::GetInstance()->GetScene();
@@ -57,5 +57,17 @@ void SceneDestroyEntity(const uint64_t id) {
   auto scene = CSharpScriptEngine::GetInstance()->GetScene();
   BE_CORE_ASSERT(scene, "No active Scene");
   scene->DestroyEntity(id);
+}
+
+uint64_t SceneInstantiatePrefab(const AssetHandle* prefab_handle) {
+  auto scene = CSharpScriptEngine::GetInstance()->GetScene();
+  BE_CORE_ASSERT(scene, "No active Scene");
+
+  Ref<Prefab> prefab = AssetManager::GetAsset<Prefab>(*prefab_handle);
+  if (prefab == nullptr) {
+    return 0;
+  }
+
+  return scene->Instantiate(prefab).GetUUID();
 }
 }  // namespace base_engine::glue::internal_calls
