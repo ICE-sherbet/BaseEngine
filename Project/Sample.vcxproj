@@ -1,0 +1,620 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{582B9C61-742D-4D2B-9C72-42C088CE473D}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>Project</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>../../MofLibrary/Include;C:\MofLibrary\Include;../vendor\imgui;$(IncludePath)</IncludePath>
+    <LibraryPath>../../MofLibrary/Library;$(LibraryPath);C:\MofLibrary\Include;../vendor\imgui\bin\Debug-windows-x86_64\ImGui</LibraryPath>
+    <OutDir>$(SolutionDir)\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>../../MofLibrary/Include;$(IncludePath);</IncludePath>
+    <LibraryPath>../../MofLibrary/Library;$(LibraryPath);</LibraryPath>
+    <OutDir>$(SolutionDir)\</OutDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;BE_DEBUG;BE_ENABLE_PROFILING;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)\vendor\imgui;$(SolutionDir)\vendor;$(SolutionDir)\vendor\mono\x86;$(SolutionDir)\Library\Include;$(ProjectDir)\include\utilities\observable;$(SolutionDir)\vendor\optick\src;$(SolutionDir)\vendor\yaml-cpp\include</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(SolutionDir)vendor\mono\x86;$(SolutionDir)\Library\Library;$(SolutionDir)vendor\yaml-cpp;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>LIBCMTD</IgnoreSpecificDefaultLibraries>
+      <AdditionalDependencies>mono-2.0-sgen.lib;OptickCore.lib;;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)\Library\Include;$(ProjectDir)\include\utilities\observable</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>$(SolutionDir)\Library\Library;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>LIBCMT</IgnoreSpecificDefaultLibraries>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\vendor\yaml-cpp\src\binary.cpp" />
+    <ClCompile Include="..\vendor\yaml-cpp\src\contrib\graphbuilder.cpp" />
+    <ClCompile Include="..\vendor\yaml-cpp\src\contrib\graphbuilderadapter.cpp" />
+    <ClCompile Include="..\vendor\yaml-cpp\src\convert.cpp" />
+    <ClCompile Include="..\vendor\yaml-cpp\src\depthguard.cpp" />
+    <ClCompile Include="..\vendor\yaml-cpp\src\directives.cpp" />
+    <ClCompile Include="..\vendor\yaml-cpp\src\emit.cpp" />
+    <ClCompile Include="..\vendor\yaml-cpp\src\emitfromevents.cpp" />
+    <ClCompile Include="..\vendor\yaml-cpp\src\emitter.cpp" />
+    <ClCompile Include="..\vendor\yaml-cpp\src\emitterstate.cpp" />
+    <ClCompile Include="..\vendor\yaml-cpp\src\emitterutils.cpp" />
+    <ClCompile Include="..\vendor\yaml-cpp\src\exceptions.cpp" />
+    <ClCompile Include="..\vendor\yaml-cpp\src\exp.cpp" />
+    <ClCompile Include="..\vendor\yaml-cpp\src\memory.cpp" />
+    <ClCompile Include="..\vendor\yaml-cpp\src\node.cpp" />
+    <ClCompile Include="..\vendor\yaml-cpp\src\nodebuilder.cpp" />
+    <ClCompile Include="..\vendor\yaml-cpp\src\nodeevents.cpp" />
+    <ClCompile Include="..\vendor\yaml-cpp\src\node_data.cpp" />
+    <ClCompile Include="..\vendor\yaml-cpp\src\null.cpp" />
+    <ClCompile Include="..\vendor\yaml-cpp\src\ostream_wrapper.cpp" />
+    <ClCompile Include="..\vendor\yaml-cpp\src\parse.cpp" />
+    <ClCompile Include="..\vendor\yaml-cpp\src\parser.cpp" />
+    <ClCompile Include="..\vendor\yaml-cpp\src\regex_yaml.cpp" />
+    <ClCompile Include="..\vendor\yaml-cpp\src\scanner.cpp" />
+    <ClCompile Include="..\vendor\yaml-cpp\src\scanscalar.cpp" />
+    <ClCompile Include="..\vendor\yaml-cpp\src\scantag.cpp" />
+    <ClCompile Include="..\vendor\yaml-cpp\src\scantoken.cpp" />
+    <ClCompile Include="..\vendor\yaml-cpp\src\simplekey.cpp" />
+    <ClCompile Include="..\vendor\yaml-cpp\src\singledocparser.cpp" />
+    <ClCompile Include="..\vendor\yaml-cpp\src\stream.cpp" />
+    <ClCompile Include="..\vendor\yaml-cpp\src\tag.cpp" />
+    <ClCompile Include="Actor.cpp" />
+    <ClCompile Include="ApplyStaticGravitySystem.cpp" />
+    <ClCompile Include="Asset.cpp" />
+    <ClCompile Include="AssetImporter.cpp" />
+    <ClCompile Include="AssetManager.cpp" />
+    <ClCompile Include="AssetRegistry.cpp" />
+    <ClCompile Include="Audio.cpp" />
+    <ClCompile Include="AudioGlue.cpp" />
+    <ClCompile Include="BaseEngineCollision.cpp" />
+    <ClCompile Include="BaseEngineCore.cpp" />
+    <ClCompile Include="BaseEngineInput.cpp" />
+    <ClCompile Include="BodyTypeTag.cpp" />
+    <ClCompile Include="BroadPhaseSystem.cpp" />
+    <ClCompile Include="Callable.cpp" />
+    <ClCompile Include="CameraCustomComponent.cpp" />
+    <ClCompile Include="CollisionGlue.cpp" />
+    <ClCompile Include="Connection.cpp" />
+    <ClCompile Include="ConnectableObject.cpp" />
+    <ClCompile Include="ConsoleMessage.cpp" />
+    <ClCompile Include="ConsolePanel.cpp" />
+    <ClCompile Include="ContactSolverReferenceService.cpp" />
+    <ClCompile Include="ContactSolverSystem.cpp" />
+    <ClCompile Include="ContactTesterCircleCircle.cpp" />
+    <ClCompile Include="ContactTesterReferenceService.cpp" />
+    <ClCompile Include="CSharpInstance.cpp" />
+    <ClCompile Include="DynamicContactSolver.cpp" />
+    <ClCompile Include="EditorConsoleSink.cpp" />
+    <ClCompile Include="EditorLayer.cpp" />
+    <ClCompile Include="EditorPanel.cpp" />
+    <ClCompile Include="EditorPanelManager.cpp" />
+    <ClCompile Include="EntityGlue.cpp" />
+    <ClCompile Include="IFieldStorage.cpp" />
+    <ClCompile Include="HierarchyContextMenu.cpp" />
+    <ClCompile Include="HierarchyPanel.cpp" />
+    <ClCompile Include="IBaseEngineAudioEngine.cpp" />
+    <ClCompile Include="ImGuiAssetHelper.cpp" />
+    <ClCompile Include="ImGuiVariantHelper.cpp" />
+    <ClCompile Include="InputGlue.cpp" />
+    <ClCompile Include="InspectorPanel.cpp" />
+    <ClCompile Include="IntegratePosesSystem.cpp" />
+    <ClCompile Include="DebugGlue.cpp" />
+    <ClCompile Include="ManagedComponentStorage.cpp" />
+    <ClCompile Include="Matrix44Utilities.cpp" />
+    <ClCompile Include="MethodBind.cpp" />
+    <ClCompile Include="MofAudio.cpp" />
+    <ClCompile Include="MofAudioEngine.cpp" />
+    <ClCompile Include="MofSoundBuffer.cpp" />
+    <ClCompile Include="MonoClassTypeInfo.cpp" />
+    <ClCompile Include="CSharpScriptEngine.cpp" />
+    <ClCompile Include="EditorAssetManager.cpp" />
+    <ClCompile Include="EffectBase.cpp" />
+    <ClCompile Include="IBaseEngineAssetManager.cpp" />
+    <ClCompile Include="Log.cpp" />
+    <ClCompile Include="Matrix44.cpp" />
+    <ClCompile Include="MofTexture.cpp" />
+    <ClCompile Include="MonoGCManager.cpp" />
+    <ClCompile Include="MonoGlue.cpp" />
+    <ClCompile Include="MonoScriptCash.cpp" />
+    <ClCompile Include="MonoScriptUtilities.cpp" />
+    <ClCompile Include="ObjectEntity.cpp" />
+    <ClCompile Include="PhysicsData.cpp" />
+    <ClCompile Include="PhysicsContactListenerSystem.cpp" />
+    <ClCompile Include="PhysicsObjectFactory.cpp" />
+    <ClCompile Include="PhysicsTesterCommon.cpp" />
+    <ClCompile Include="Prefab.cpp" />
+    <ClCompile Include="Quaternion.cpp" />
+    <ClCompile Include="QuaternionUtilities.cpp" />
+    <ClCompile Include="Ref.cpp" />
+    <ClCompile Include="Material.cpp" />
+    <ClCompile Include="MofShader.cpp" />
+    <ClCompile Include="MofShaderImpl.cpp" />
+    <ClCompile Include="MofSpriteMotionController.cpp" />
+    <ClCompile Include="NinePatchImageComponent.cpp" />
+    <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="SceneGlue.cpp" />
+    <ClCompile Include="SceneRenderer.cpp" />
+    <ClCompile Include="SceneAssetSerializer.cpp" />
+    <ClCompile Include="SceneSerializer.cpp" />
+    <ClCompile Include="Script.cpp" />
+    <ClCompile Include="ScriptGlue.cpp" />
+    <ClCompile Include="ScriptTypes.cpp" />
+    <ClCompile Include="SelectManager.cpp" />
+    <ClCompile Include="SetupEditorImGui.cpp" />
+    <ClCompile Include="ShaderBase.cpp" />
+    <ClCompile Include="PhysicsSolversCommon.cpp" />
+    <ClCompile Include="SpriteRendererGlue.cpp" />
+    <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="TextureGlue.cpp" />
+    <ClCompile Include="ToolbarPanel.cpp" />
+    <ClCompile Include="TransformComponent.cpp" />
+    <ClCompile Include="TransformGlue.cpp" />
+    <ClCompile Include="CameraComponent.cpp" />
+    <ClCompile Include="CanvasRender.cpp" />
+    <ClCompile Include="Circle.cpp" />
+    <ClCompile Include="CollisionComponent.cpp" />
+    <ClCompile Include="Component.cpp" />
+    <ClCompile Include="ContactRayCastCallBack.cpp" />
+    <ClCompile Include="SpriteAnimationClipLoader.cpp" />
+    <ClCompile Include="UpdateCirclesBV.cpp" />
+    <ClCompile Include="UUID.cpp" />
+    <ClCompile Include="Vector3.cpp" />
+    <ClCompile Include="Vector4.cpp" />
+    <ClCompile Include="EpaSolver.cpp" />
+    <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameApp.cpp" />
+    <ClCompile Include="Geometry2D.cpp" />
+    <ClCompile Include="GJK.cpp" />
+    <ClCompile Include="IBaseEngineCanvasRender.cpp" />
+    <ClCompile Include="IBaseEngineCollider.cpp" />
+    <ClCompile Include="IBaseEngineRender.cpp" />
+    <ClCompile Include="IBaseEngineTexture.cpp" />
+    <ClCompile Include="IBaseEngineEmpty.cpp" />
+    <ClCompile Include="Geometry2D.ipp" />
+    <ClCompile Include="ImageComponent.cpp" />
+    <ClCompile Include="Manifold.cpp" />
+    <ClCompile Include="MofSpriteAnimationComponent.cpp" />
+    <ClCompile Include="Object.cpp" />
+    <ClCompile Include="ObjectDataBase.cpp" />
+    <ClCompile Include="PhysicsBlockAllocator.cpp" />
+    <ClCompile Include="PhysicsBody2D.cpp" />
+    <ClCompile Include="PhysicsBodyComponent.cpp" />
+    <ClCompile Include="PhysicsCircleContact.cpp" />
+    <ClCompile Include="PhysicsCircleShape.cpp" />
+    <ClCompile Include="PhysicsContact.cpp" />
+    <ClCompile Include="PhysicsContactFilter.cpp" />
+    <ClCompile Include="PhysicsContactListener.cpp" />
+    <ClCompile Include="PhysicsContactManager.cpp" />
+    <ClCompile Include="PhysicsDynamicTree.cpp" />
+    <ClCompile Include="PhysicsFixture.cpp" />
+    <ClCompile Include="PhysicsPolygonContact.cpp" />
+    <ClCompile Include="PhysicsPolygonShape.cpp" />
+    <ClCompile Include="PhysicsWorld.cpp" />
+    <ClCompile Include="InputActor.cpp" />
+    <ClCompile Include="InputComponent.cpp" />
+    <ClCompile Include="IShape.cpp" />
+    <ClCompile Include="Point.cpp" />
+    <ClCompile Include="Rect.cpp" />
+    <ClCompile Include="RenderComponent.cpp" />
+    <ClCompile Include="RenderMof.cpp" />
+    <ClCompile Include="ShapeRenderComponent.cpp" />
+    <ClCompile Include="Sprite.cpp" />
+    <ClCompile Include="SpriteComponent.cpp" />
+    <ClCompile Include="TextureMof.cpp" />
+    <ClCompile Include="Vector2.cpp" />
+    <ClCompile Include="VectorUtilities.cpp" />
+    <ClCompile Include="WeakRefObject.cpp" />
+    <ClCompile Include="WinMain.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\vendor\yaml-cpp\include\yaml-cpp\anchor.h" />
+    <ClInclude Include="..\vendor\yaml-cpp\include\yaml-cpp\binary.h" />
+    <ClInclude Include="..\vendor\yaml-cpp\include\yaml-cpp\contrib\anchordict.h" />
+    <ClInclude Include="..\vendor\yaml-cpp\include\yaml-cpp\contrib\graphbuilder.h" />
+    <ClInclude Include="..\vendor\yaml-cpp\include\yaml-cpp\depthguard.h" />
+    <ClInclude Include="..\vendor\yaml-cpp\include\yaml-cpp\dll.h" />
+    <ClInclude Include="..\vendor\yaml-cpp\include\yaml-cpp\emitfromevents.h" />
+    <ClInclude Include="..\vendor\yaml-cpp\include\yaml-cpp\emitter.h" />
+    <ClInclude Include="..\vendor\yaml-cpp\include\yaml-cpp\emitterdef.h" />
+    <ClInclude Include="..\vendor\yaml-cpp\include\yaml-cpp\emittermanip.h" />
+    <ClInclude Include="..\vendor\yaml-cpp\include\yaml-cpp\emitterstyle.h" />
+    <ClInclude Include="..\vendor\yaml-cpp\include\yaml-cpp\eventhandler.h" />
+    <ClInclude Include="..\vendor\yaml-cpp\include\yaml-cpp\exceptions.h" />
+    <ClInclude Include="..\vendor\yaml-cpp\include\yaml-cpp\mark.h" />
+    <ClInclude Include="..\vendor\yaml-cpp\include\yaml-cpp\node\convert.h" />
+    <ClInclude Include="..\vendor\yaml-cpp\include\yaml-cpp\node\detail\impl.h" />
+    <ClInclude Include="..\vendor\yaml-cpp\include\yaml-cpp\node\detail\iterator.h" />
+    <ClInclude Include="..\vendor\yaml-cpp\include\yaml-cpp\node\detail\iterator_fwd.h" />
+    <ClInclude Include="..\vendor\yaml-cpp\include\yaml-cpp\node\detail\memory.h" />
+    <ClInclude Include="..\vendor\yaml-cpp\include\yaml-cpp\node\detail\node.h" />
+    <ClInclude Include="..\vendor\yaml-cpp\include\yaml-cpp\node\detail\node_data.h" />
+    <ClInclude Include="..\vendor\yaml-cpp\include\yaml-cpp\node\detail\node_iterator.h" />
+    <ClInclude Include="..\vendor\yaml-cpp\include\yaml-cpp\node\detail\node_ref.h" />
+    <ClInclude Include="..\vendor\yaml-cpp\include\yaml-cpp\node\emit.h" />
+    <ClInclude Include="..\vendor\yaml-cpp\include\yaml-cpp\node\impl.h" />
+    <ClInclude Include="..\vendor\yaml-cpp\include\yaml-cpp\node\iterator.h" />
+    <ClInclude Include="..\vendor\yaml-cpp\include\yaml-cpp\node\node.h" />
+    <ClInclude Include="..\vendor\yaml-cpp\include\yaml-cpp\node\parse.h" />
+    <ClInclude Include="..\vendor\yaml-cpp\include\yaml-cpp\node\ptr.h" />
+    <ClInclude Include="..\vendor\yaml-cpp\include\yaml-cpp\node\type.h" />
+    <ClInclude Include="..\vendor\yaml-cpp\include\yaml-cpp\noexcept.h" />
+    <ClInclude Include="..\vendor\yaml-cpp\include\yaml-cpp\null.h" />
+    <ClInclude Include="..\vendor\yaml-cpp\include\yaml-cpp\ostream_wrapper.h" />
+    <ClInclude Include="..\vendor\yaml-cpp\include\yaml-cpp\parser.h" />
+    <ClInclude Include="..\vendor\yaml-cpp\include\yaml-cpp\stlemitter.h" />
+    <ClInclude Include="..\vendor\yaml-cpp\include\yaml-cpp\traits.h" />
+    <ClInclude Include="..\vendor\yaml-cpp\include\yaml-cpp\yaml.h" />
+    <ClInclude Include="..\vendor\yaml-cpp\src\collectionstack.h" />
+    <ClInclude Include="..\vendor\yaml-cpp\src\contrib\graphbuilderadapter.h" />
+    <ClInclude Include="..\vendor\yaml-cpp\src\directives.h" />
+    <ClInclude Include="..\vendor\yaml-cpp\src\emitterstate.h" />
+    <ClInclude Include="..\vendor\yaml-cpp\src\emitterutils.h" />
+    <ClInclude Include="..\vendor\yaml-cpp\src\exp.h" />
+    <ClInclude Include="..\vendor\yaml-cpp\src\indentation.h" />
+    <ClInclude Include="..\vendor\yaml-cpp\src\nodebuilder.h" />
+    <ClInclude Include="..\vendor\yaml-cpp\src\nodeevents.h" />
+    <ClInclude Include="..\vendor\yaml-cpp\src\ptr_vector.h" />
+    <ClInclude Include="..\vendor\yaml-cpp\src\regeximpl.h" />
+    <ClInclude Include="..\vendor\yaml-cpp\src\regex_yaml.h" />
+    <ClInclude Include="..\vendor\yaml-cpp\src\scanner.h" />
+    <ClInclude Include="..\vendor\yaml-cpp\src\scanscalar.h" />
+    <ClInclude Include="..\vendor\yaml-cpp\src\scantag.h" />
+    <ClInclude Include="..\vendor\yaml-cpp\src\setting.h" />
+    <ClInclude Include="..\vendor\yaml-cpp\src\singledocparser.h" />
+    <ClInclude Include="..\vendor\yaml-cpp\src\stream.h" />
+    <ClInclude Include="..\vendor\yaml-cpp\src\streamcharsource.h" />
+    <ClInclude Include="..\vendor\yaml-cpp\src\stringsource.h" />
+    <ClInclude Include="..\vendor\yaml-cpp\src\tag.h" />
+    <ClInclude Include="..\vendor\yaml-cpp\src\token.h" />
+    <ClInclude Include="2DShapes.h" />
+    <ClInclude Include="Actor.h" />
+    <ClInclude Include="Adapter.h" />
+    <ClInclude Include="ApplyStaticGravitySystem.h" />
+    <ClInclude Include="Assert.h" />
+    <ClInclude Include="Asset.h" />
+    <ClInclude Include="AssetImporter.h" />
+    <ClInclude Include="AssetManager.h" />
+    <ClInclude Include="AssetMetadata.h" />
+    <ClInclude Include="AssetRegistry.h" />
+    <ClInclude Include="AssetSerializer.h" />
+    <ClInclude Include="AssetTypes.h" />
+    <ClInclude Include="Audio.h" />
+    <ClInclude Include="AudioComponent.h" />
+    <ClInclude Include="AudioGlue.h" />
+    <ClInclude Include="BaseEngineCollision.h" />
+    <ClInclude Include="BaseEngineCore.h" />
+    <ClInclude Include="BaseEngineEmpty.h" />
+    <ClInclude Include="BaseEngineInput.h" />
+    <ClInclude Include="Becs\Algorithm.h" />
+    <ClInclude Include="Becs\becs.hpp" />
+    <ClInclude Include="Becs\BecsComponent.h" />
+    <ClInclude Include="Becs\CompressedPair.h" />
+    <ClInclude Include="Becs\config.h" />
+    <ClInclude Include="Becs\Delegate.h" />
+    <ClInclude Include="Becs\Entity.h" />
+    <ClInclude Include="Becs\EntityFwd.h" />
+    <ClInclude Include="Becs\Group.h" />
+    <ClInclude Include="Becs\BecsIterator.h" />
+    <ClInclude Include="Becs\HashedString.h" />
+    <ClInclude Include="Becs\Registry.h" />
+    <ClInclude Include="Becs\SignalHandle.h" />
+    <ClInclude Include="Becs\SignalHandlerMixin.h" />
+    <ClInclude Include="Becs\SparseSet.h" />
+    <ClInclude Include="Becs\Storage.h" />
+    <ClInclude Include="Becs\Traits\Traits.h" />
+    <ClInclude Include="Becs\TypeInfo.h" />
+    <ClInclude Include="Becs\TypeTraits.h" />
+    <ClInclude Include="Becs\View.h" />
+    <ClInclude Include="BinaryArchive.h" />
+    <ClInclude Include="BinderCommon.h" />
+    <ClInclude Include="BodyMask.h" />
+    <ClInclude Include="BodyTypeTag.h" />
+    <ClInclude Include="BoundingBox.h" />
+    <ClInclude Include="BroadPhase.h" />
+    <ClInclude Include="BroadPhaseSystem.h" />
+    <ClInclude Include="Callable.h" />
+    <ClInclude Include="CameraCustomComponent.h" />
+    <ClInclude Include="CollisionGlue.h" />
+    <ClInclude Include="Connection.h" />
+    <ClInclude Include="ConnectableObject.h" />
+    <ClInclude Include="ConsoleMessage.h" />
+    <ClInclude Include="ConsolePanel.h" />
+    <ClInclude Include="ContactSolverSystem.h" />
+    <ClInclude Include="DynamicContactSolver.h" />
+    <ClInclude Include="DebugGlue.h" />
+    <ClInclude Include="EditorConsoleSink.h" />
+    <ClInclude Include="EditorLayer.h" />
+    <ClInclude Include="EditorPanel.h" />
+    <ClInclude Include="EditorPanelManager.h" />
+    <ClInclude Include="IFieldStorage.h" />
+    <ClInclude Include="HierarchyContextMenu.h" />
+    <ClInclude Include="HierarchyPanel.h" />
+    <ClInclude Include="ILayer.h" />
+    <ClInclude Include="ImGuiAssetHelper.h" />
+    <ClInclude Include="ImGuiVariantHelper.h" />
+    <ClInclude Include="InspectorPanel.h" />
+    <ClInclude Include="MethodBind.h" />
+    <ClInclude Include="OnCollisionTag.h" />
+    <ClInclude Include="PhysicsContactListenerSystem.h" />
+    <ClInclude Include="PhysicsTesterCommon.h" />
+    <ClInclude Include="Prefab.h" />
+    <ClInclude Include="PrefabComponent.h" />
+    <ClInclude Include="SceneAssetSerializer.h" />
+    <ClInclude Include="SceneSerializer.h" />
+    <ClInclude Include="SelectManager.h" />
+    <ClInclude Include="SetupEditorImGui.h" />
+    <ClInclude Include="ToolbarPanel.h" />
+    <ClInclude Include="YAMLSerializeHelper.h" />
+    <ClInclude Include="SolveContact.h" />
+    <ClInclude Include="ContactSolverReferenceService.h" />
+    <ClInclude Include="ContactTesterCircleCircle.h" />
+    <ClInclude Include="ContactTesterReferenceService.h" />
+    <ClInclude Include="ContactTesterSystem.h" />
+    <ClInclude Include="CSharpInstance.h" />
+    <ClInclude Include="EntityGlue.h" />
+    <ClInclude Include="IBaseEngineAudioEngine.h" />
+    <ClInclude Include="IBecsSystem.h" />
+    <ClInclude Include="InputGlue.h" />
+    <ClInclude Include="IntegratePosesSystem.h" />
+    <ClInclude Include="AbstractPhysicsSystem.h" />
+    <ClInclude Include="ManagedComponentStorage.h" />
+    <ClInclude Include="MofAudio.h" />
+    <ClInclude Include="MofAudioEngine.h" />
+    <ClInclude Include="MofSoundBuffer.h" />
+    <ClInclude Include="MonoClassTypeInfo.h" />
+    <ClInclude Include="CSharpScriptEngine.h" />
+    <ClInclude Include="DataComponents.h" />
+    <ClInclude Include="DependenciesDefine.h" />
+    <ClInclude Include="EditorAssetManager.h" />
+    <ClInclude Include="EffectBase.h" />
+    <ClInclude Include="HierarchyComponent.h" />
+    <ClInclude Include="IBaseEngineAssetManager.h" />
+    <ClInclude Include="IdComponent.h" />
+    <ClInclude Include="Log.h" />
+    <ClInclude Include="Math.h" />
+    <ClInclude Include="MathUtilities.h" />
+    <ClInclude Include="Matrix.h" />
+    <ClInclude Include="Matrix33.h" />
+    <ClInclude Include="Matrix44.h" />
+    <ClInclude Include="Matrix44Utilities.h" />
+    <ClInclude Include="MofTexture.h" />
+    <ClInclude Include="MonoGCHandle.h" />
+    <ClInclude Include="MonoGCManager.h" />
+    <ClInclude Include="MonoGlue.h" />
+    <ClInclude Include="MonoGlueInternalCalls.h" />
+    <ClInclude Include="MonoGlueMacro.h" />
+    <ClInclude Include="MonoScriptCash.h" />
+    <ClInclude Include="MonoScriptUtilities.h" />
+    <ClInclude Include="ObjectEntity.h" />
+    <ClInclude Include="PhysicsData.h" />
+    <ClInclude Include="PhysicsEngineData.h" />
+    <ClInclude Include="PhysicsObjectFactory.h" />
+    <ClInclude Include="PossibleContact.h" />
+    <ClInclude Include="Profiler.h" />
+    <ClInclude Include="QuaternionUtilities.h" />
+    <ClInclude Include="Quaternion.h" />
+    <ClInclude Include="QuaternionUtilities.inl" />
+    <ClInclude Include="Ref.h" />
+    <ClInclude Include="ISpriteAnimatable.h" />
+    <ClInclude Include="Material.h" />
+    <ClInclude Include="MofShader.h" />
+    <ClInclude Include="MofShaderImpl.h" />
+    <ClInclude Include="MofSpriteMotionController.h" />
+    <ClInclude Include="NinePatchImageComponent.h" />
+    <ClInclude Include="PairFrozen.h" />
+    <ClInclude Include="PlayerStateUtility.h" />
+    <ClInclude Include="resource1.h" />
+    <ClInclude Include="RigidBodyComponent.h" />
+    <ClInclude Include="Scene.h" />
+    <ClInclude Include="SceneGlue.h" />
+    <ClInclude Include="SceneRenderer.h" />
+    <ClInclude Include="Script.h" />
+    <ClInclude Include="ScriptComponent.h" />
+    <ClInclude Include="ScriptGlue.h" />
+    <ClInclude Include="ScriptTypes.h" />
+    <ClInclude Include="ShaderBase.h" />
+    <ClInclude Include="ShapeComponents.h" />
+    <ClInclude Include="PhysicsSolversCommon.h" />
+    <ClInclude Include="SoundBuffer.h" />
+    <ClInclude Include="SpriteRendererComponent.h" />
+    <ClInclude Include="SpriteRendererGlue.h" />
+    <ClInclude Include="TagComponent.h" />
+    <ClInclude Include="TextArchive.h" />
+    <ClInclude Include="Texture.h" />
+    <ClInclude Include="TextureGlue.h" />
+    <ClInclude Include="TransformComponent.h" />
+    <ClInclude Include="TransformGlue.h" />
+    <ClInclude Include="ApplyTuple.h" />
+    <ClInclude Include="TypeUtilities.h" />
+    <ClInclude Include="CameraComponent.h" />
+    <ClInclude Include="CanvasRender.h" />
+    <ClInclude Include="Circle.h" />
+    <ClInclude Include="CollisionComponent.h" />
+    <ClInclude Include="Component.h" />
+    <ClInclude Include="ComponentParameter.h" />
+    <ClInclude Include="ContactRayCastCallBack.h" />
+    <ClInclude Include="SpriteAnimationClipLoader.h" />
+    <ClInclude Include="UpdateBV.h" />
+    <ClInclude Include="UpdateCirclesBV.h" />
+    <ClInclude Include="UUID.h" />
+    <ClInclude Include="Vector3.h" />
+    <ClInclude Include="Vector4.h" />
+    <ClInclude Include="VelocityComponent.h" />
+    <ClInclude Include="EnumExtension.h" />
+    <ClInclude Include="EnumFlags.h" />
+    <ClInclude Include="FrozenConcept.h" />
+    <ClInclude Include="FrozenHelper.h" />
+    <ClInclude Include="FrozenMacro.h" />
+    <ClInclude Include="IBaseEngineCanvasRender.h" />
+    <ClInclude Include="ImageComponent.h" />
+    <ClInclude Include="Object.h" />
+    <ClInclude Include="ObjectDataBase.h" />
+    <ClInclude Include="ObjectID.h" />
+    <ClInclude Include="ParameterMap.h" />
+    <ClInclude Include="EngineComponent.h" />
+    <ClInclude Include="EpaSolver.h" />
+    <ClInclude Include="ExpandingSimplex.h" />
+    <ClInclude Include="ExpandingSimplexEdge.h" />
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="GameApp.h" />
+    <ClInclude Include="Geometry2D.h" />
+    <ClInclude Include="GJK.h" />
+    <ClInclude Include="IBaseEngineCollider.h" />
+    <ClInclude Include="IBaseEngineRender.h" />
+    <ClInclude Include="IBaseEngineTexture.h" />
+    <ClInclude Include="IBaseEngineEmpty.h" />
+    <ClInclude Include="include\utilities\observable\IObservable.h" />
+    <ClInclude Include="include\utilities\observable\IObserver.h" />
+    <ClInclude Include="include\utilities\observable\ReactiveProperty.h" />
+    <ClInclude Include="include\utilities\observable\Subject.h" />
+    <ClInclude Include="include\utilities\observable\Unit.h" />
+    <ClInclude Include="ISpriteAnimationComponent.h" />
+    <ClInclude Include="Manifold.h" />
+    <ClInclude Include="MinkowskiSum.h" />
+    <ClInclude Include="MofSpriteAnimationComponent.h" />
+    <ClInclude Include="PhysicsBlockAllocator.h" />
+    <ClInclude Include="PhysicsCircleContact.h" />
+    <ClInclude Include="PhysicsCircleShape.h" />
+    <ClInclude Include="PhysicsCollision.h" />
+    <ClInclude Include="PhysicsBody2D.h" />
+    <ClInclude Include="PhysicsBodyComponent.h" />
+    <ClInclude Include="PhysicsCommon.h" />
+    <ClInclude Include="PhysicsComponentData.h" />
+    <ClInclude Include="PhysicsContact.h" />
+    <ClInclude Include="PhysicsContactFilter.h" />
+    <ClInclude Include="PhysicsContactListener.h" />
+    <ClInclude Include="PhysicsContactManager.h" />
+    <ClInclude Include="PhysicsDynamicTree.h" />
+    <ClInclude Include="PhysicsFixture.h" />
+    <ClInclude Include="PhysicsManifold.h" />
+    <ClInclude Include="PhysicsMathUtility.h" />
+    <ClInclude Include="PhysicsPolygonContact.h" />
+    <ClInclude Include="PhysicsPolygonShape.h" />
+    <ClInclude Include="PhysicsRotate.h" />
+    <ClInclude Include="PhysicsShapes.h" />
+    <ClInclude Include="PhysicsSweep.h" />
+    <ClInclude Include="PhysicsTransform.h" />
+    <ClInclude Include="PhysicsVector2.h" />
+    <ClInclude Include="PhysicsWorld.h" />
+    <ClInclude Include="PhysicsWorldCallBack.h" />
+    <ClInclude Include="InputActor.h" />
+    <ClInclude Include="InputComponent.h" />
+    <ClInclude Include="IShape.h" />
+    <ClInclude Include="Point.h" />
+    <ClInclude Include="Point2d.h" />
+    <ClInclude Include="Point2dFrozen.h" />
+    <ClInclude Include="Pow.h" />
+    <ClInclude Include="Rect.h" />
+    <ClInclude Include="RenderComponent.h" />
+    <ClInclude Include="RenderMof.h" />
+    <ClInclude Include="SendManifold.h" />
+    <ClInclude Include="Frozen.h" />
+    <ClInclude Include="ComponentServiceLocator.h" />
+    <ClInclude Include="ShapeRenderComponent.h" />
+    <ClInclude Include="Sprite.h" />
+    <ClInclude Include="SpriteAnimationClipFrozen.h" />
+    <ClInclude Include="SpriteComponent.h" />
+    <ClInclude Include="StateMachine.h" />
+    <ClInclude Include="StringFrozen.h" />
+    <ClInclude Include="TextureMof.h" />
+    <ClInclude Include="TupleHasElement.h" />
+    <ClInclude Include="VariantFrozen.h" />
+    <ClInclude Include="VariantUtilities.h" />
+    <ClInclude Include="Vector2.h" />
+    <ClInclude Include="VectorFrozen.h" />
+    <ClInclude Include="VectorUtilities.h" />
+    <ClInclude Include="WeakRefObject.h" />
+    <ClInclude Include="YAMLArchive.h" />
+    <ClInclude Include="YesNo.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="LICENSE" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cpp.hint" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Sample.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\Resource\icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\vendor\imgui\ImGui.vcxproj">
+      <Project>{c0ff640d-2c14-8dbe-f595-301e616989ef}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
