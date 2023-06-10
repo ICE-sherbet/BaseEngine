@@ -6,6 +6,7 @@
 // @details
 
 #pragma once
+#include <stack>
 #include <unordered_map>
 
 #include "IFieldStorage.h"
@@ -14,6 +15,7 @@
 #include "MonoGlue.h"
 #include "MonoScriptCash.h"
 #include "Scene.h"
+#include "ObjectEntity.h"
 #include "ScriptComponent.h"
 #include "ScriptTypes.h"
 
@@ -46,7 +48,8 @@ class CSharpScriptEngine {
   void RuntimeInitializeScriptEntity(ObjectEntity entity);
 
   void DuplicateScriptInstance(ObjectEntity entity, ObjectEntity target_entity);
-  void ShutdownScriptEntity(ObjectEntity entity, bool erase = true);
+  void InitializeRuntimeDuplicatedEntities();
+	void ShutdownScriptEntity(ObjectEntity entity, bool erase = true);
   MonoDomain* GetCoreDomain() const;
   ;
   MonoImage* GetCoreImage();
@@ -146,7 +149,7 @@ class CSharpScriptEngine {
     ScriptEntityMap script_entities;
     ScriptInstanceMap script_instances;
     InstanceFieldStorageMap field_map;
-
+    std::stack<ObjectEntity> runtime_duplicated_script_entities;
   } scene_state_;
   std::unique_ptr<MonoScriptCacheStorage> storage_ = nullptr;
   std::unique_ptr<MonoGlue> glue_ = nullptr;

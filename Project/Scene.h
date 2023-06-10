@@ -8,13 +8,14 @@
 #pragma once
 #include "Asset.h"
 #include "Becs/Entity.h"
-#include "Becs/Registry.h"
 #include "IBecsSystem.h"
 #include "IdComponent.h"
 #include "Matrix44.h"
 #include "Ref.h"
 #include "TransformComponent.h"
 #include "UUID.h"
+#include "Becs/Registry.h"
+
 namespace base_engine {
 class Prefab;
 class ObjectEntity;
@@ -83,6 +84,8 @@ class Scene final : public Asset {
   UUID GetUUID() const { return scene_id_; }
   std::string_view GetName() const { return scene_name_; }
   void SetName(const std::string& name) { scene_name_ = name; }
+  bool IsPlaying() const { return is_playing_; }
+
 
   Scene();
   Scene(const std::string& name) : scene_name_(name) {}
@@ -102,7 +105,7 @@ class Scene final : public Asset {
   friend ObjectEntity;
 
   std::vector<std::unique_ptr<ISystem>> systems_;
-
+  bool is_playing_ = false;
   /**
    * \brief 各Entityが持つScriptComponentのOnUpdateを呼び出す
    * \param time 前回のUpdateからの経過時間

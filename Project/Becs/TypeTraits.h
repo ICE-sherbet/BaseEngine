@@ -93,6 +93,11 @@ inline constexpr auto unpack_as_value = Value;
 template <auto Value>
 using integral_constant = std::integral_constant<decltype(Value), Value>;
 
+template <bool... Bs>
+struct bool_list{};
+
+
+
 /**
  * \brief Alias template to facilitate the creation of named values.
  * @tparam Value A constant value at least convertible to `id_type`.

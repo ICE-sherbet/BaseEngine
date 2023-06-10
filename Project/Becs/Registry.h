@@ -18,6 +18,7 @@
 #include "TypeInfo.h"
 #include "TypeTraits.h"
 #include "View.h"
+#include <algorithm>
 
 namespace becs {
 
@@ -181,6 +182,7 @@ template <typename Lhs, typename Rhs>
  */
 template <typename Entity, typename Allocator>
 class BasicRegistry {
+public:
   using basic_common_type = basic_sparse_set<Entity, Allocator>;
 
   using alloc_traits = std::allocator_traits<Allocator>;
@@ -280,7 +282,6 @@ class BasicRegistry {
 
       if constexpr (std::is_same_v<Type, void> &&
                     !std::is_constructible_v<alloc_type, allocator_type>) {
-        // std::allocator<void> has no cross constructors (waiting for C++20)
         cpool =
             std::allocate_shared<storage_for_type<std::remove_const_t<Type>>>(
                 get_allocator(), alloc_type{});
@@ -339,7 +340,7 @@ class BasicRegistry {
       : pools{allocator},
         entities{std::allocate_shared<storage_for_type<entity_type>>(
             allocator, allocator)},
-        groups{allocator} {
+        groups_{allocator} {
     pools.reserve(count);
     rebind();
   }
@@ -347,14 +348,14 @@ class BasicRegistry {
   BasicRegistry(BasicRegistry &&other) noexcept
       : pools{std::move(other.pools)},
         entities{std::move(other.entities)},
-        groups{std::move(other.groups)} {
+        groups_{std::move(other.groups_)} {
     rebind();
   }
 
   BasicRegistry &operator=(BasicRegistry &&other) noexcept {
     pools = std::move(other.pools);
     entities = std::move(other.entities);
-    groups = std::move(other.groups);
+    groups_ = std::move(other.groups_);
 
     rebind();
 
@@ -617,10 +618,10 @@ class BasicRegistry {
   template <typename Type, typename... Args>
   decltype(auto) emplace_or_replace(const entity_type elem, Args &&...args) {
     if (auto &cpool = assure<Type>(); cpool.contains(elem)) {
-    	return cpool.patch(elem, [... args = std::move(args)](auto &...curr) {
+      return cpool.patch(elem, [... args = std::move(args)](auto &...curr) {
         ((curr = Type{args...}), ...);
       });
-      
+
     } else {
       return cpool.emplace(elem, std::forward<Args>(args)...);
     }
@@ -769,9 +770,10 @@ class BasicRegistry {
 
   /**
    * \brief Entity
-   * が指定のコンポーネントを所持しているかどうかのチェックを行う。 \tparam Type
-   * 指定のコンポーネント型 \param elem 有効な識別子 \return
-   * コンポーネントを所持しているか
+   * が指定のコンポーネントを所持しているかどうかのチェックを行う。
+   * \tparam Type 指定のコンポーネント型
+   * \param elem 有効な識別子
+   * \return コンポーネントを所持しているか
    */
   template <typename... Type>
   [[nodiscard]] bool all_of(const entity_type elem) const {
@@ -796,8 +798,7 @@ class BasicRegistry {
    * \return Entity が所持するコンポーネントへの参照
    */
   template <typename... Type>
-  [[nodiscard]] decltype(auto) get(
-      [[maybe_unused]] const entity_type elem) const {
+  [[nodiscard]] decltype(auto) get(const entity_type elem) const {
     if constexpr (sizeof...(Type) == 1u) {
       return (assure<std::remove_const_t<Type>>().get(elem), ...);
     } else {
@@ -807,7 +808,7 @@ class BasicRegistry {
 
   /*! @copydoc get */
   template <typename... Type>
-  [[nodiscard]] decltype(auto) get([[maybe_unused]] const entity_type elem) {
+  [[nodiscard]] decltype(auto) get(const entity_type elem) {
     if constexpr (sizeof...(Type) == 1u) {
       return (const_cast<Type &>(std::as_const(*this).template get<Type>(elem)),
               ...);
@@ -938,11 +939,44 @@ class BasicRegistry {
             assure<std::remove_const_t<Exclude>>()...};
   }
 
+  /**
+   * \brief Entityに付いているコンポーネントを指定先にコピーする。\n
+   * コピー先に同じコンポーネントがある場合は上書きされます。\n
+   * コピー先にないStorageは新規に作成されます。
+   * \tparam Exclude コピーから除外するコンポーネント群
+   * \param src_entity コピー元のEntity
+   * \param dst コピー先のレジストリ
+   * \param dst_entity コピー先のEntity
+   */
+  template <typename... Exclude>
+  void copy_to(Entity src_entity,
+                              BasicRegistry &dst, Entity dst_entity) {
+    constexpr std::array<uint32_t, sizeof...(Exclude)> exclude_args = {
+        type_hash<Exclude>::value()...};
+
+  	auto &dst_pool = dst.pools;
+    for (auto &&[id, entity_map] : storage()) {
+      bool skip = false;
+      for (auto exclude : exclude_args) {
+        if (exclude == id) skip = true;
+      }
+      if (skip) continue;
+      auto &storage = entity_map;
+      auto &dst_storage = dst_pool[id];
+
+      if (storage.contains(src_entity)) {
+        storage.copy(src_entity, dst_storage, dst_entity);
+      }
+    }
+  }
+
  private:
   container_type pools;
+
   std::shared_ptr<storage_for_type<entity_type>> entities;
   std::vector<group_data,
               typename alloc_traits::template rebind_alloc<group_data>>
-      groups;
+      groups_;
 };
+
 }  // namespace becs

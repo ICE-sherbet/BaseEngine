@@ -50,7 +50,9 @@ uint64_t SceneFindEntityByTag(MonoString* tag) {
   auto scene = CSharpScriptEngine::GetInstance()->GetScene();
   BE_CORE_ASSERT(scene, "No active Scene");
   const std::string name = mono_string_to_utf8(tag);
-  return scene->FindEntityWithTag(name).GetUUID();
+  auto entity = scene->FindEntityWithTag(name);
+  if (!entity) return 0;
+  return entity.GetUUID();
 }
 
 void SceneDestroyEntity(const uint64_t id) {
@@ -67,7 +69,7 @@ uint64_t SceneInstantiatePrefab(const AssetHandle* prefab_handle) {
   if (prefab == nullptr) {
     return 0;
   }
-
-  return scene->Instantiate(prefab).GetUUID();
+  const auto entity = scene->Instantiate(prefab).GetUUID();
+  return entity;
 }
 }  // namespace base_engine::glue::internal_calls

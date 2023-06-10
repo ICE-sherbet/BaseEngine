@@ -163,6 +163,7 @@
     <ClCompile Include="HierarchyContextMenu.cpp" />
     <ClCompile Include="HierarchyPanel.cpp" />
     <ClCompile Include="IBaseEngineAudioEngine.cpp" />
+    <ClCompile Include="ImGuiArchive.cpp" />
     <ClCompile Include="ImGuiAssetHelper.cpp" />
     <ClCompile Include="ImGuiVariantHelper.cpp" />
     <ClCompile Include="InputGlue.cpp" />
@@ -400,6 +401,7 @@
     <ClInclude Include="HierarchyContextMenu.h" />
     <ClInclude Include="HierarchyPanel.h" />
     <ClInclude Include="ILayer.h" />
+    <ClInclude Include="ImGuiArchive.h" />
     <ClInclude Include="ImGuiAssetHelper.h" />
     <ClInclude Include="ImGuiVariantHelper.h" />
     <ClInclude Include="InspectorPanel.h" />
@@ -579,12 +581,10 @@
     <ClInclude Include="RenderMof.h" />
     <ClInclude Include="SendManifold.h" />
     <ClInclude Include="Frozen.h" />
-    <ClInclude Include="ComponentServiceLocator.h" />
     <ClInclude Include="ShapeRenderComponent.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="SpriteAnimationClipFrozen.h" />
     <ClInclude Include="SpriteComponent.h" />
-    <ClInclude Include="StateMachine.h" />
     <ClInclude Include="StringFrozen.h" />
     <ClInclude Include="TextureMof.h" />
     <ClInclude Include="TupleHasElement.h" />

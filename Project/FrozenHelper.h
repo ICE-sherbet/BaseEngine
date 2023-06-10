@@ -8,6 +8,34 @@
 #pragma once
 #include <type_traits>
 namespace frozen {
+namespace detail {
+struct NameValuePairCore {};
+}  // namespace detail
+
+template <class T>
+class NameValuePair : detail::NameValuePairCore {
+ private:
+  using Type = std::conditional_t<
+      std::is_array_v<std::remove_reference_t<T>>, std::remove_cv_t<T>,
+      std::conditional_t<std::is_lvalue_reference_v<T>, T, std::decay_t<T>>>;
+
+  static_assert(!std::is_base_of_v<detail::NameValuePairCore, T>,
+                "ValueをNameValuePairCoreにして入れ子にすることは出来ない");
+
+  NameValuePair& operator=(NameValuePair const&) = delete;
+
+ public:
+  NameValuePair(char const* n, T&& v) : name(n), value(std::forward<T>(v)) {}
+
+  char const* name;
+  Type value;
+};
+
+template <class T>
+NameValuePair<T> make_name_value_pair(char const* name, T&& value) {
+  return NameValuePair<T>{name, std::forward<T>(value)};
+}
+
 using SizeType = uint64_t;
 
 template <class T>
@@ -46,7 +74,5 @@ SizeTag<T> make_size_tag(T&& size) {
 
 }  // namespace frozen
 template <class ArchiveType, class T>
-concept BinaryArchiveConcept = requires(ArchiveType& ar,
-                                        frozen::BinaryData<T> binary) {
-  ar(binary);
-};
+concept BinaryArchiveConcept =
+    requires(ArchiveType& ar, frozen::BinaryData<T> binary) { ar(binary); };

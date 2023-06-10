@@ -1,39 +1,9 @@
 Version: 1
 Scene: ""
 Entities:
-  - Entity: 1414931816280112919
-    TagComponent:
-      Tag: TestLog
-    HierarchyComponent:
-      Parent: 14536754888403409843
-      Children:
-        []
-    TransformComponent:
-      Rotation: {x: 0, y: -0, z: 0, w: 1}
-      Position: {x: -90, y: 360, z: 0}
-      Scale: {x: 1, y: 1, z: 1}
-    SpriteRendererComponent:
-      Sprite: 12630102728575510015
-      Color: {x: 1, y: 1, z: 1, w: 1}
-      Pivot: {x: 0, y: 0}
-  - Entity: 4121227715461785497
-    TagComponent:
-      Tag: TestLog
-    HierarchyComponent:
-      Parent: 14536754888403409843
-      Children:
-        []
-    TransformComponent:
-      Rotation: {x: 0, y: -0, z: 0, w: 1}
-      Position: {x: 620, y: 360, z: 0}
-      Scale: {x: 1, y: 1, z: 1}
-    SpriteRendererComponent:
-      Sprite: 12630102728575510015
-      Color: {x: 1, y: 1, z: 1, w: 1}
-      Pivot: {x: 0, y: 0}
   - Entity: 7840592607947910121
     TagComponent:
-      Tag: GameObject
+      Tag: Player
     HierarchyComponent:
       Parent: 0
       Children:
@@ -61,46 +31,24 @@ Entities:
       Name: Demo.DemoBehavior.Shooting.PlayerController
       Fields:
         speed_: 10
-        bullet_prefab_: 3044122888852536289
-  - Entity: 14536754888403409843
+        _shotInterval: 0.100000001
+        _shotIntervalCounter: 0
+        _bulletPrefab: 3044122888852536289
+  - Entity: 12917604403286553133
     TagComponent:
-      Tag: Player2
+      Tag: Spawner
     HierarchyComponent:
       Parent: 0
       Children:
-        - 1414931816280112919
-        - 16199543523697262429
-        - 4121227715461785497
-    TransformComponent:
-      Rotation: {x: 0, y: -0, z: 0, w: 1}
-      Position: {x: 500, y: 0, z: 0}
-      Scale: {x: 1, y: 1, z: 1}
-    SpriteRendererComponent:
-      Sprite: 12630102728575510015
-      Color: {x: 1, y: 1, z: 1, w: 1}
-      Pivot: {x: 0, y: 0}
-    RigidBodyComponent:
-      Restitution: 1
-      Mass: 1
-    BodyMaskComponent:
-      ShapeType: 1
-      BodyType: 1
-      BodyMask: 1
-      TargetMask: 1
-    CircleComponent:
-      Radius: 100
-  - Entity: 16199543523697262429
-    TagComponent:
-      Tag: TestLog
-    HierarchyComponent:
-      Parent: 14536754888403409843
-      Children:
         []
     TransformComponent:
-      Rotation: {x: 0, y: -0, z: 0, w: 1}
-      Position: {x: 350, y: 360, z: 0}
+      Rotation: {x: 0, y: 0, z: 0, w: 1}
+      Position: {x: 0, y: 0, z: 0}
       Scale: {x: 1, y: 1, z: 1}
-    SpriteRendererComponent:
-      Sprite: 12630102728575510015
-      Color: {x: 1, y: 1, z: 1, w: 1}
-      Pivot: {x: 0, y: 0}
+    ScriptComponent:
+      ClassHandle: 879384766
+      Name: Demo.DemoBehavior.Shooting.EnemySpawner
+      Fields:
+        _enemyPrefab: 9441174645906916149
+        _spawnInterval: 2
+        _spawnIntervalCounter: 0

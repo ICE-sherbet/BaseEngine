@@ -81,9 +81,6 @@
     <Filter Include="Constexpr\math">
       <UniqueIdentifier>{8ebd35c1-5c94-4baa-93c6-89af038d2595}</UniqueIdentifier>
     </Filter>
-    <Filter Include="StateMachine">
-      <UniqueIdentifier>{f45f9f4d-389b-43c3-af3d-a842d03c9cd8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="BaseEngine\physics">
       <UniqueIdentifier>{7d0e0f0a-d457-45f7-bcc8-4582254b85c7}</UniqueIdentifier>
     </Filter>
@@ -125,9 +122,6 @@
     </Filter>
     <Filter Include="BaseEngine\Component\CameraComponent">
       <UniqueIdentifier>{fd201564-2900-4d4c-9a23-975864afa56a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Utilities\ServiceLocator">
-      <UniqueIdentifier>{f7539243-6c2d-4216-b606-0692bbc690e6}</UniqueIdentifier>
     </Filter>
     <Filter Include="BaseEngine\Object">
       <UniqueIdentifier>{09b45f67-41f2-4ddd-b5cc-2f1fe9c775a2}</UniqueIdentifier>
@@ -1026,6 +1020,9 @@
     <ClCompile Include="Prefab.cpp">
       <Filter>BaseEngine\Scene\Entity</Filter>
     </ClCompile>
+    <ClCompile Include="ImGuiArchive.cpp">
+      <Filter>BaseEngine\Editor\ImGui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameApp.h">
@@ -1115,9 +1112,6 @@
     <ClInclude Include="Pow.h">
       <Filter>Constexpr\math</Filter>
     </ClInclude>
-    <ClInclude Include="StateMachine.h">
-      <Filter>StateMachine</Filter>
-    </ClInclude>
     <ClInclude Include="VectorUtilities.h">
       <Filter>BaseEngine\Math\Vector</Filter>
     </ClInclude>
@@ -1177,9 +1171,6 @@
     </ClInclude>
     <ClInclude Include="CameraComponent.h">
       <Filter>BaseEngine\Component\CameraComponent</Filter>
-    </ClInclude>
-    <ClInclude Include="ComponentServiceLocator.h">
-      <Filter>Utilities\ServiceLocator</Filter>
     </ClInclude>
     <ClInclude Include="Object.h">
       <Filter>BaseEngine\Object</Filter>
@@ -1993,6 +1984,9 @@
     </ClInclude>
     <ClInclude Include="PrefabComponent.h">
       <Filter>BaseEngine\DataComponents\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGuiArchive.h">
+      <Filter>BaseEngine\Editor\ImGui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

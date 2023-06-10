@@ -40,12 +40,13 @@ public:
   }
 
  private:
+  //TODO 物理解決を実装する
   void AddTaskImpl(const becs::Entity body_a, const becs::Entity body_b,
                    float penetration, Vector2 normal, Vector2 point) {
     auto& registry = scene_->GetRegistry();
-    const auto entity = registry.create();
-    registry.emplace<SolveContact<TagA, TagB>>(entity, body_a, body_b,
-                                               penetration, normal, point);
+    //const auto entity = registry.create();
+    //registry.emplace<SolveContact<TagA, TagB>>(entity, body_a, body_b,
+    //                                           penetration, normal, point);
   }
 
   Ref<Scene> scene_;

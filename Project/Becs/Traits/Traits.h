@@ -187,9 +187,7 @@ class basic_BecsTraits {
 };
 template <typename Type>
 struct BecsTraits : basic_BecsTraits<internal::BecsTraits<Type>> {
-  /*! @brief Base type. */
   using base_type = basic_BecsTraits<internal::BecsTraits<Type>>;
-  /*! @brief Page size, default is `ENTT_SPARSE_PAGE`. */
   static constexpr std::size_t page_size = 32;
 };
 

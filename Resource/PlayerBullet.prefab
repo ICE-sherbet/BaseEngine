@@ -1,5 +1,5 @@
 Prefab:
-  - Entity: 1837854286210720626
+  - Entity: 1051357182443281697
     TagComponent:
       Tag: PlayerBullet
     HierarchyComponent:
@@ -7,7 +7,7 @@ Prefab:
       Children:
         []
     TransformComponent:
-      Rotation: {x: 0, y: 0, z: 0, w: 1}
+      Rotation: {x: 0, y: -0, z: 0, w: 1}
       Position: {x: 0, y: 0, z: 0}
       Scale: {x: 1, y: 1, z: 1}
     SpriteRendererComponent:
@@ -27,3 +27,5 @@ Prefab:
     ScriptComponent:
       ClassHandle: 1391968702
       Name: Demo.DemoBehavior.Shooting.BulletController
+      Fields:
+        _angle: -1.55999994

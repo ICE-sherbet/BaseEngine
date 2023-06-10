@@ -38,21 +38,10 @@ ObjectEntity Prefab::CreatePrefabFromEntity(ObjectEntity entity) {
   ObjectEntity new_entity = scene_->CreateEntity();
   new_entity.AddComponent<PrefabComponent>(
       handle_, new_entity.GetComponent<IdComponent>().uuid);
-  auto CopyComponentIfExistsFunc = [&entity, &new_entity,
-                                    this]<typename Component>() {
-    CopyComponentIfExists<Component>(new_entity, scene_->GetRegistry(), entity,
-                                     entity.GetScene()->GetRegistry());
-  };
-  
-  CopyComponentIfExistsFunc.operator()<TagComponent>();
-  CopyComponentIfExistsFunc.operator()<TransformComponent>();
-  CopyComponentIfExistsFunc.operator()<ScriptComponent>();
-  CopyComponentIfExistsFunc.operator()<SpriteRendererComponent>();
-  CopyComponentIfExistsFunc.operator()<physics::RigidBodyComponent>();
-  CopyComponentIfExistsFunc.operator()<physics::VelocityComponent>();
-  CopyComponentIfExistsFunc.operator()<physics::BodyMask>();
-  CopyComponentIfExistsFunc.operator()<physics::Circle>();
-  CopyComponentIfExistsFunc.operator()<physics::BoundingBox>();
+
+  entity.GetScene()->GetRegistry().copy_to<IdComponent, PrefabComponent>(
+      entity, scene_->GetRegistry(), new_entity);
+
   for (const auto child_id : entity.Children()) {
     ObjectEntity child_duplicate =
         CreatePrefabFromEntity(entity.GetScene()->GetEntityWithUUID(child_id));

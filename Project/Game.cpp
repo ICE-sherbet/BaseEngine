@@ -115,10 +115,12 @@ void Game::Update() {
   b_collision->Collide();
   scene_->OnUpdate(Mof::CUtilities::GetFrameSecond());
 
-  if (g_pInput->IsKeyPush(MOFKEY_B)) {
-    g_pGraphics->SetScreenMode(false);
-  }
-
+  // if (g_pInput->IsKeyPush(MOFKEY_B)) {
+  //   g_pGraphics->SetScreenMode(false);
+  // }
+  // if (g_pInput->IsKeyPush(MOFKEY_V)) {
+  //   g_pGraphics->SetScreenMode(true);
+  // }
   if (g_pInput->IsKeyPush(MOFKEY_P) && g_pInput->IsKeyHold(MOFKEY_LCONTROL)) {
     SceneSerializer serializer(scene_);
     serializer.Serialize("Test.bscene");
@@ -127,9 +129,7 @@ void Game::Update() {
     SceneSerializer serializer(scene_);
     serializer.Deserialize("Test.bscene");
   }
-  if (g_pInput->IsKeyPush(MOFKEY_V)) {
-    g_pGraphics->SetScreenMode(true);
-  }
+  
 }
 
 void Game::Shutdown() { Clear(); }

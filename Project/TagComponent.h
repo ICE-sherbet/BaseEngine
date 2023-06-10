@@ -14,17 +14,10 @@ struct TagComponent {
 
   TagComponent() = default;
   TagComponent(const TagComponent& other) = default;
-  TagComponent(TagComponent&& other) noexcept : tag(std::move(other.tag)) {}
 
   TagComponent& operator=(const TagComponent& other) {
     if (this == &other) return *this;
     tag = other.tag;
-    return *this;
-  }
-
-  TagComponent& operator=(TagComponent&& other) noexcept {
-    if (this == &other) return *this;
-    tag = std::move(other.tag);
     return *this;
   }
 

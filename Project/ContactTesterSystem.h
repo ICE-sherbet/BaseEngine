@@ -45,8 +45,10 @@ class ContactTesterSystem
     const auto tag_a = possible_contact.tag_a;
     const auto tag_b = possible_contact.tag_b;
     auto& registry = this->GetScene()->GetRegistry();
-    registry.template emplace<OnCollisionEnterTag>(possible_contact.body_a);
-    registry.template emplace<OnCollisionEnterTag>(possible_contact.body_b);
+    registry.template emplace<OnCollisionEnterTag>(possible_contact.body_a,
+                                                   possible_contact.body_b);
+    registry.template emplace<OnCollisionEnterTag>(possible_contact.body_b,
+                                                   possible_contact.body_a);
     (*solver_table_)[tag_a][tag_b]->AddTask(possible_contact.body_a,
                                             possible_contact.body_b, tag_a,
                                             tag_b, penetration, normal, point);

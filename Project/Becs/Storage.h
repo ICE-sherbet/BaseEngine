@@ -330,6 +330,15 @@ class basic_storage
     swap(element_at(lhs), element_at(rhs));
   }
 
+  void copy(Entity src_entity, std::shared_ptr<basic_sparse_set<>>& dst,
+            Entity dst_entity) const override
+  {
+    if (!dst) {
+      dst = std::make_shared<basic_storage<Type>>();
+    }
+    dst->try_emplace(dst_entity, false, try_get(src_entity));
+  }
+
  private:
   void swap_or_move([[maybe_unused]] const std::size_t from,
                     [[maybe_unused]] const std::size_t to) override {}
@@ -495,6 +504,16 @@ class basic_storage
 
   [[nodiscard]] value_type &get(const entity_type elem) noexcept {
     return const_cast<value_type &>(std::as_const(*this).get(elem));
+  }
+  [[nodiscard]] const void *try_get(
+      const entity_type elem) const noexcept override {
+    if (!base_type::contains(elem)) return nullptr;
+    return static_cast<void *>(
+        std::addressof(element_at(base_type::index(elem))));
+  }
+
+  [[nodiscard]] void *try_get(const entity_type elem) noexcept override {
+    return const_cast<void *>(std::as_const(*this).try_get(elem));
   }
 
   [[nodiscard]] std::tuple<const value_type &> get_as_tuple(

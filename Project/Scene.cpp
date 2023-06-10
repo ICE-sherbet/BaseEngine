@@ -71,44 +71,22 @@ ObjectEntity Scene::CreateEntityWithUUID(UUID uuid, const std::string& name) {
   object_entity_map_[uuid] = entity;
   return entity;
 }
-template <typename TComponent>
-void CopyComponentIfExists(becs::Entity dst, becs::registry& dst_registry,
-                           const becs::Entity src,
-                           becs::registry& src_registry) {
-  if (src_registry.any_of<TComponent>(src)) {
-    auto src_component = src_registry.get<TComponent>(src);
-    dst_registry.emplace_or_replace<TComponent>(dst, src_component);
-  }
-}
+
 ObjectEntity Scene::CreatePrefabEntity(ObjectEntity entity, ObjectEntity parent,
                                        const Vector3* translation,
                                        const Vector3* rotation,
                                        const Vector3* scale) {
   ObjectEntity new_entity = CreateEntity();
-  auto CopyComponentIfExistsFunc = [&entity, &new_entity,
-                                    this]<typename Component>() {
-    CopyComponentIfExists<Component>(new_entity, registry_, entity,
-                                     entity.GetScene()->GetRegistry());
-  };
-  auto t = entity.Children();
-  CopyComponentIfExistsFunc.operator()<TagComponent>();
-  CopyComponentIfExistsFunc.operator()<PrefabComponent>();
-  CopyComponentIfExistsFunc.operator()<HierarchyComponent>();
-  CopyComponentIfExistsFunc.operator()<TransformComponent>();
-  CopyComponentIfExistsFunc.operator()<ScriptComponent>();
-  CopyComponentIfExistsFunc.operator()<SpriteRendererComponent>();
-  CopyComponentIfExistsFunc.operator()<physics::RigidBodyComponent>();
-  CopyComponentIfExistsFunc.operator()<physics::VelocityComponent>();
-  CopyComponentIfExistsFunc.operator()<physics::BodyMask>();
-  CopyComponentIfExistsFunc.operator()<physics::Circle>();
-  CopyComponentIfExistsFunc.operator()<physics::BoundingBox>();
+
+  entity.GetScene()->GetRegistry().copy_to<IdComponent>(entity, registry_,
+                                                        new_entity);
+
   auto&& transform = new_entity.GetComponent<TransformComponent>();
   transform.SetChildren(std::vector<UUID>{});
   transform.SetScene(this);
   new_entity.Children().clear();
   if (parent) {
     transform.SetParent(new_entity.GetUUID());
-
     new_entity.SetParent(parent);
   }
 
@@ -332,10 +310,7 @@ void Scene::PhysicsUpdate() {
 void Scene::OnUpdate(const float time) {
   PhysicsUpdate();
   ScriptOnUpdate(time);
-
-  for (auto view : registry_.view<TransformComponent>()) {
-    //    InternalGetWorldSpaceTransformMatrix({view, this});
-  }
+  CSharpScriptEngine::GetInstance()->InitializeRuntimeDuplicatedEntities();
 }
 
 void Scene::OnUpdateRuntime(float time) {}
@@ -347,10 +322,12 @@ void Scene::OnRenderRuntime(float time) {}
 void Scene::OnRenderEditor(float time) {}
 
 void Scene::OnRuntimeStart() {
+  is_playing_ = true;
   CSharpScriptEngine::GetInstance()->InitializeRuntime();
 }
 
 void Scene::OnRuntimeStop() {
+  is_playing_ = false;
   CSharpScriptEngine::GetInstance()->ShutdownRuntime();
 }
 

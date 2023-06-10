@@ -256,6 +256,11 @@ class basic_sparse_set {
     packed.clear();
   }
 
+  virtual void copy(Entity src_entity, std::shared_ptr<basic_sparse_set<>>& dst,
+                    Entity dst_entity) const
+  {
+  }
+
   /**
    * \brief Entity を SparseSet に割り当てます。
    * \param ent 有効な識別子
@@ -279,6 +284,11 @@ class basic_sparse_set {
       return --(end() - pos);
     }
   }
+  virtual const void *try_get(const Entity elem) const noexcept {
+    return nullptr;
+  }
+
+  virtual void *try_get(const Entity elem) noexcept { return nullptr; }
 
   /**
    * \brief 指定の場所で２つの要素を入れ替える.
@@ -481,8 +491,12 @@ class basic_sparse_set {
   [[nodiscard]] bool contains(const entity_type elem) const noexcept {
     const auto elem_p = sparse_ptr(elem);
     constexpr auto cap = traits_type::to_entity(null);
-    return elem_p && (((~cap & traits_type::to_integral(elem)) ^
-                       traits_type::to_integral(*elem_p)) < cap);
+    constexpr auto cap_i = ~cap;
+    auto elem_integral = traits_type::to_integral(elem);
+    auto elem_p_integral = elem_p ? traits_type::to_integral(*elem_p) : 0;
+    auto and_cap = cap_i & elem_integral;
+    auto xor_cap = (and_cap) ^ elem_p_integral;
+    return elem_p && ((xor_cap) < cap);
   }
 
   /**

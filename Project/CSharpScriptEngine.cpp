@@ -60,7 +60,6 @@ void CSharpScriptEngine::LoadMonoAssembly() {
   mono_state_.core_assembly_info_->AssemblyImage =
       mono_image_open_full(kCoreMonoAssemblyPath, &status, 0);
 
-
   mono_state_.core_assembly_info_->Assembly = mono_assembly_load_from_full(
       mono_state_.core_assembly_info_->AssemblyImage, kCoreMonoAssemblyPath,
       &status, 0);
@@ -86,6 +85,8 @@ void CSharpScriptEngine::ShutdownRuntime() {
 
   scene_state_.script_instances.clear();
   MonoGCManager::CollectGarbage(false);
+  while (!scene_state_.runtime_duplicated_script_entities.empty())
+    scene_state_.runtime_duplicated_script_entities.pop();
 }
 
 void CSharpScriptEngine::ShutdownRuntimeScriptEntity(ObjectEntity entity) {
@@ -96,7 +97,7 @@ void CSharpScriptEngine::ShutdownRuntimeScriptEntity(ObjectEntity entity) {
   for (auto field_id : script_component.field_ids) {
     Ref<IFieldStorage> field_storage =
         scene_state_.field_map[entity.GetUUID()][field_id];
-    field_storage->SetRuntimeInstance(nullptr);
+    if (field_storage) field_storage->SetRuntimeInstance(nullptr);
   }
   MonoGCManager::ReleaseObjectReference(script_component.managed_instance);
   script_component.managed_instance = nullptr;
@@ -198,6 +199,24 @@ void CSharpScriptEngine::DuplicateScriptInstance(ObjectEntity entity,
     scene_state_.field_map[target_entity_id][field_id]->SetValueVariant(
         scene_state_.field_map[src_entity_id][field_id]->GetValueVariant());
   }
+  if (scene_state_.scene_context && scene_state_.scene_context->IsPlaying()) {
+    // scene_state_.runtime_duplicated_script_entities.push(target_entity);
+    RuntimeInitializeScriptEntity(target_entity);
+  }
+}
+
+void CSharpScriptEngine::InitializeRuntimeDuplicatedEntities() {
+  while (!scene_state_.runtime_duplicated_script_entities.empty()) {
+    const auto& entity = scene_state_.runtime_duplicated_script_entities.top();
+
+    if (!entity) {
+      scene_state_.runtime_duplicated_script_entities.pop();
+      continue;
+    }
+
+    RuntimeInitializeScriptEntity(entity);
+    scene_state_.runtime_duplicated_script_entities.pop();
+  }
 }
 
 void CSharpScriptEngine::ShutdownScriptEntity(ObjectEntity entity, bool erase) {
@@ -233,7 +252,8 @@ void CSharpScriptEngine::InitMono() {
 
   mono_state_.root_domain_ = mono_jit_init("BaseEngine_ScriptCore");
   std::string domain_name = "BE_Runtime";
-  mono_state_.domain_ = mono_domain_create_appdomain(domain_name.data(), nullptr);
+  mono_state_.domain_ =
+      mono_domain_create_appdomain(domain_name.data(), nullptr);
   mono_domain_set(mono_state_.domain_, true);
   mono_domain_set_config(mono_state_.domain_, ".", "");
   LoadMonoAssembly();
