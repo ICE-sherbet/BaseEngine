@@ -134,6 +134,8 @@
     <ClCompile Include="AssetImporter.cpp" />
     <ClCompile Include="AssetManager.cpp" />
     <ClCompile Include="AssetRegistry.cpp" />
+    <ClCompile Include="AssetsBrowserItems.cpp" />
+    <ClCompile Include="AssetsBrowserPanel.cpp" />
     <ClCompile Include="Audio.cpp" />
     <ClCompile Include="AudioGlue.cpp" />
     <ClCompile Include="BaseEngineCollision.cpp" />
@@ -347,6 +349,8 @@
     <ClInclude Include="AssetManager.h" />
     <ClInclude Include="AssetMetadata.h" />
     <ClInclude Include="AssetRegistry.h" />
+    <ClInclude Include="AssetsBrowserItems.h" />
+    <ClInclude Include="AssetsBrowserPanel.h" />
     <ClInclude Include="AssetSerializer.h" />
     <ClInclude Include="AssetTypes.h" />
     <ClInclude Include="Audio.h" />

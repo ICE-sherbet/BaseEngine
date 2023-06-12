@@ -484,6 +484,9 @@
     <Filter Include="BaseEngine\Editor\Panel\ConsolePanel">
       <UniqueIdentifier>{24384981-c4b0-434e-904c-1151cffa4e74}</UniqueIdentifier>
     </Filter>
+    <Filter Include="BaseEngine\Editor\Panel\AssetsBrowser">
+      <UniqueIdentifier>{3f8a4c6f-0cdb-4433-a35a-71033f077fb3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -1022,6 +1025,12 @@
     </ClCompile>
     <ClCompile Include="ImGuiArchive.cpp">
       <Filter>BaseEngine\Editor\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="AssetsBrowserPanel.cpp">
+      <Filter>BaseEngine\Editor\Panel\AssetsBrowser</Filter>
+    </ClCompile>
+    <ClCompile Include="AssetsBrowserItems.cpp">
+      <Filter>BaseEngine\Editor\Panel\AssetsBrowser</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1987,6 +1996,12 @@
     </ClInclude>
     <ClInclude Include="ImGuiArchive.h">
       <Filter>BaseEngine\Editor\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="AssetsBrowserPanel.h">
+      <Filter>BaseEngine\Editor\Panel\AssetsBrowser</Filter>
+    </ClInclude>
+    <ClInclude Include="AssetsBrowserItems.h">
+      <Filter>BaseEngine\Editor\Panel\AssetsBrowser</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

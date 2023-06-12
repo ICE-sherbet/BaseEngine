@@ -4,12 +4,14 @@
 #include "imgui.h"
 #include "InspectorPanel.h"
 #include "ToolbarPanel.h"
+#include "AssetsBrowserPanel.h"
 
 namespace base_engine::editor {
 void EditorPanelManager::Initialize() {
   panels_.emplace_back(std::make_shared<HierarchyPanel>());
   panels_.emplace_back(std::make_shared<InspectorPanel>());
   panels_.emplace_back(std::make_shared<ToolbarPanel>(this));
+  panels_.emplace_back(std::make_shared<AssetsBrowserPanel>());
 
   for (const auto& editor_panel : panels_) {
     editor_panel->Initialize(scene_context_);
