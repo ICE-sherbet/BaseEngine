@@ -15,6 +15,7 @@ class Texture : public Asset {
   virtual AssetType GetAssetType() const override {
     return AssetType::kTexture;
   }
+  virtual void* GetTexture() = 0;
 };
 class TextureUtility {
  public:

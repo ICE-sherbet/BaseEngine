@@ -155,7 +155,8 @@ class Log {
 #define BE_CORE_ERROR(...)                                                \
   ::base_engine::Log::PrintMessage(::base_engine::Log::Type::kCore,       \
                                    ::base_engine::Log::Level::kError, "", \
-                                   __VA_ARGS__)
+                                   __VA_ARGS__);                          \
+                                   __debugbreak();
 #define BE_CORE_FATAL(...)                                                \
   ::base_engine::Log::PrintMessage(::base_engine::Log::Type::kCore,       \
                                    ::base_engine::Log::Level::kFatal, "", \

@@ -56,7 +56,7 @@ void HierarchyPanel::DrawEntityNode(const ObjectEntity& entity) {
   const bool right_clicked = ImGui::IsItemClicked(ImGuiMouseButton_Right);
 
   if (left_clicked) {
-    SelectManager::Instance()->SelectItem(id);
+    SelectManager::Instance()->SelectItem("HierarchyPanel", id);
   }
 
   if (opened) {

@@ -9,12 +9,15 @@ SelectManager* SelectManager::Instance() {
   return instance_;
 }
 
-void SelectManager::SelectItem(const UUID item) {
+void SelectManager::SelectItem(const std::string& context, const UUID item) {
   EmitSignal("SelectItem", static_cast<uint64_t>(item));
-  select_item_ = item;
+  select_map_[context] = item;
 }
 
-UUID SelectManager::GetSelectItem() const { return select_item_; }
+UUID SelectManager::GetSelectItem(const std::string& context) const {
+  if (!select_map_.contains(context)) return kNullUuid;
+  return select_map_.at(context);
+}
 
 SelectManager* SelectManager::instance_ = nullptr;
 }  // namespace base_engine::editor

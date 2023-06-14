@@ -37,7 +37,6 @@ void InspectorPanel::RenderProperties() {
   ObjectEntity object = scene_context_->TryGetEntityWithUUID(select_item_);
   if (!object) return;
   if (!object.HasComponent<component::TagComponent>()) {
-    SelectManager::Instance()->SelectItem(0);
     return;
   }
   ImGui::BeginGroup();

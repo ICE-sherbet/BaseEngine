@@ -17,10 +17,8 @@ class MofTexture final : public Texture {
     texture_ = new Mof::CTexture;
     texture_->Load(path.c_str());
   }
-  ~MofTexture() override
-  {
-  	texture_->Release();
-  }
+  void* GetTexture() override { return texture_->GetTexture(); }
+  ~MofTexture() override { texture_->Release(); }
   Mof::LPTexture texture_;
 };
 }  // namespace base_engine

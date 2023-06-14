@@ -58,10 +58,11 @@ bool Game::Initialize() {
   object.EmitSignal("Plus-method", 2);
   object.EmitSignal("Test-method", "test", 0.1f, 1);
   scene_ = Ref<Scene>::Create("Sample");
-  editor_layer_ = std::make_unique<editor::EditorLayer>(this);
-  editor_layer_->Initialize(scene_);
   BASE_ENGINE(Render)->Initialize();
   BASE_ENGINE(AssetManager)->Initialize();
+
+  editor_layer_ = std::make_unique<editor::EditorLayer>(this);
+  editor_layer_->Initialize(scene_);
 
   actors_.reserve(1024);
   BASE_ENGINE(Collider)->SetCallBack(this);
@@ -129,7 +130,6 @@ void Game::Update() {
     SceneSerializer serializer(scene_);
     serializer.Deserialize("Test.bscene");
   }
-  
 }
 
 void Game::Shutdown() { Clear(); }
@@ -294,7 +294,7 @@ void Game::SetNextFrameEvent(const std::function<void()>& event) {
   next_frame_event_.emplace_back(event);
 }
 
-void Game::Render(){
+void Game::Render() {
   BE_PROFILE_FUNC("GameRender");
   BASE_ENGINE(Render)->Begin();
   scene_->OnRender(0);

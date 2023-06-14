@@ -1,5 +1,6 @@
 ﻿#include "EditorLayer.h"
 
+#include "EditorTextureResource.h"
 #include "SetupEditorImGui.h"
 #include "imgui.h"
 
@@ -26,5 +27,9 @@ void EditorLayer::SetSceneContext(const Ref<Scene>& scene) {
   panel_manager_->SetSceneContext(scene);
 }
 
-EditorLayer::~EditorLayer() { SetupEditorImGui::Cleanup(); }
+EditorLayer::~EditorLayer()
+{
+	SetupEditorImGui::Cleanup();
+  ThemeDB::Destroy();
+}
 }  // namespace base_engine::editor

@@ -1032,6 +1032,12 @@
     <ClCompile Include="AssetsBrowserItems.cpp">
       <Filter>BaseEngine\Editor\Panel\AssetsBrowser</Filter>
     </ClCompile>
+    <ClCompile Include="EditorTextureResource.cpp">
+      <Filter>BaseEngine\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="AssetsBrowserSetting.cpp">
+      <Filter>BaseEngine\Editor\Panel\AssetsBrowser</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameApp.h">
@@ -2001,6 +2007,12 @@
       <Filter>BaseEngine\Editor\Panel\AssetsBrowser</Filter>
     </ClInclude>
     <ClInclude Include="AssetsBrowserItems.h">
+      <Filter>BaseEngine\Editor\Panel\AssetsBrowser</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorTextureResource.h">
+      <Filter>BaseEngine\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="AssetsBrowserSetting.h">
       <Filter>BaseEngine\Editor\Panel\AssetsBrowser</Filter>
     </ClInclude>
   </ItemGroup>
