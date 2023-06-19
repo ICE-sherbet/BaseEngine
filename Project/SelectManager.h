@@ -19,6 +19,7 @@ class SelectManager : public ConnectableObject {
   void SelectItem(const std::string& context, UUID item);
 
   [[nodiscard]] UUID GetSelectItem(const std::string& context) const;
+  [[nodiscard]] bool IsSelectItem(const std::string& context, UUID item) const;
 
  private:
   using SelectAssetContextMap = std::unordered_map<std::string, UUID>;

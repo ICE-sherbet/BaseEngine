@@ -14,7 +14,7 @@ class InspectorPanel : public EditorPanel {
   void OnImGuiRender() override;
   void Initialize(const Ref<Scene>& context) override;
   void SetSceneContext(const Ref<Scene>& context) override;
-  void PickItem(uint64_t item);
+  void PickItem(const std::string& context,uint64_t item);
 
  private:
 

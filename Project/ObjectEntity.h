@@ -34,7 +34,7 @@ class ObjectEntity {
   T& AddComponent(Args&&... args) const {
     BE_CORE_ASSERT(!HasComponent<T>(), "Entity already has component!");
     if (HasComponent<T>()) {
-      int n = 3;
+      __debugbreak();
     }
     return scene_->registry_.emplace<T>(entity_handle_,
                                         std::forward<Args>(args)...);

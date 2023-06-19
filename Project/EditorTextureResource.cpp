@@ -23,8 +23,13 @@ void EditorTextureResource::Initialize() {
                          const std::filesystem::path& relative_path) {
     icon_map_[key] = LoadTexture(relative_path);
   };
+
+
   IconLoad("DefaultFolder", "DefaultFolder.png");
   IconLoad("DefaultAssetItem", "DefaultAssetItem.png");
+  IconLoad("BackIcon", "BackArrow.png");
+  IconLoad("ForwardIcon", "ForwardArrow.png");
+
 }
 
 Ref<Texture> EditorTextureResource::GetIcon(const std::string& name) {

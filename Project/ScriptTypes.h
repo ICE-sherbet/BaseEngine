@@ -80,6 +80,7 @@ class Variant {
   explicit Variant(uint64_t value);
   explicit Variant(float value);
   explicit Variant(double value);
+  explicit Variant(const char* value);
   explicit Variant(const std::string& value);
   explicit Variant(AssetHandle value);
 

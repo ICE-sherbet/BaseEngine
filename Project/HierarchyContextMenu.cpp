@@ -84,14 +84,18 @@ void HierarchyContextMenu::BuildRoot() {
                         ImGui::PopID();
                       }});
   menu_items_.emplace(
-      "Prefab Asset", ItemEvents{[this] {
-        auto entity = scene_->TryGetEntityWithUUID(target_object_);
-        const auto name = entity.GetComponent<component::TagComponent>().tag;
-        auto prefab =
-            AssetManager::GetEditorAssetManager()->CreateNewAsset<Prefab>(
-                name + ".prefab", "");
-        prefab->Create(entity);
-      }});
+      "Prefab Asset",
+      ItemEvents{
+          [this] {
+            auto entity = scene_->TryGetEntityWithUUID(target_object_);
+            const auto name =
+                entity.GetComponent<component::TagComponent>().tag;
+            auto prefab =
+                AssetManager::GetEditorAssetManager()->CreateNewAsset<Prefab>(
+                    name + ".prefab", "");
+            prefab->Create(entity);
+          },
+          [this] { return !scene_->TryGetEntityWithUUID(target_object_); }});
 }
 
 void HierarchyContextMenu::SetTargetObject(const Ref<Scene>& scene,

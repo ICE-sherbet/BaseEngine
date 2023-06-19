@@ -26,6 +26,10 @@ class AssetsBrowserPanel : public EditorPanel {
                                const Ref<DirectoryInfo>& parent);
 
   void ChangeDirectory(Ref<DirectoryInfo>& directory);
+
+  void RenderTopBar();
+  void RenderCurrentDirectoryContent();
+
   struct BrowserPanelTheme;
   std::unique_ptr<BrowserPanelTheme> theme_;
 

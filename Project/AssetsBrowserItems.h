@@ -26,30 +26,30 @@ struct DirectoryInfo : public RefCounted {
   SubDirectoryMap sub_directories;
 };
 
-enum class ContentBrowserAction { kNone = 0, kSelect = 1 };
-struct ContentBrowserItemActionResult {
+enum class AssetsBrowserAction { kNone = 0, kSelect = 1, kActivated = 2 };
+struct AssetsBrowserItemActionResult {
   uint16_t field = 0;
 
-  void Set(ContentBrowserAction flag, bool value) {
+  void Set(AssetsBrowserAction flag, bool value) {
     if (value)
       field |= static_cast<uint16_t>(flag);
     else
       field &= ~static_cast<uint16_t>(flag);
   }
 
-  [[nodiscard]] bool IsSet(ContentBrowserAction flag) const {
+  [[nodiscard]] bool IsSet(AssetsBrowserAction flag) const {
     return static_cast<uint16_t>(flag) & field;
   }
 };
 
-class ContentBrowserItem : public RefCounted {
-  using ItemActionResult = ContentBrowserItemActionResult;
+class AssetsBrowserItem : public RefCounted {
+  using ItemActionResult = AssetsBrowserItemActionResult;
 
  public:
   enum class ItemType : uint16_t { kNone, kDirectory, kAsset };
 
-  ContentBrowserItem(ItemType type, const AssetHandle& handle,
-                     const std::string& name, const Ref<Texture>& icon);
+  AssetsBrowserItem(ItemType type, const AssetHandle& handle,
+                    const std::string& name, const Ref<Texture>& icon);
 
   void OnRenderBegin();
   ItemActionResult OnRender();
@@ -72,21 +72,18 @@ class ContentBrowserItem : public RefCounted {
   bool just_selected_ = false;
 };
 
-class ContentBrowserDirectory final : public ContentBrowserItem {
+class AssetsBrowserDirectory final : public AssetsBrowserItem {
  public:
-	explicit ContentBrowserDirectory(const Ref<DirectoryInfo>& directory_info);
-  ~ContentBrowserDirectory() = default;
+  explicit AssetsBrowserDirectory(const Ref<DirectoryInfo>& directory_info);
 
   Ref<DirectoryInfo>& GetDirectoryInfo() { return directory_info_; }
 
  private:
   Ref<DirectoryInfo> directory_info_;
 };
-class ContentBrowserAsset : public ContentBrowserItem {
+class AssetsBrowserAsset : public AssetsBrowserItem {
  public:
-  ContentBrowserAsset(const AssetMetadata& asset_info,
-                      const Ref<Texture>& icon);
-  virtual ~ContentBrowserAsset();
+  AssetsBrowserAsset(const AssetMetadata& asset_info, const Ref<Texture>& icon);
 
   const AssetMetadata& GetAssetInfo() const { return asset_info_; }
 
@@ -97,17 +94,17 @@ class ContentBrowserItemList {
   static constexpr size_t kInvalidItem = std::numeric_limits<size_t>::max();
 
  public:
-  using ItemList = std::vector<Ref<ContentBrowserItem>>;
+  using ItemList = std::vector<Ref<AssetsBrowserItem>>;
 
   ItemList::iterator begin() { return items_.begin(); }
   ItemList::iterator end() { return items_.end(); }
   ItemList::const_iterator begin() const { return items_.begin(); }
   ItemList::const_iterator end() const { return items_.end(); }
 
-  Ref<ContentBrowserItem>& operator[](const size_t index) {
+  Ref<AssetsBrowserItem>& operator[](const size_t index) {
     return items_[index];
   }
-  const Ref<ContentBrowserItem>& operator[](const size_t index) const {
+  const Ref<AssetsBrowserItem>& operator[](const size_t index) const {
     return items_[index];
   }
 

@@ -6,6 +6,7 @@
 // @details
 
 #pragma once
+#include <algorithm>
 #include <vector>
 
 #include "Algorithm.h"
@@ -18,7 +19,6 @@
 #include "TypeInfo.h"
 #include "TypeTraits.h"
 #include "View.h"
-#include <algorithm>
 
 namespace becs {
 
@@ -182,7 +182,7 @@ template <typename Lhs, typename Rhs>
  */
 template <typename Entity, typename Allocator>
 class BasicRegistry {
-public:
+ public:
   using basic_common_type = basic_sparse_set<Entity, Allocator>;
 
   using alloc_traits = std::allocator_traits<Allocator>;
@@ -304,6 +304,9 @@ public:
                   "Non-decayed types not allowed");
 
     if (const auto it = pools.find(id); it != pools.cend()) {
+      if (!it->second) {
+        __debugbreak();
+      }
       return static_cast<const storage_for_type<Type> &>(*it->second);
     }
 
@@ -949,12 +952,11 @@ public:
    * \param dst_entity コピー先のEntity
    */
   template <typename... Exclude>
-  void copy_to(Entity src_entity,
-                              BasicRegistry &dst, Entity dst_entity) {
+  void copy_to(Entity src_entity, BasicRegistry &dst, Entity dst_entity) {
     constexpr std::array<uint32_t, sizeof...(Exclude)> exclude_args = {
         type_hash<Exclude>::value()...};
 
-  	auto &dst_pool = dst.pools;
+    auto &dst_pool = dst.pools;
     for (auto &&[id, entity_map] : storage()) {
       bool skip = false;
       for (auto exclude : exclude_args) {
@@ -962,11 +964,9 @@ public:
       }
       if (skip) continue;
       auto &storage = entity_map;
-      auto &dst_storage = dst_pool[id];
+      auto &&dst_storage = dst_pool[id];
 
-      if (storage.contains(src_entity)) {
-        storage.copy(src_entity, dst_storage, dst_entity);
-      }
+      storage.copy(src_entity, dst_storage, dst_entity);
     }
   }
 

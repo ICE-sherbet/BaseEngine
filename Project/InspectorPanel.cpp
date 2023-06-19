@@ -180,7 +180,6 @@ void InspectorPanel::RenderScript(ObjectEntity& object) {
           Variant variant = storage->GetValueVariant();
           if (ImGuiHelper::VariantField(field->field_info.name, &variant))
             storage->SetValueVariant(variant);
-
         }
       }
     }
@@ -242,5 +241,8 @@ void InspectorPanel::SetSceneContext(const Ref<Scene>& context) {
   scene_context_ = context;
 }
 
-void InspectorPanel::PickItem(uint64_t item) { select_item_ = item; }
+void InspectorPanel::PickItem(const std::string& context, const uint64_t item) {
+  if (context != "HierarchyPanel") return;
+  select_item_ = item;
+}
 }  // namespace base_engine::editor

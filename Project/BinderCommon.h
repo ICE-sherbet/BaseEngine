@@ -23,17 +23,30 @@ template <class T>
 struct VariantCaster {
   static T cast(const Variant &p_variant) {
     using TStripped = std::remove_pointer_t<T>;
-    return static_cast<T>(p_variant);
+    return static_cast<TStripped>(p_variant);
   }
 };
-
+template <class T>
+struct VariantCaster<T &> {
+  static T cast(const Variant &p_variant) {
+    using TStripped = std::remove_pointer_t<T>;
+    return static_cast<TStripped>(p_variant);
+  }
+};
+template <class T>
+struct VariantCaster<const T &> {
+  static T cast(const Variant &p_variant) {
+    using TStripped = std::remove_pointer_t<T>;
+    return static_cast<TStripped>(p_variant);
+  }
+};
 template <class T, class... P, size_t... Is>
 void call_with_variant_args_helper(T *p_instance, void (T::*p_method)(P...),
                                    const Variant **p_args,
                                    IndexSequence<Is...>) {
   (p_instance->*p_method)(VariantCaster<P>::cast(*p_args[Is])...);
-  (void)(p_args);  // avoid warning
 }
+
 template <class T, class... P>
 void call_with_variant_args_dv(T *p_instance, void (T::*p_method)(P...),
                                const Variant **p_args, int p_argcount) {

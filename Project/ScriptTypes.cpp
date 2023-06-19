@@ -132,9 +132,14 @@ Variant::Variant(const double value) {
   data_.double_value = value;
 }
 
+Variant::Variant(const char* value) : data_() {
+  this->type_ = VariantType::kString;
+  new (data_.mem)(std::shared_ptr)(std::make_shared<std::string>(value));
+}
+
 Variant::Variant(const std::string& value) : data_() {
   this->type_ = VariantType::kString;
-  new (data_.mem) std::string(value);
+  new (data_.mem)(std::shared_ptr)(std::make_shared<std::string>(value));
 }
 
 Variant::Variant(const AssetHandle value) {
@@ -222,6 +227,6 @@ Variant::Variant(MonoObject* object, const VariantType type) {
 Variant::operator float() const { return data_.float_value; }
 
 Variant::operator std::string() const {
-  return *reinterpret_cast<const std::string*>(data_.mem);
+  return **reinterpret_cast<const std::shared_ptr<std::string>*>(data_.mem);
 }
 }  // namespace base_engine

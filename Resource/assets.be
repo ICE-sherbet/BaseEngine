@@ -1,7 +1,4 @@
 Assets:
-  - Handle: 792951110303639287
-    FilePath: Player2.prefab
-    Type: Prefab
   - Handle: 1851133531463115590
     FilePath: Player.prefab
     Type: Prefab
@@ -35,12 +32,18 @@ Assets:
   - Handle: 9441174645906916149
     FilePath: Enemy.prefab
     Type: Prefab
+  - Handle: 9908362728409949851
+    FilePath: Parent.prefab
+    Type: Prefab
   - Handle: 10571259387326822115
     FilePath: Editor\DefaultAssetItem.png
     Type: Texture
   - Handle: 12630102728575510015
     FilePath: PlayerT.png
     Type: Texture
+  - Handle: 14300411935874002001
+    FilePath: Empty.prefab
+    Type: Prefab
   - Handle: 16620167309166039932
     FilePath: Enemy2.png
     Type: Texture

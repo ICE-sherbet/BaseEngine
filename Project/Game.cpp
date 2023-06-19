@@ -28,6 +28,7 @@ base_engine::IBaseEngineCollider* b_collision;
 
 namespace base_engine {
 
+
 bool Game::Initialize() {
   class Hoge {
     int ans = 0;

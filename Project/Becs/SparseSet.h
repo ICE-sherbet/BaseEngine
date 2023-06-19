@@ -530,8 +530,8 @@ class basic_sparse_set {
   virtual void move_element(const std::size_t, const std::size_t) {}
 
  private:
-  sparse_container_type sparse;
-  packed_container_type packed;
+  sparse_container_type sparse{0};
+  packed_container_type packed{0};
   const type_info *info;
   entity_type free_list;
   deletion_policy mode;

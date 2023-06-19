@@ -6,6 +6,7 @@
 #include "AssetsBrowserItems.h"
 #include "AssetsBrowserSetting.h"
 #include "EditorTextureResource.h"
+#include "SelectManager.h"
 #include "imgui.h"
 
 namespace base_engine::editor {
@@ -22,23 +23,9 @@ AssetsBrowserPanel::AssetsBrowserPanel() {
 
 void AssetsBrowserPanel::OnImGuiRender() {
   ImGui::Begin("Assets Browser");
+  RenderTopBar();
+  RenderCurrentDirectoryContent();
 
-
-  const float paddingForOutline = 2.0f;
-  const float scrollBarrOffset = 20.0f + ImGui::GetStyle().ScrollbarSize;
-  float panelWidth = ImGui::GetContentRegionAvail().x - scrollBarrOffset;
-  float cellSize = AssetsBrowserSetting::Get().thumbnail_size +
-                   theme_->padding + paddingForOutline;
-  int columnCount = static_cast<int>(panelWidth / cellSize);
-  if (ImGui::BeginTable("AssetsBrowserPanelTable", columnCount)) {
-    for (auto& item : current_items_) {
-      ImGui::TableNextColumn();
-      item->OnRenderBegin();
-      item->OnRender();
-      item->OnRenderEnd();
-    }
-    ImGui::EndTable();
-  }
   ImGui::End();
 }
 
@@ -105,11 +92,11 @@ AssetHandle AssetsBrowserPanel::ProcessDirectory(
 
 void AssetsBrowserPanel::ChangeDirectory(Ref<DirectoryInfo>& directory) {
   if (!directory) return;
-  current_items_.Clear();
+  current_items_.items_.clear();
   for (const auto& directory_info :
        directory->sub_directories | std::views::values) {
     current_items_.items_.emplace_back(
-        Ref<ContentBrowserDirectory>::Create(directory_info));
+        Ref<AssetsBrowserDirectory>::Create(directory_info));
   }
   for (const auto asset_handle : directory->assets) {
     if (AssetMetadata metadata =
@@ -126,9 +113,51 @@ void AssetsBrowserPanel::ChangeDirectory(Ref<DirectoryInfo>& directory) {
           icon = ThemeDB::GetInstance()->GetIcon("DefaultAssetItem");
         }
       }
-      auto item = Ref<ContentBrowserAsset>::Create(metadata, icon);
+      auto item = Ref<AssetsBrowserAsset>::Create(metadata, icon);
       current_items_.items_.push_back(item);
     }
+  }
+}
+
+void AssetsBrowserPanel::RenderTopBar() {
+  const float top_bar_height = 25.0f;
+
+  ImGui::BeginChild("##top_bar", ImVec2(0, top_bar_height));
+
+  ImGui::EndChild();
+}
+
+void AssetsBrowserPanel::RenderCurrentDirectoryContent() {
+  constexpr float padding_for_outline = 2.0f;
+  const float scroll_barr_offset = 20.0f + ImGui::GetStyle().ScrollbarSize;
+  const float panel_width =
+      ImGui::GetContentRegionAvail().x - scroll_barr_offset;
+  const float cell_size = AssetsBrowserSetting::Get().thumbnail_size +
+                          theme_->padding + padding_for_outline;
+  const int column_count = static_cast<int>(panel_width / cell_size);
+  if (ImGui::BeginTable("AssetsBrowserPanelTable", column_count)) {
+    for (auto& item : current_items_) {
+      ImGui::TableNextColumn();
+      item->OnRenderBegin();
+      auto result = item->OnRender();
+
+      if (result.IsSet(AssetsBrowserAction::kSelect)) {
+        SelectManager::Instance()->SelectItem("AssetsBrowser",
+                                              item->GetHandle());
+      }
+
+      item->OnRenderEnd();
+
+      if (result.IsSet(AssetsBrowserAction::kActivated)) {
+        if (item->GetType() == AssetsBrowserItem::ItemType::kDirectory) {
+          SelectManager::Instance()->SelectItem("AssetsBrowser", 0);
+          ChangeDirectory(
+              item.As<AssetsBrowserDirectory>()->GetDirectoryInfo());
+          break;
+        }
+      }
+    }
+    ImGui::EndTable();
   }
 }
 
