@@ -152,15 +152,14 @@ void AssetsBrowserPanel::RenderTopBar() {
   };
   const auto back = ThemeDB::GetInstance()->GetIcon("BackIcon");
 
-  if(content_browser_button("##Back", back))
-  {
+  if (content_browser_button("##Back", back)) {
     OnBrowseBack();
   }
 
   ImGui::SameLine();
 
   const auto forward = ThemeDB::GetInstance()->GetIcon("ForwardIcon");
-  
+
   if (content_browser_button("##Forward", forward)) {
     OnBrowseForward();
   }
@@ -203,17 +202,13 @@ void AssetsBrowserPanel::RenderCurrentDirectoryContent() {
   }
 }
 
-void AssetsBrowserPanel::OnBrowseBack()
-{
+void AssetsBrowserPanel::OnBrowseBack() {
   next_directory_ = current_directory_;
   previous_directory_ = current_directory_->parent;
   ChangeDirectory(previous_directory_);
 }
 
-void AssetsBrowserPanel::OnBrowseForward()
-{
-	ChangeDirectory(next_directory_);
-}
+void AssetsBrowserPanel::OnBrowseForward() { ChangeDirectory(next_directory_); }
 
 AssetsBrowserPanel::~AssetsBrowserPanel() = default;
 }  // namespace base_engine::editor
