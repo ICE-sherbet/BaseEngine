@@ -411,6 +411,7 @@
     <ClInclude Include="ILayer.h" />
     <ClInclude Include="ImGuiArchive.h" />
     <ClInclude Include="ImGuiAssetHelper.h" />
+    <ClInclude Include="ImGuiUtilities.h" />
     <ClInclude Include="ImGuiVariantHelper.h" />
     <ClInclude Include="InspectorPanel.h" />
     <ClInclude Include="MethodBind.h" />

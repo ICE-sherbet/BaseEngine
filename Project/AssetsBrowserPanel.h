@@ -30,6 +30,10 @@ class AssetsBrowserPanel : public EditorPanel {
   void RenderTopBar();
   void RenderCurrentDirectoryContent();
 
+
+  void OnBrowseBack();
+  void OnBrowseForward();
+
   struct BrowserPanelTheme;
   std::unique_ptr<BrowserPanelTheme> theme_;
 

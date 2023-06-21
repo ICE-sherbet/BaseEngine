@@ -38,6 +38,9 @@ Assets:
   - Handle: 10571259387326822115
     FilePath: Editor\DefaultAssetItem.png
     Type: Texture
+  - Handle: 11467147179446877218
+    FilePath: Editor\ForwardArrow.png
+    Type: Texture
   - Handle: 12630102728575510015
     FilePath: PlayerT.png
     Type: Texture
@@ -46,6 +49,9 @@ Assets:
     Type: Prefab
   - Handle: 16620167309166039932
     FilePath: Enemy2.png
+    Type: Texture
+  - Handle: 16665932443343882340
+    FilePath: Editor\BackArrow.png
     Type: Texture
   - Handle: 16674861703912307365
     FilePath: no-texture.png

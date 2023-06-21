@@ -6,6 +6,7 @@
 #include "AssetsBrowserItems.h"
 #include "AssetsBrowserSetting.h"
 #include "EditorTextureResource.h"
+#include "ImGuiUtilities.h"
 #include "SelectManager.h"
 #include "imgui.h"
 
@@ -117,12 +118,53 @@ void AssetsBrowserPanel::ChangeDirectory(Ref<DirectoryInfo>& directory) {
       current_items_.items_.push_back(item);
     }
   }
+
+  previous_directory_ = directory;
+  current_directory_ = directory;
 }
 
 void AssetsBrowserPanel::RenderTopBar() {
   const float top_bar_height = 25.0f;
 
-  ImGui::BeginChild("##top_bar", ImVec2(0, top_bar_height));
+  ImGui::BeginChild("##top_bar", ImVec2(0, top_bar_height * 1.2f), false,
+                    ImGuiWindowFlags_NoScrollbar);
+
+  auto content_browser_button = [top_bar_height](const char* labelId,
+                                                 Ref<Texture> icon) {
+    const ImU32 button_col = ThemeDB::GetInstance()->GetColor("BackGroundDark");
+    const ImU32 button_col_p = ui::ColorWithMultipliedValue(button_col, 0.8f);
+    ui::ScopedColorStack button_colors(ImGuiCol_Button, button_col,
+                                       ImGuiCol_ButtonHovered, button_col,
+                                       ImGuiCol_ButtonActive, button_col_p);
+
+    const float icon_size = std::min(24.0f, top_bar_height);
+    const float icon_padding = 3.0f;
+    const bool clicked = ImGui::Button(labelId, ImVec2(icon_size, icon_size));
+    const auto normal_color = ThemeDB::GetInstance()->GetColor("TextDarker");
+
+    ui::DrawButtonImage(
+        icon->GetTexture(), normal_color,
+        ui::ColorWithMultipliedValue(normal_color, 1.2f),
+        ui::ColorWithMultipliedValue(normal_color, 0.8f),
+        ui::RectExpanded(ui::GetItemRect(), -icon_padding, -icon_padding));
+
+    return clicked;
+  };
+  const auto back = ThemeDB::GetInstance()->GetIcon("BackIcon");
+
+  if(content_browser_button("##Back", back))
+  {
+    OnBrowseBack();
+  }
+
+  ImGui::SameLine();
+
+  const auto forward = ThemeDB::GetInstance()->GetIcon("ForwardIcon");
+  
+  if (content_browser_button("##Forward", forward)) {
+    OnBrowseForward();
+  }
+  ImGui::Separator();
 
   ImGui::EndChild();
 }
@@ -159,6 +201,18 @@ void AssetsBrowserPanel::RenderCurrentDirectoryContent() {
     }
     ImGui::EndTable();
   }
+}
+
+void AssetsBrowserPanel::OnBrowseBack()
+{
+  next_directory_ = current_directory_;
+  previous_directory_ = current_directory_->parent;
+  ChangeDirectory(previous_directory_);
+}
+
+void AssetsBrowserPanel::OnBrowseForward()
+{
+	ChangeDirectory(next_directory_);
 }
 
 AssetsBrowserPanel::~AssetsBrowserPanel() = default;

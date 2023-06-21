@@ -2015,6 +2015,9 @@
     <ClInclude Include="AssetsBrowserSetting.h">
       <Filter>BaseEngine\Editor\Panel\AssetsBrowser</Filter>
     </ClInclude>
+    <ClInclude Include="ImGuiUtilities.h">
+      <Filter>BaseEngine\Editor\ImGui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="LICENSE">
