@@ -18,9 +18,13 @@ bool AssetReferenceField(const std::string& label, AssetHandle* asset_handle,
     auto data = ImGui::AcceptDragDropPayload("asset_payload");
     if (data) {
       const auto handle = *static_cast<AssetHandle*>(data->Data);
-      *asset_handle = handle;
-      result = true;
-    	ImGui::EndDragDropTarget();
+      if (AssetManager::GetMutableMetadata(handle).type == asset_type ||
+          asset_type == AssetType::kNone) {
+        *asset_handle = handle;
+        result = true;
+      }
+
+      ImGui::EndDragDropTarget();
     }
   }
 
@@ -37,7 +41,7 @@ bool AssetReferenceField(const std::string& label, AssetHandle* asset_handle,
       for (const auto& metadata : registry | std::views::values) {
         if (asset_type != AssetType::kNone && metadata.type != asset_type)
           continue;
-        std::string preview = metadata.file_path.string().c_str();
+        std::string preview = metadata.file_path.string();
         if (metadata.type == AssetType::kScript) {
           preview = metadata.file_path.string();
         }

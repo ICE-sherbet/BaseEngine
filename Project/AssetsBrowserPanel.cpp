@@ -11,6 +11,8 @@
 #include "imgui.h"
 
 namespace base_engine::editor {
+std::mutex AssetsBrowserPanel::lock_mutex_;
+
 struct AssetsBrowserPanel::BrowserPanelTheme {
   float padding = 2.0f;
 
@@ -33,6 +35,8 @@ void AssetsBrowserPanel::OnImGuiRender() {
 void AssetsBrowserPanel::Initialize(const Ref<Scene>& context) {
   const AssetHandle base_directory_handle = ProcessDirectory(".", nullptr);
   base_directory_ = directories_[base_directory_handle];
+  AssetManager::GetEditorAssetManager()->SetAssetChangeCallback(
+      [this](auto events) { OnFileSystemChanged(events); });
   ChangeDirectory(base_directory_);
 }
 
@@ -40,6 +44,8 @@ void AssetsBrowserPanel::SetSceneContext(const Ref<Scene>& context) {}
 
 Ref<DirectoryInfo> AssetsBrowserPanel::GetDirectory(
     const std::filesystem::path& filepath) const {
+  if (directories_.empty()) return nullptr;
+
   if (filepath.empty() || filepath.string() == ".") return base_directory_;
 
   for (const auto& directory : directories_ | std::views::values) {
@@ -202,6 +208,26 @@ void AssetsBrowserPanel::RenderCurrentDirectoryContent() {
   }
 }
 
+void AssetsBrowserPanel::Refresh() {
+  std::lock_guard<std::mutex> lock_guard(lock_mutex_);
+  RefreshWithoutLock();
+}
+
+void AssetsBrowserPanel::RefreshWithoutLock() {
+  directories_.clear();
+  current_items_.Clear();
+
+  Ref<DirectoryInfo> current_directory = current_directory_;
+  const AssetHandle base_directory_handle = ProcessDirectory(".", nullptr);
+  base_directory_ = directories_[base_directory_handle];
+  current_directory_ = GetDirectory(current_directory->filepath);
+
+  if (!current_directory_)
+    current_directory_ = base_directory_;  // Our current directory was removed
+
+  ChangeDirectory(current_directory_);
+}
+
 void AssetsBrowserPanel::OnBrowseBack() {
   next_directory_ = current_directory_;
   previous_directory_ = current_directory_->parent;
@@ -209,6 +235,37 @@ void AssetsBrowserPanel::OnBrowseBack() {
 }
 
 void AssetsBrowserPanel::OnBrowseForward() { ChangeDirectory(next_directory_); }
+
+void AssetsBrowserPanel::OnFileSystemChanged(
+    const std::vector<FileSystemChangedEvent>& events) {
+  Refresh();
+
+  for (const auto& e : events) {
+    if (e.action != FileSystemAction::kAdded) continue;
+
+    AssetHandle handle = 0;
+
+    if (!e.is_directory) {
+      if (auto asset =
+              AssetManager::GetEditorAssetManager()->GetAsset(e.filepath)) {
+        handle = asset->handle_;
+      }
+    } else {
+      const auto& directory_info = GetDirectory(e.filepath);
+      handle = directory_info->handle;
+    }
+
+    if (handle == 0) continue;
+
+    const size_t item_index = current_items_.FindItem(handle);
+
+    if (item_index == ContentBrowserItemList::kInvalidItem) continue;
+
+    auto& item = current_items_[item_index];
+    SelectManager::Instance()->SelectItem("AssetsBrowser", handle);
+    break;
+  }
+}
 
 AssetsBrowserPanel::~AssetsBrowserPanel() = default;
 }  // namespace base_engine::editor

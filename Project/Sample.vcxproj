@@ -163,6 +163,7 @@
     <ClCompile Include="EditorPanelManager.cpp" />
     <ClCompile Include="EditorTextureResource.cpp" />
     <ClCompile Include="EntityGlue.cpp" />
+    <ClCompile Include="FileSystem.cpp" />
     <ClCompile Include="IFieldStorage.cpp" />
     <ClCompile Include="HierarchyContextMenu.cpp" />
     <ClCompile Include="HierarchyPanel.cpp" />
@@ -405,6 +406,7 @@
     <ClInclude Include="EditorPanel.h" />
     <ClInclude Include="EditorPanelManager.h" />
     <ClInclude Include="EditorTextureResource.h" />
+    <ClInclude Include="FileSystem.h" />
     <ClInclude Include="IFieldStorage.h" />
     <ClInclude Include="HierarchyContextMenu.h" />
     <ClInclude Include="HierarchyPanel.h" />

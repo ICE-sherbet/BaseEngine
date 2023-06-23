@@ -1,77 +1,75 @@
 ﻿#include "EditorAssetManager.h"
 
+#include <yaml-cpp/yaml.h>
+
 #include <cstring>
 #include <fstream>
 #include <ranges>
 #include <string>
-
-#include <yaml-cpp/yaml.h>
 using namespace base_engine;
 static AssetMetadata kNullMetadata;
 
-EditorAssetManager::EditorAssetManager() {
-}
+EditorAssetManager::EditorAssetManager() {}
 
-void EditorAssetManager::Initialize()
-{
+void EditorAssetManager::Initialize() {
   AssetImporter::Init();
   LoadAssetRegistry();
+  FileSystem::AddFileSystemChangedCallback(
+      [this](const std::vector<FileSystemChangedEvent>& events) {
+	      OnFileSystemChanged(events);
+      });
+
   ReloadAssetFiles();
   WriteRegistryToFile();
 }
 
 EditorAssetManager::~EditorAssetManager() { WriteRegistryToFile(); }
 
-AssetType EditorAssetManager::GetAssetType(const AssetHandle asset_handle)
-{
-	return asset_registry_.Get(asset_handle).type;
+AssetType EditorAssetManager::GetAssetType(const AssetHandle asset_handle) {
+  return asset_registry_.Get(asset_handle).type;
 }
 
-void EditorAssetManager::AddMemoryOnlyAsset(Ref<Asset> asset)
-{
-	AssetMetadata metadata;
-	metadata.handle = asset->handle_;
-	metadata.is_data_loaded = true;
-	metadata.type = asset->GetAssetType();
-	metadata.is_memory_asset = true;
-	asset_registry_[metadata.handle] = metadata;
+void EditorAssetManager::AddMemoryOnlyAsset(Ref<Asset> asset) {
+  AssetMetadata metadata;
+  metadata.handle = asset->handle_;
+  metadata.is_data_loaded = true;
+  metadata.type = asset->GetAssetType();
+  metadata.is_memory_asset = true;
+  asset_registry_[metadata.handle] = metadata;
 
-	memory_assets_[asset->handle_] = asset;
+  memory_assets_[asset->handle_] = asset;
 }
 
-bool EditorAssetManager::ReloadData(AssetHandle asset_handle)
-{ return false; }
+bool EditorAssetManager::ReloadData(AssetHandle asset_handle) { return false; }
 
-bool EditorAssetManager::IsAssetHandleValid(const AssetHandle asset_handle)
-{
-	return IsMemoryAsset(asset_handle) || GetMetadata(asset_handle).IsValid();
+bool EditorAssetManager::IsAssetHandleValid(const AssetHandle asset_handle) {
+  return IsMemoryAsset(asset_handle) || GetMetadata(asset_handle).IsValid();
 }
 
-bool EditorAssetManager::IsAssetLoaded(AssetHandle handle)
-{ return false; }
+bool EditorAssetManager::IsAssetLoaded(AssetHandle handle) { return false; }
 
-std::unordered_set<AssetHandle> EditorAssetManager::GetAllAssetsWithType(AssetType type)
-{
-	return {};
+std::unordered_set<AssetHandle> EditorAssetManager::GetAllAssetsWithType(
+    AssetType type) {
+  return {};
 }
 
-const std::unordered_map<AssetHandle, Ref<Asset>>& EditorAssetManager::GetLoadedAssets()
-{
-	return {};
+const std::unordered_map<AssetHandle, Ref<Asset>>&
+EditorAssetManager::GetLoadedAssets() {
+  return {};
 }
 
-const std::unordered_map<AssetHandle, Ref<Asset>>& EditorAssetManager::GetMemoryOnlyAssets()
-{
-	return {};
+const std::unordered_map<AssetHandle, Ref<Asset>>&
+EditorAssetManager::GetMemoryOnlyAssets() {
+  return {};
 }
 
-Ref<Asset> EditorAssetManager::GetAsset(const std::filesystem::path file_path)
-{
-	return GetAsset(GetMetadata(file_path).handle);
+Ref<Asset> EditorAssetManager::GetAsset(const std::filesystem::path file_path) {
+  return GetAsset(GetMetadata(file_path).handle);
 }
 
-const AssetRegistry& EditorAssetManager::GetAssetRegistry() const
-{ return asset_registry_; }
+const AssetRegistry& EditorAssetManager::GetAssetRegistry() const {
+  return asset_registry_;
+}
 
 Ref<Asset> EditorAssetManager::GetAsset(const AssetHandle asset_handle) {
   if (IsMemoryAsset(asset_handle)) return memory_assets_[asset_handle];
@@ -138,8 +136,7 @@ AssetMetadata& EditorAssetManager::GetMutableMetadata(AssetHandle handle) {
 
   return kNullMetadata;
 }
-void EditorAssetManager::LoadAssetRegistry()
-{
+void EditorAssetManager::LoadAssetRegistry() {
   BE_CORE_INFO("[AssetManager] Loading Asset Registry");
 
   const auto& asset_registry_path = "assets.be";
@@ -156,7 +153,7 @@ void EditorAssetManager::LoadAssetRegistry()
   }
 
   for (auto entry : handles) {
-	  auto filepath = entry["FilePath"].as<std::string>();
+    auto filepath = entry["FilePath"].as<std::string>();
 
     AssetMetadata metadata;
     metadata.handle = entry["Handle"].as<uint64_t>();
@@ -167,12 +164,10 @@ void EditorAssetManager::LoadAssetRegistry()
     if (metadata.type == AssetType::kNone) continue;
 
     if (metadata.type != GetAssetTypeFromPath(filepath)) {
-
       metadata.type = GetAssetTypeFromPath(filepath);
     }
 
     if (!std::filesystem::exists(metadata.file_path)) {
-
       std::string mostLikelyCandidate;
       uint32_t bestScore = 0;
       for (auto& pathEntry : std::filesystem::recursive_directory_iterator(
@@ -181,14 +176,12 @@ void EditorAssetManager::LoadAssetRegistry()
 
         if (path.filename() != metadata.file_path.filename()) continue;
 
-      	uint32_t score = 0;
+        uint32_t score = 0;
         for (const auto& part : path) {
           if (filepath.find(part.string()) != std::string::npos) score++;
         }
 
         if (bestScore > 0 && score == bestScore) {
-          // TODO: How do we handle this?
-          // Probably prompt the user at this point?
         }
 
         if (score <= bestScore) continue;
@@ -200,9 +193,9 @@ void EditorAssetManager::LoadAssetRegistry()
       if (mostLikelyCandidate.empty() && bestScore == 0) {
         continue;
       }
-      
-      metadata.file_path = std::filesystem::path{mostLikelyCandidate}.make_preferred();
 
+      metadata.file_path =
+          std::filesystem::path{mostLikelyCandidate}.make_preferred();
     }
 
     if (metadata.handle == 0) {
@@ -211,16 +204,13 @@ void EditorAssetManager::LoadAssetRegistry()
 
     asset_registry_[metadata.handle] = metadata;
   }
-  
 }
 
-void EditorAssetManager::ReloadAssetFiles()
-{
+void EditorAssetManager::ReloadAssetFiles() {
   for (const std::filesystem::directory_entry& x :
        std::filesystem::recursive_directory_iterator(".")) {
     const auto str = proximate(x.path());
     ImportAsset(str);
-
   }
 }
 
@@ -266,4 +256,67 @@ AssetMetadata& EditorAssetManager::GetMetadataInternal(
     const AssetHandle handle) {
   if (asset_registry_.Contains(handle)) return asset_registry_[handle];
   return kNullMetadata;
+}
+
+void EditorAssetManager::OnFileSystemChanged(
+    const std::vector<FileSystemChangedEvent>& events) {
+  auto GetAssetHandleFromFilePath = [this](const std::filesystem::path& path) {
+    return GetMetadata(path).handle;
+  };
+  for (const auto& e : events) {
+    if (!e.is_directory) {
+      switch (e.action) {
+        case FileSystemAction::kModified: {
+          const AssetHandle handle = GetAssetHandleFromFilePath(e.filepath);
+          const auto& metadata = GetMetadata(handle);
+
+          if (metadata.type == AssetType::kPrefab) break;
+
+          if (metadata.IsValid()) ReloadData(handle);
+          break;
+        }
+        case FileSystemAction::kRename: {
+          const AssetType previous_type = GetAssetTypeFromPath(e.old_name);
+          const AssetType new_type = GetAssetTypeFromPath(e.filepath);
+
+          if (previous_type == AssetType::kNone &&
+              new_type != AssetType::kNone) {
+            ImportAsset(e.filepath);
+          } else {
+            OnAssetRenamed(GetAssetHandleFromFilePath(e.filepath.parent_path() /
+                                                      e.old_name),
+                           e.filepath);
+          }
+          break;
+        }
+        case FileSystemAction::kDelete: {
+          OnAssetDeleted(GetAssetHandleFromFilePath(e.filepath));
+          break;
+        }
+        case FileSystemAction::kAdded:
+          break;
+        default:;
+      }
+    }
+  }
+
+  AssetsChangeCallback(events);
+}
+
+void EditorAssetManager::OnAssetRenamed(
+    const AssetHandle asset_handle, const std::filesystem::path& new_filepath) {
+  AssetMetadata& metadata = asset_registry_[asset_handle];
+  if (!metadata.IsValid()) return;
+
+  metadata.file_path = new_filepath;
+  WriteRegistryToFile();
+}
+
+void EditorAssetManager::OnAssetDeleted(const AssetHandle asset_handle) {
+  const AssetMetadata metadata = GetMetadata(asset_handle);
+  if (!metadata.IsValid()) return;
+
+  asset_registry_.Remove(asset_handle);
+  loaded_assets_.erase(asset_handle);
+  WriteRegistryToFile();
 }

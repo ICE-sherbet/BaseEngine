@@ -1,12 +1,15 @@
 ﻿#include "EditorLayer.h"
 
 #include "EditorTextureResource.h"
+#include "FileSystem.h"
 #include "SetupEditorImGui.h"
 #include "imgui.h"
 
 namespace base_engine::editor {
 void EditorLayer::Initialize(const Ref<Scene>& scene) {
   SetupEditorImGui::Setup();
+
+  FileSystem::StartWatching();
   panel_manager_ = std::make_unique<EditorPanelManager>(game_);
   panel_manager_->SetSceneContext(scene);
   panel_manager_->Initialize();
@@ -29,6 +32,8 @@ void EditorLayer::SetSceneContext(const Ref<Scene>& scene) {
 
 EditorLayer::~EditorLayer()
 {
+  FileSystem::StopWatching();
+
 	SetupEditorImGui::Cleanup();
   ThemeDB::Destroy();
 }

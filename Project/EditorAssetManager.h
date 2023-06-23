@@ -8,11 +8,17 @@
 #pragma once
 #include "AssetImporter.h"
 #include "AssetRegistry.h"
+#include "ConnectableObject.h"
+#include "FileSystem.h"
 #include "IBaseEngineAssetManager.h"
 
 namespace base_engine {
-class EditorAssetManager : public IBaseEngineAssetManager {
+class EditorAssetManager final : public IBaseEngineAssetManager,
+                                 public ConnectableObject {
  public:
+  using AssetsChangeEventFunc =
+      std::function<void(const std::vector<FileSystemChangedEvent>&)>;
+
   EditorAssetManager();
 
   void Initialize() override;
@@ -38,11 +44,16 @@ class EditorAssetManager : public IBaseEngineAssetManager {
   const AssetMetadata& GetMetadata(AssetHandle handle);
   const AssetMetadata& GetMetadata(const std::filesystem::path& filepath);
 
+  void SetAssetChangeCallback(const AssetsChangeEventFunc& callback) {
+    AssetsChangeCallback = callback;
+  }
+
   AssetHandle ImportAsset(const std::filesystem::path& filepath);
 
   static AssetType GetAssetTypeFromPath(const std::filesystem::path& path);
   AssetMetadata& GetMutableMetadata(AssetHandle handle) override;
   const AssetRegistry& GetAssetRegistry() const;
+
   template <typename T, typename... Args>
   Ref<T> CreateNewAsset(const std::filesystem::path& filename,
                         const std::filesystem::path& directory_path,
@@ -77,10 +88,16 @@ class EditorAssetManager : public IBaseEngineAssetManager {
   void ReloadAssetFiles();
   void WriteRegistryToFile();
   AssetMetadata& GetMetadataInternal(AssetHandle handle);
+  void OnFileSystemChanged(const std::vector<FileSystemChangedEvent>& events);
+  void OnAssetRenamed(AssetHandle asset_handle,
+                      const std::filesystem::path& new_filepath);
+  void OnAssetDeleted(AssetHandle asset_handle);
 
  private:
   std::unordered_map<AssetHandle, Ref<Asset>> loaded_assets_;
   std::unordered_map<AssetHandle, Ref<Asset>> memory_assets_;
+
+  AssetsChangeEventFunc AssetsChangeCallback;
 
   AssetRegistry asset_registry_;
 };

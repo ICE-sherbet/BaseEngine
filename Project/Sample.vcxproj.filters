@@ -487,6 +487,9 @@
     <Filter Include="BaseEngine\Editor\Panel\AssetsBrowser">
       <UniqueIdentifier>{3f8a4c6f-0cdb-4433-a35a-71033f077fb3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="BaseEngine\Utilities\FileSystem">
+      <UniqueIdentifier>{8f527d1e-00a4-415c-8a71-06494facedac}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -1037,6 +1040,9 @@
     </ClCompile>
     <ClCompile Include="AssetsBrowserSetting.cpp">
       <Filter>BaseEngine\Editor\Panel\AssetsBrowser</Filter>
+    </ClCompile>
+    <ClCompile Include="FileSystem.cpp">
+      <Filter>BaseEngine\Utilities\FileSystem</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -2017,6 +2023,9 @@
     </ClInclude>
     <ClInclude Include="ImGuiUtilities.h">
       <Filter>BaseEngine\Editor\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="FileSystem.h">
+      <Filter>BaseEngine\Utilities\FileSystem</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -8,6 +8,7 @@
 #pragma once
 #include "AssetsBrowserItems.h"
 #include "EditorPanel.h"
+#include "FileSystem.h"
 
 namespace base_engine::editor {
 class AssetsBrowserPanel : public EditorPanel {
@@ -30,9 +31,13 @@ class AssetsBrowserPanel : public EditorPanel {
   void RenderTopBar();
   void RenderCurrentDirectoryContent();
 
+  void Refresh();
+  void RefreshWithoutLock();
 
   void OnBrowseBack();
   void OnBrowseForward();
+
+  void OnFileSystemChanged(const std::vector<FileSystemChangedEvent>& events);
 
   struct BrowserPanelTheme;
   std::unique_ptr<BrowserPanelTheme> theme_;
@@ -43,5 +48,7 @@ class AssetsBrowserPanel : public EditorPanel {
   Ref<DirectoryInfo> next_directory_, previous_directory_;
 
   std::unordered_map<AssetHandle, Ref<DirectoryInfo>> directories_;
+
+  static std::mutex lock_mutex_;
 };
 }  // namespace base_engine::editor
