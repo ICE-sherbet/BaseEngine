@@ -1,8 +1,12 @@
 ﻿#include "HierarchyPanel.h"
 
+#include <mono/metadata/appdomain.h>
+#include <mono/metadata/class.h>
+#include <mono/metadata/object.h>
+
+#include "CSharpScriptEngine.h"
 #include "SelectManager.h"
 #include "imgui.h"
-
 namespace base_engine::editor {
 void HierarchyPanel::Initialize(const Ref<Scene>& context) {
   SetSceneContext(context);
@@ -13,7 +17,13 @@ void HierarchyPanel::Initialize(const Ref<Scene>& context) {
 void HierarchyPanel::OnImGuiRender() {
   {
     ImGui::Begin("Hierarchy");
-
+    if (ImGui::Button("Test Button")) {
+      int a = 100;
+      auto str = mono_value_box(CSharpScriptEngine::GetInstance()->GetCoreDomain(),
+                     mono_get_int32_class(), &a);
+      CSharpScriptEngine::CallMethod("BaseEngine_ScriptCore.Debug", "Log2",
+                                     *str);
+    }
     {
       ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x - 3.0f * 3.0f);
       for (const auto entity_view =

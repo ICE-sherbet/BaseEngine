@@ -490,6 +490,9 @@
     <Filter Include="BaseEngine\Utilities\FileSystem">
       <UniqueIdentifier>{8f527d1e-00a4-415c-8a71-06494facedac}</UniqueIdentifier>
     </Filter>
+    <Filter Include="BaseEngine\Core\Variant">
+      <UniqueIdentifier>{b9714a2f-bba2-4fcc-8978-5c9a29d4e6ee}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -1043,6 +1046,12 @@
     </ClCompile>
     <ClCompile Include="FileSystem.cpp">
       <Filter>BaseEngine\Utilities\FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentDB.cpp">
+      <Filter>BaseEngine\DataComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="Variant.cpp">
+      <Filter>BaseEngine\Core\Variant</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -2026,6 +2035,18 @@
     </ClInclude>
     <ClInclude Include="FileSystem.h">
       <Filter>BaseEngine\Utilities\FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentProperty.h">
+      <Filter>BaseEngine\DataComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentDB.h">
+      <Filter>BaseEngine\DataComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="Variant.h">
+      <Filter>BaseEngine\Core\Variant</Filter>
+    </ClInclude>
+    <ClInclude Include="TestComponent.h">
+      <Filter>BaseEngine\DataComponents\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

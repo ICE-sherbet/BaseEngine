@@ -23,6 +23,7 @@
 #include "Scene.h"
 #include "SceneSerializer.h"
 #include "Script.h"
+#include "TestComponent.h"
 #include "Texture.h"
 base_engine::IBaseEngineCollider* b_collision;
 
@@ -35,6 +36,7 @@ bool Game::Initialize() {
 
    public:
     void Sub(int n) { ans -= n; }
+    int Get() { return ans; }
     void Plus(int n) { ans += n; }
     void Test(std::string text, float v1, int v2) {
       std::cout << "Hoge:" << text << v1 << v2 << std::endl;
@@ -58,10 +60,28 @@ bool Game::Initialize() {
   object.EmitSignal("Sub-method", 1);
   object.EmitSignal("Plus-method", 2);
   object.EmitSignal("Test-method", "test", 0.1f, 1);
+  Variant a;
+  MethodBindTR m(&Hoge::Get);
+  auto result = m.call(&hoge,nullptr,0);
+  make_callable_function_pointer(&hoge, &Hoge::Get).Call(nullptr,0,a);
   scene_ = Ref<Scene>::Create("Sample");
   BASE_ENGINE(Render)->Initialize();
   BASE_ENGINE(AssetManager)->Initialize();
+  component::TestComponent::_Initialize();
 
+  component::TestComponent test;
+  test.color = Vector4{1, 0, 0, 1};
+  Variant result_test;
+  if (ComponentDB::TryGetProperty(&test, component::TestComponent::_GetClassNameStatic(), "color",
+                                                          result_test))
+  {
+    __debugbreak();
+  };
+  result_test = Variant(Vector4{20, 0, 0, 1});
+  if (ComponentDB::TrySetProperty(&test, component::TestComponent::_GetClassNameStatic(),
+                                  "color", result_test)) {
+    __debugbreak();
+  };
   editor_layer_ = std::make_unique<editor::EditorLayer>(this);
   editor_layer_->Initialize(scene_);
 

@@ -81,19 +81,19 @@ bool ImGuiHelper::VariantField(const std::string& label, Variant* variant) {
         (*value) = buf;
       });
       break;
-    case VariantType::RECT2D:
+    case VariantType::kRECT2D:
       break;
-    case VariantType::RECT2F:
+    case VariantType::kRECT2F:
       break;
-    case VariantType::RECT2I:
+    case VariantType::kRECT2I:
       break;
-    case VariantType::VECTOR2F:
+    case VariantType::kVECTOR2F:
       break;
-    case VariantType::VECTOR3F:
+    case VariantType::kVECTOR3F:
       break;
-    case VariantType::VECTOR4F:
+    case VariantType::kVECTOR4F:
       break;
-    case VariantType::COLOR:
+    case VariantType::kCOLOR:
       break;
     case VariantType::kAssetHandle:
       decorator.operator()<AssetHandle>([&label, &result](AssetHandle* value) {

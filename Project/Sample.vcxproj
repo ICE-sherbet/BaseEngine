@@ -147,6 +147,7 @@
     <ClCompile Include="Callable.cpp" />
     <ClCompile Include="CameraCustomComponent.cpp" />
     <ClCompile Include="CollisionGlue.cpp" />
+    <ClCompile Include="ComponentDB.cpp" />
     <ClCompile Include="Connection.cpp" />
     <ClCompile Include="ConnectableObject.cpp" />
     <ClCompile Include="ConsoleMessage.cpp" />
@@ -234,6 +235,7 @@
     <ClCompile Include="SpriteAnimationClipLoader.cpp" />
     <ClCompile Include="UpdateCirclesBV.cpp" />
     <ClCompile Include="UUID.cpp" />
+    <ClCompile Include="Variant.cpp" />
     <ClCompile Include="Vector3.cpp" />
     <ClCompile Include="Vector4.cpp" />
     <ClCompile Include="EpaSolver.cpp" />
@@ -394,6 +396,8 @@
     <ClInclude Include="Callable.h" />
     <ClInclude Include="CameraCustomComponent.h" />
     <ClInclude Include="CollisionGlue.h" />
+    <ClInclude Include="ComponentDB.h" />
+    <ClInclude Include="ComponentProperty.h" />
     <ClInclude Include="Connection.h" />
     <ClInclude Include="ConnectableObject.h" />
     <ClInclude Include="ConsoleMessage.h" />
@@ -426,7 +430,9 @@
     <ClInclude Include="SceneSerializer.h" />
     <ClInclude Include="SelectManager.h" />
     <ClInclude Include="SetupEditorImGui.h" />
+    <ClInclude Include="TestComponent.h" />
     <ClInclude Include="ToolbarPanel.h" />
+    <ClInclude Include="Variant.h" />
     <ClInclude Include="YAMLSerializeHelper.h" />
     <ClInclude Include="SolveContact.h" />
     <ClInclude Include="ContactSolverReferenceService.h" />

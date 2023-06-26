@@ -88,6 +88,32 @@ class CSharpScriptEngine {
                          const void** parameters);
 
   template <typename... TArgs>
+  static void CallMethod(const std::string& className,
+                         const std::string& methodName, TArgs&&... args) {
+
+    constexpr size_t argsCount = sizeof...(args);
+
+    MonoClassTypeInfo* clazz =
+        GetInstance()->storage_->GetManagedClassByName(className);
+    if (clazz == nullptr) {
+      return;
+    }
+
+    MonoMethodInfo* method = GetInstance()->storage_->GetSpecificManagedMethod(
+        clazz, methodName, argsCount);
+    if (method == nullptr) {
+      return;
+    }
+
+    if constexpr (argsCount > 0) {
+      const void* data[] = {&args...};
+      CallMethod(nullptr, method, data);
+    } else {
+      CallMethod(nullptr, method, nullptr);
+    }
+  }
+
+  template <typename... TArgs>
   static void CallMethod(MonoObject* managedObject,
                          const std::string& methodName, TArgs&&... args) {
     if (managedObject == nullptr) {
