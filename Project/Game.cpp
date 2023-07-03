@@ -67,21 +67,8 @@ bool Game::Initialize() {
   scene_ = Ref<Scene>::Create("Sample");
   BASE_ENGINE(Render)->Initialize();
   BASE_ENGINE(AssetManager)->Initialize();
-  component::TestComponent::_Initialize();
-
-  component::TestComponent test;
-  test.color = Vector4{1, 0, 0, 1};
-  Variant result_test;
-  if (ComponentDB::TryGetProperty(&test, component::TestComponent::_GetClassNameStatic(), "color",
-                                                          result_test))
-  {
-    __debugbreak();
-  };
-  result_test = Variant(Vector4{20, 0, 0, 1});
-  if (ComponentDB::TrySetProperty(&test, component::TestComponent::_GetClassNameStatic(),
-                                  "color", result_test)) {
-    __debugbreak();
-  };
+  ComponentDB::Initialize();
+  
   editor_layer_ = std::make_unique<editor::EditorLayer>(this);
   editor_layer_->Initialize(scene_);
 

@@ -493,6 +493,15 @@
     <Filter Include="BaseEngine\Core\Variant">
       <UniqueIdentifier>{b9714a2f-bba2-4fcc-8978-5c9a29d4e6ee}</UniqueIdentifier>
     </Filter>
+    <Filter Include="BaseEngine\Editor\Panel\InspectorPanel">
+      <UniqueIdentifier>{29356c32-248f-4c9b-94c1-6f2f6a0d4a43}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BaseEngine\Editor\Control">
+      <UniqueIdentifier>{d1c41a5e-974c-4392-a424-a6cd0499b2c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BaseEngine\Editor\Panel\InspectorPanel\Property">
+      <UniqueIdentifier>{e4a190b9-890e-4c43-a2cf-b069bc87b8fc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -993,9 +1002,6 @@
     <ClCompile Include="SelectManager.cpp">
       <Filter>BaseEngine\Editor\Panel</Filter>
     </ClCompile>
-    <ClCompile Include="InspectorPanel.cpp">
-      <Filter>BaseEngine\Editor\Panel</Filter>
-    </ClCompile>
     <ClCompile Include="ImGuiVariantHelper.cpp">
       <Filter>BaseEngine\Editor\ImGui</Filter>
     </ClCompile>
@@ -1052,6 +1058,51 @@
     </ClCompile>
     <ClCompile Include="Variant.cpp">
       <Filter>BaseEngine\Core\Variant</Filter>
+    </ClCompile>
+    <ClCompile Include="TagComponent.cpp">
+      <Filter>BaseEngine\DataComponents\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteRendererComponent.cpp">
+      <Filter>BaseEngine\DataComponents\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ScriptComponent.cpp">
+      <Filter>BaseEngine\DataComponents\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioComponent.cpp">
+      <Filter>BaseEngine\DataComponents\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="InspectorPanel.cpp">
+      <Filter>BaseEngine\Editor\Panel\InspectorPanel</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorControl.cpp">
+      <Filter>BaseEngine\Editor\Control</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorLabel.cpp">
+      <Filter>BaseEngine\Editor\Control</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorDragValue.cpp">
+      <Filter>BaseEngine\Editor\Control</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorProperty.cpp">
+      <Filter>BaseEngine\Editor\Panel\InspectorPanel\Property</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorProperties.cpp">
+      <Filter>BaseEngine\Editor\Panel\InspectorPanel\Property</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorCheckBox.cpp">
+      <Filter>BaseEngine\Editor\Control</Filter>
+    </ClCompile>
+    <ClCompile Include="InspectorUtilities.cpp">
+      <Filter>BaseEngine\Editor\Panel\InspectorPanel</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorAssetPicker.cpp">
+      <Filter>BaseEngine\Editor\Control</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorButton.cpp">
+      <Filter>BaseEngine\Editor\Control</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGuiUtilities.cpp">
+      <Filter>BaseEngine\Editor\ImGui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1976,9 +2027,6 @@
     <ClInclude Include="SelectManager.h">
       <Filter>BaseEngine\Editor\Panel</Filter>
     </ClInclude>
-    <ClInclude Include="InspectorPanel.h">
-      <Filter>BaseEngine\Editor\Panel</Filter>
-    </ClInclude>
     <ClInclude Include="ImGuiVariantHelper.h">
       <Filter>BaseEngine\Editor\ImGui</Filter>
     </ClInclude>
@@ -2047,6 +2095,36 @@
     </ClInclude>
     <ClInclude Include="TestComponent.h">
       <Filter>BaseEngine\DataComponents\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="InspectorPanel.h">
+      <Filter>BaseEngine\Editor\Panel\InspectorPanel</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorControl.h">
+      <Filter>BaseEngine\Editor\Control</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorLabel.h">
+      <Filter>BaseEngine\Editor\Control</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorDragValue.h">
+      <Filter>BaseEngine\Editor\Control</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorProperty.h">
+      <Filter>BaseEngine\Editor\Panel\InspectorPanel\Property</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorProperties.h">
+      <Filter>BaseEngine\Editor\Panel\InspectorPanel\Property</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorCheckBox.h">
+      <Filter>BaseEngine\Editor\Control</Filter>
+    </ClInclude>
+    <ClInclude Include="InspectorUtilities.h">
+      <Filter>BaseEngine\Editor\Panel\InspectorPanel</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorAssetPicker.h">
+      <Filter>BaseEngine\Editor\Control</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorButton.h">
+      <Filter>BaseEngine\Editor\Control</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

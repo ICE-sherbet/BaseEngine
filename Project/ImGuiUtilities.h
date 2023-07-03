@@ -7,11 +7,17 @@
 
 #pragma once
 #include <algorithm>
+#include <string_view>
 
 #include "imgui.h"
 #include "imgui_internal.h"
 
 namespace base_engine::editor::ui {
+
+const char* GenerateID();
+const char* GenerateLabelID(std::string_view label);
+void PushID();
+void PopID();
 
 class ScopedColorStack {
  public:

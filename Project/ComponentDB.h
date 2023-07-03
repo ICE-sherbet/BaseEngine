@@ -6,6 +6,7 @@
 // @details
 
 #pragma once
+#include <ranges>
 #include <string_view>
 #include <unordered_map>
 
@@ -27,6 +28,7 @@ class ComponentDB {
  public:
   struct ClassInfo {
     std::string name;
+    uint32_t id;
     std::vector<PropertyInfo> properties{};
     std::unordered_map<std::string, PropertyInfo> property_map{};
     std::unordered_map<std::string, PropertySetGet> property_setget{};
@@ -35,9 +37,11 @@ class ComponentDB {
 
   ComponentDB() = delete;
 
+  static void Initialize();
+
   template <class T>
   static void AddClass() {
-    AddClassImpl(T::_GetClassNameStatic());
+    AddClassImpl(T::_GetClassNameStatic(), T::_GetHash());
   }
 
   static std::shared_ptr<MethodBind> BindMethodImpl(
@@ -68,18 +72,40 @@ class ComponentDB {
                           const std::string& setter_name,
                           const std::string& getter_name);
 
+  static void GetPropertyList(const std::string& class_name,
+                              std::list<PropertyInfo>* list);
+  static void GetPropertyList(uint32_t class_id,
+                              std::list<PropertyInfo>* list);
+
+  /**
+   * \brief 指定クラスのプロパティを取得する
+   * \param object 指定クラスのインスタンス
+   * \param class_name 指定クラスの名前
+   * \param property_name プロパティ名
+   * \param return_value プロパティのゲッターの戻り値
+   * \return プロパティを取得できたかどうか
+   */
   static bool TryGetProperty(void* object, const std::string& class_name,
-                                const std::string& property_name,
-                                Variant& return_value);
+                             const std::string& property_name,
+                             Variant& return_value);
   static bool TrySetProperty(void* object, const std::string& class_name,
-																const std::string& property_name,
-																const Variant& value);
+                             const std::string& property_name,
+                             const Variant& value);
 
- private:
-  static void AddClassImpl(std::string_view class_name) {
-    classes_[class_name.data()] = ClassInfo{class_name.data()};
-  }
+  static void GetClassHash(std::list<uint32_t>* list);
 
-  static std::unordered_map<std::string, ClassInfo> classes_;
+  static void GetClassList(std::list<uint32_t>* list);
+
+  static std::shared_ptr<ClassInfo> GetClass(uint32_t id);
+
+  static std::shared_ptr<ClassInfo> GetClass(const std::string& name);
+
+private:
+  static void AddClassImpl(std::string_view class_name, uint32_t id);
+
+  static std::unordered_map<std::string, std::shared_ptr<ClassInfo>>
+      classes_name_map_;
+  static std::unordered_map<uint32_t, std::shared_ptr<ClassInfo>>
+      classes_id_map_;
 };
 }  // namespace base_engine

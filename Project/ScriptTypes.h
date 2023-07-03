@@ -14,8 +14,8 @@
 
 #include "Asset.h"
 #include "Ref.h"
-#include "Vector2.h"
 #include "Variant.h"
+#include "Vector2.h"
 extern "C" {
 typedef struct _MonoAssembly MonoAssembly;
 typedef struct _MonoImage MonoImage;
@@ -32,11 +32,24 @@ namespace base_engine {
 
 ;
 
+enum class PropertyHint
+{
+	kNone,
+  kAsset
+};
 
 struct PropertyInfo {
   VariantType type = VariantType::kNil;
   std::string name;
+  PropertyHint hint;
+  std::string hint_name;
   std::string class_name;
+
+  PropertyInfo(VariantType type = VariantType::kNil,
+               const std::string& name = "unknown",
+               PropertyHint hint = PropertyHint::kNone,
+               const std::string& hint_name = "")
+      : type(type), name(name), hint(hint), hint_name(hint_name) {}
 };
 namespace {
 consteval uint64_t Bit(const int n) { return std::rotl(1u, n); }

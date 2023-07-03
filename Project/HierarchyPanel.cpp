@@ -18,11 +18,12 @@ void HierarchyPanel::OnImGuiRender() {
   {
     ImGui::Begin("Hierarchy");
     if (ImGui::Button("Test Button")) {
-      int a = 100;
-      auto str = mono_value_box(CSharpScriptEngine::GetInstance()->GetCoreDomain(),
-                     mono_get_int32_class(), &a);
-      CSharpScriptEngine::CallMethod("BaseEngine_ScriptCore.Debug", "Log2",
-                                     *str);
+      for (auto storage : scene_context_->GetRegistry().storage())
+      {
+        auto name = storage.second.type().name();
+        __debugbreak();
+      }
+      
     }
     {
       ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x - 3.0f * 3.0f);

@@ -27,14 +27,12 @@ Vector3 TransformComponent::GetLocalRotationEuler() const {
 }
 
 void TransformComponent::SetLocalTranslation(const Vector3& pos) {
-
   position_ = pos;
   UpdateTransform();
 }
 
 Vector3 TransformComponent::GetLocalTranslation() const {
-  if (local_dirty_)
-  {
+  if (local_dirty_) {
     const_cast<TransformComponent*>(this)->UpdateFormValues();
   }
 
@@ -46,21 +44,15 @@ void TransformComponent::SetLocalScale(const Vector3& scale) {
   UpdateTransform();
 }
 
-Vector3 TransformComponent::GetLocalScale() const {
-
-  return scale_;
-}
+Vector3 TransformComponent::GetLocalScale() const { return scale_; }
 
 void TransformComponent::SetLocalRotationEuler(const Vector3& euler) {
-
   rotation_euler_ = euler;
   rotation_ = Rotation(rotation_euler_);
   UpdateTransform();
 }
 
-Quaternion TransformComponent::GetLocalRotation() {
-  return rotation_;
-}
+Quaternion TransformComponent::GetLocalRotation() { return rotation_; }
 
 void TransformComponent::SetGlobalTransform(const Matrix44& transform) {
   const Matrix44 xform =
@@ -90,6 +82,28 @@ Vector3 TransformComponent::GetGlobalTranslation() const {
 
 Vector3 TransformComponent::GetGlobalRotationEuler() const {
   return global_rotation_euler_;
+}
+
+void TransformComponent::_Bind() {
+  ComponentDB::BindMethod("SetLocalTranslation",
+                          &TransformComponent::SetLocalTranslation);
+  ComponentDB::BindMethod("GetLocalTranslation",
+                          &TransformComponent::GetLocalTranslation);
+  ADD_PROPERTY(PropertyInfo(VariantType::kVECTOR3F, "position"),
+               "SetLocalTranslation", "GetLocalTranslation");
+
+  ComponentDB::BindMethod("SetLocalRotationEuler",
+                          &TransformComponent::SetLocalRotationEuler);
+  ComponentDB::BindMethod("GetLocalRotationEuler",
+                          &TransformComponent::GetLocalRotationEuler);
+  ADD_PROPERTY(PropertyInfo(VariantType::kVECTOR3F, "rotationEuler"),
+               "SetLocalRotationEuler", "GetLocalRotationEuler");
+
+  ComponentDB::BindMethod("SetLocalScale", &TransformComponent::SetLocalScale);
+  ComponentDB::BindMethod("GetLocalSetLocalScale",
+                          &TransformComponent::GetLocalScale);
+  ADD_PROPERTY(PropertyInfo(VariantType::kVECTOR3F, "scale"), "SetLocalScale",
+               "GetLocalScale");
 }
 
 Matrix44 TransformComponent::GetGlobalTransform() {
