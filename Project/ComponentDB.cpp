@@ -1,6 +1,9 @@
 ﻿#include "ComponentDB.h"
 
+#include "BodyMask.h"
 #include "DataComponents.h"
+#include "ShapeComponents.h"
+
 namespace base_engine {
 using ClassInfoPtr = std::shared_ptr<ComponentDB::ClassInfo>;
 std::unordered_map<std::string, ClassInfoPtr> ComponentDB::classes_name_map_;
@@ -13,6 +16,9 @@ void ComponentDB::Initialize() {
   ScriptComponent::_Initialize();
   AudioComponent::_Initialize();
   TransformComponent::_Initialize();
+
+  physics::BodyMask::_Initialize();
+  physics::CircleShape::_Initialize();
 }
 
 std::shared_ptr<MethodBind> ComponentDB::BindMethodImpl(

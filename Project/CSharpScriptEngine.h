@@ -35,7 +35,7 @@ class CSharpScriptEngine {
   void InitMono();
 
   void LoadMonoAssembly();
-
+  void ReloadMonoAssembly();
   void InitializeRuntime();
   void ShutdownRuntime();
   void ShutdownRuntimeScriptEntity(ObjectEntity entity);
@@ -51,7 +51,7 @@ class CSharpScriptEngine {
   void InitializeRuntimeDuplicatedEntities();
 	void ShutdownScriptEntity(ObjectEntity entity, bool erase = true);
   MonoDomain* GetCoreDomain() const;
-  ;
+  
   MonoImage* GetCoreImage();
   Ref<AssemblyInfo> GetCoreAssembly() {
     return mono_state_.core_assembly_info_;

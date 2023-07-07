@@ -348,7 +348,8 @@ void Scene::OnRender(float time) {
           {0, 0, static_cast<MofFloat>(texture->texture_->GetWidth()),
            static_cast<MofFloat>(texture->texture_->GetHeight())},
           Mof::CVector4Utilities::ToU32Color(spriteRendererComponent.color),
-          {0.5, 0.5, 0});
+          {spriteRendererComponent.Pivot().x, spriteRendererComponent.Pivot().y,
+           0});
 
     } else {
       BE_CORE_INFO("UUID:{0} テクスチャデータの参照がありません。",
@@ -403,6 +404,6 @@ void Scene::CopyTo(Scene* to) {
   CopyComponent<physics::VelocityComponent>(to->registry_, registry_,
                                             entity_map);
   CopyComponent<physics::BodyMask>(to->registry_, registry_, entity_map);
-  CopyComponent<physics::Circle>(to->registry_, registry_, entity_map);
+  CopyComponent<physics::CircleShape>(to->registry_, registry_, entity_map);
   CopyComponent<physics::BoundingBox>(to->registry_, registry_, entity_map);
 }

@@ -54,6 +54,7 @@ void InspectorPanel::RenderProperties() {
                                  ImGuiTreeNodeFlags_DefaultOpen))
       continue;
     for (const auto& property : properties_map_[fixed_class]) {
+      property->UpdateProperty();
       property->Draw();
     }
   }
@@ -63,6 +64,7 @@ void InspectorPanel::RenderProperties() {
                                  ImGuiTreeNodeFlags_DefaultOpen))
       continue;
     for (const auto& property : properties) {
+      property->UpdateProperty();
       property->Draw();
     }
   }
@@ -110,40 +112,16 @@ void InspectorPanel::RenderAddComponentButton(ObjectEntity& object) {
     std::list<uint32_t> class_list;
     ComponentDB::GetClassList(&class_list);
     for (const uint32_t hash : class_list) {
-      if (!r.storage(hash))continue;
+      if (!r.storage(hash)) continue;
       if (r.storage(hash)->contains(object.GetHandle())) continue;
       if (const auto clazz = ComponentDB::GetClass(hash);
           ImGui::MenuItem(clazz->name.c_str())) {
-      	r.storage(hash)->try_emplace(object.GetHandle(), false);
+        r.storage(hash)->try_emplace(object.GetHandle(), false);
         GenerateProperties(object);
         ImGui::CloseCurrentPopup();
       }
     }
     ImGui::EndPopup();
-  }
-}
-
-void InspectorPanel::RenderProperty(ObjectEntity& object) {
-  auto& registry = scene_context_->GetRegistry();
-  for (const auto& storage : registry.storage()) {
-    std::list<PropertyInfo> infos;
-
-    auto clazz = ComponentDB::GetClass(storage.first);
-    if (!clazz) continue;
-    if (ImGui::CollapsingHeader(clazz->name.c_str(),
-                                ImGuiTreeNodeFlags_DefaultOpen)) {
-      auto data = storage.second.try_get(object.GetHandle());
-      if (!data) continue;
-
-      Variant property;
-      std::list<PropertyInfo> property_infos;
-      ComponentDB::GetPropertyList(clazz->name, &property_infos);
-      for (const auto& property_info : property_infos) {
-        ComponentDB::TryGetProperty(data, clazz->name, property_info.name,
-                                    property);
-      }
-    }
-    ComponentDB::GetPropertyList(storage.first, &infos);
   }
 }
 
@@ -281,27 +259,27 @@ void InspectorPanel::RenderRigidBody(ObjectEntity& object) {
 }
 
 void InspectorPanel::RenderCircleShape(ObjectEntity& object) {
-  if (!object.HasComponent<physics::Circle>()) return;
-  if (!ImGui::CollapsingHeader("Circle Shape", ImGuiTreeNodeFlags_DefaultOpen))
+  if (!object.HasComponent<physics::CircleShape>()) return;
+  if (!ImGui::CollapsingHeader("CircleShape Shape", ImGuiTreeNodeFlags_DefaultOpen))
     return;
 
-  auto& circle = object.GetComponent<physics::Circle>();
+  auto& circle = object.GetComponent<physics::CircleShape>();
   ImGui::InputFloat("Radius", &circle.radius);
 }
 
 void InspectorPanel::GenerateProperties(ObjectEntity& object) {
   properties_map_.clear();
+
   auto& registry = scene_context_->GetRegistry();
   for (const auto& storage : registry.storage()) {
-    std::list<PropertyInfo> infos;
 
     auto clazz = ComponentDB::GetClass(storage.first);
     if (!clazz) continue;
     auto data = storage.second.try_get(object.GetHandle());
     if (!data) continue;
-
     std::list<PropertyInfo> property_infos;
-    ComponentDB::GetPropertyList(clazz->name, &property_infos);
+    object.GetClassPropertyList(storage.first, &property_infos);
+
     auto& properties = properties_map_[clazz->name];
     properties = std::vector<PropertyPtr>{};
 
@@ -310,7 +288,7 @@ void InspectorPanel::GenerateProperties(ObjectEntity& object) {
                                                   property_info.hint,
                                                   property_info.hint_name);
       if (!editor) continue;
-      editor->SetObjectAndClassName(data, clazz->name);
+      editor->SetObjectAndClassName(object, clazz->name);
       editor->SetPropertyName(property_info.name);
       editor->UpdateProperty();
       editor->Connect("PropertyChanged",
@@ -324,15 +302,11 @@ void InspectorPanel::GenerateProperties(ObjectEntity& object) {
 void InspectorPanel::PropertyChanged(const std::string& class_name,
                                      const std::string& property,
                                      const Variant& value) {
-  const ObjectEntity object =
+	ObjectEntity object =
       scene_context_->TryGetEntityWithUUID(select_item_);
   if (!object) return;
-
-  auto& registry = scene_context_->GetRegistry();
-  const auto clazz = ComponentDB::GetClass(class_name);
-  const auto data = registry.storage(clazz->id)->try_get(object.GetHandle());
-  if (!data) return;
-  ComponentDB::TrySetProperty(data, class_name, property, value);
+	const auto clazz = ComponentDB::GetClass(class_name);
+  object.TrySetProperty(class_name, property, value);
 }
 
 void InspectorPanel::SetSceneContext(const Ref<Scene>& context) {

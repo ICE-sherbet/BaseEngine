@@ -12,7 +12,7 @@
 
 namespace base_engine::physics {
 class ContactTesterCircleCircle
-    : public ContactTesterSystem<physics::Circle, physics::Circle> {
+    : public ContactTesterSystem<physics::CircleShape, physics::CircleShape> {
  public:
   ContactTesterCircleCircle(const Ref<Scene>& scene,
                             const Ref<PhysicsEngineData>& engine);

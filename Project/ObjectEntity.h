@@ -50,7 +50,7 @@ class ObjectEntity {
     BE_CORE_ASSERT(HasComponent<T>(), "Entity doesn't have component!");
     if (!HasComponent<T>())
     {
-      int n = 3;
+      __debugbreak();
     }
     return scene_->registry_.get<T>(entity_handle_);
   }
@@ -59,7 +59,7 @@ class ObjectEntity {
   [[nodiscard]] const T& GetComponent() const {
     BE_CORE_ASSERT(HasComponent<T>(), "Entity doesn't have component!");
     if (!HasComponent<T>()) {
-      int n = 3;
+      __debugbreak();
     }
     return scene_->registry_.get<T>(entity_handle_);
   }
@@ -126,7 +126,70 @@ class ObjectEntity {
 
   [[nodiscard]] becs::Entity GetHandle() const { return entity_handle_; }
 
- private:
+  /**
+   * \brief Scriptを含むプロパティのリストを取得する
+   * \param list OUT 全てのプロパティリストが返される
+   */
+  void GetPropertyList(std::list<PropertyInfo>* list);
+
+
+  /**
+   * \brief Scriptを含む指定クラスのプロパティリストを取得する
+   * \param class_name 指定クラスの名前
+   * \param list OUT プロパティのリストが返される
+   */
+  void GetClassPropertyList(const std::string& class_name,
+                            std::list<PropertyInfo>* list);
+  /**
+   * \brief Scriptを含む指定クラスのプロパティリストを取得する
+   * \param class_id 指定クラスのハッシュ値
+   * \param list OUT プロパティのリストが返される
+   */
+  void GetClassPropertyList(uint32_t class_id, std::list<PropertyInfo>* list);
+
+  /**
+   * \brief Scriptを含む指定クラスのプロパティを取得する
+   * \param class_name 指定クラスの名前
+   * \param property_info プロパティ情報
+   * \param return_value プロパティのゲッターの戻り値
+   * \return プロパティを取得できたかどうか
+   */
+  bool TryGetProperty(const std::string& class_name,
+                      const PropertyInfo& property_info,
+                             Variant& return_value) const;
+  /**
+   * \brief Scriptを含む指定クラスのプロパティを取得する
+   * \param class_name 指定クラスの名前
+   * \param property_name プロパティ名前
+   * \param return_value プロパティのゲッターの戻り値
+   * \return プロパティを取得できたかどうか
+   */
+  bool TryGetProperty(const std::string& class_name,
+                      const std::string& property_name,
+                      Variant& return_value) const;
+
+  /**
+   * \brief Scriptを含む指定クラスのプロパティにセットする
+   * \param class_name 指定クラスの名前
+   * \param property_info プロパティ情報
+   * \param value プロパティのセッターに渡す値
+   * \return プロパティにセット出来たかどうか
+   */
+  bool TrySetProperty(const std::string& class_name,
+                      const PropertyInfo& property_info,
+                      const Variant& value);
+  /**
+   * \brief Scriptを含む指定クラスのプロパティにセットする
+   * \param class_name 指定クラスの名前
+   * \param property_name プロパティ名前
+   * \param value プロパティのセッターに渡す値
+   * \return プロパティにセット出来たかどうか
+   */
+  bool TrySetProperty(const std::string& class_name,
+                      const std::string& property_name,
+                      const Variant& value);
+
+private:
   /**
    * \brief シリアライズされたデータからシーンで生成される場合などに使用する
    * \param name オブジェクト名

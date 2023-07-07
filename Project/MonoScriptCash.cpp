@@ -63,7 +63,7 @@ void MonoScriptCacheStorage::GenerateCacheForAssembly(
 
     CacheClassMethods(assembly_info, managed_class);
     CacheClassFields(assembly_info, managed_class);
-    
+
     if (mono_class_is_subclass_of(
             managed_class.mono_class,
             GetManagedClassByName("BaseEngine_ScriptCore.Entity")->mono_class,
@@ -210,8 +210,9 @@ void MonoScriptCacheStorage::CacheClassFields(
     MonoFieldInfo& field = cache_->fields[field_id];
     field.id = field_id;
     field.field_info.name = field_name;
-    field.field_info.type =
-        MonoScriptUtilities::GetVariantTypeFromMonoType(mono_type);
+    field.field_info.type = MonoScriptUtilities::GetVariantTypeFromMonoType(
+        mono_type, &field.field_info.hint, &field.field_info.hint_name);
+    field.field_info.id = field_id;
     field.mono_field = mono_field;
     field.type = mono_field_get_type(mono_field);
 
@@ -252,7 +253,15 @@ void MonoScriptCacheStorage::CacheClassFields(
         break;
       }
     }
-
+    if (attributes &&
+        mono_custom_attrs_has_attr(
+            attributes,
+            GetManagedClassByName("BaseEngine_ScriptCore.ShowInEditorAttribute")->mono_class)) {
+      field.attribute_flags &= ~(uint64_t)FieldFlags::kProtected;
+      field.attribute_flags &= ~(uint64_t)FieldFlags::kInternal;
+      field.attribute_flags &= ~(uint64_t)FieldFlags::kPrivate;
+      field.attribute_flags |= (uint64_t)FieldFlags::kPublic;
+    }
     {
       int align;
       field.size = mono_type_size(mono_type, &align);
@@ -307,6 +316,8 @@ bool MonoScriptCacheStorage::CacheCoreClasses() {
     if (type == VariantType::MANAGED || type == VariantType::kNil) return;
     cache_->core_classes[type] = GetManagedClassByName(full_name)->id;
   };
+
+  CacheBeCoreLibClass("ShowInEditorAttribute");
   CacheBeCoreLibClass("Prefab");
 
   CacheBeCoreLibClass("Entity");

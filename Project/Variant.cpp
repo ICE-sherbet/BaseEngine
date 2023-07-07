@@ -13,7 +13,7 @@ void CopyUnbox(T& value, MonoObject* obj) {
 
 Variant::Variant() : data_() { this->type_ = VariantType::kNil; }
 
-Variant::Variant(VariantType type) {
+Variant::Variant(VariantType type) : data_() {
   this->type_ = type;
 
   switch (type) {

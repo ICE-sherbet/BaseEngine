@@ -1,14 +1,14 @@
 ﻿#include "ContactTesterCircleCircle.h"
 
 base_engine::physics::ContactTesterCircleCircle::ContactTesterCircleCircle(const Ref<Scene>& scene,
-	const Ref<PhysicsEngineData>& engine): ContactTesterSystem<Circle, Circle>(scene, engine)
+	const Ref<PhysicsEngineData>& engine): ContactTesterSystem<CircleShape, CircleShape>(scene, engine)
 {}
 
 void base_engine::physics::ContactTesterCircleCircle::TestPair(Contact& possible_contact)
 {
 	const auto transform_view =
 		GetScene()->GetRegistry().view<component::TransformComponent>();
-	const auto circle_view = GetScene()->GetRegistry().view<physics::Circle>();
+	const auto circle_view = GetScene()->GetRegistry().view<physics::CircleShape>();
 
 	auto pos_a =
 		transform_view
@@ -20,9 +20,9 @@ void base_engine::physics::ContactTesterCircleCircle::TestPair(Contact& possible
 		.GetGlobalTranslation();
 
 	const auto [radius_a] =
-		circle_view.get<physics::Circle>(possible_contact.body_a);
+		circle_view.get<physics::CircleShape>(possible_contact.body_a);
 	const auto [radius_b] =
-		circle_view.get<physics::Circle>(possible_contact.body_b);
+		circle_view.get<physics::CircleShape>(possible_contact.body_b);
 
 	float penetration = 0;
 	Vector2 normal;

@@ -6,13 +6,18 @@
 // @details
 
 #pragma once
+#include "ComponentDB.h"
+#include "ComponentProperty.h"
 
 namespace base_engine::physics {
 enum ShapeType { kShapeTypeNone, kCircle };
 
-struct Circle {
- public:
+struct CircleShape {
+  BE_COMPONENT(CircleShape)
+
   float radius;
+  [[nodiscard]] float Radius() const { return radius; }
+  void SetRadius(float radius) { this->radius = radius; }
 
   /**
    * \brief 質量慣性モーメントを求める\n
@@ -26,5 +31,7 @@ struct Circle {
   }
 
   static constexpr size_t Type() { return ShapeType::kCircle; }
+
+  static void _Bind();
 };
 }  // namespace base_engine::physics

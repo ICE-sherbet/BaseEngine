@@ -63,12 +63,6 @@
     <Filter Include="BaseEngine\Component\Input">
       <UniqueIdentifier>{269fae4c-5f53-468d-a9da-9e19e920f4ec}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\ConnectDot">
-      <UniqueIdentifier>{16ef7d1b-6e6d-4799-aa1a-3e441b5b583a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\ConnectDot\GameMain">
-      <UniqueIdentifier>{eb33f71c-9d97-41d9-96d2-b1d18807e5b2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="BaseEngine\Component\RenderComponent\ShapeRenderComponent">
       <UniqueIdentifier>{80bef507-02d6-47eb-8729-9074225e7e40}</UniqueIdentifier>
     </Filter>
@@ -502,6 +496,18 @@
     <Filter Include="BaseEngine\Editor\Panel\InspectorPanel\Property">
       <UniqueIdentifier>{e4a190b9-890e-4c43-a2cf-b069bc87b8fc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="BaseEngine\Editor\Control\DragValue">
+      <UniqueIdentifier>{69578b98-fd6a-4b67-8d44-2e8204054f07}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Main">
+      <UniqueIdentifier>{16ef7d1b-6e6d-4799-aa1a-3e441b5b583a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Main\GameMain">
+      <UniqueIdentifier>{eb33f71c-9d97-41d9-96d2-b1d18807e5b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BaseEngine\Editor\Panel\MenubarPanel">
+      <UniqueIdentifier>{527bc7ee-59bf-4b28-8a2f-e5048c4d4b40}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -517,7 +523,7 @@
       <Filter>BaseEngine\Math\Vector</Filter>
     </ClCompile>
     <ClCompile Include="Game.cpp">
-      <Filter>ソース ファイル\ConnectDot\GameMain</Filter>
+      <Filter>ソース ファイル\Main\GameMain</Filter>
     </ClCompile>
     <ClCompile Include="SpriteComponent.cpp">
       <Filter>BaseEngine\Component\RenderComponent\SpriteComponent</Filter>
@@ -1080,9 +1086,6 @@
     <ClCompile Include="EditorLabel.cpp">
       <Filter>BaseEngine\Editor\Control</Filter>
     </ClCompile>
-    <ClCompile Include="EditorDragValue.cpp">
-      <Filter>BaseEngine\Editor\Control</Filter>
-    </ClCompile>
     <ClCompile Include="EditorProperty.cpp">
       <Filter>BaseEngine\Editor\Panel\InspectorPanel\Property</Filter>
     </ClCompile>
@@ -1104,6 +1107,21 @@
     <ClCompile Include="ImGuiUtilities.cpp">
       <Filter>BaseEngine\Editor\ImGui</Filter>
     </ClCompile>
+    <ClCompile Include="EditorDragValueFloat.cpp">
+      <Filter>BaseEngine\Editor\Control\DragValue</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorDragValueInt.cpp">
+      <Filter>BaseEngine\Editor\Control\DragValue</Filter>
+    </ClCompile>
+    <ClCompile Include="ShapeComponents.cpp">
+      <Filter>BaseEngine\physics\ECS\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="BodyMask.cpp">
+      <Filter>BaseEngine\physics\ECS\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="MenuBarPanel.cpp">
+      <Filter>BaseEngine\Editor\Panel\MenubarPanel</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameApp.h">
@@ -1119,7 +1137,7 @@
       <Filter>BaseEngine\Math\Vector</Filter>
     </ClInclude>
     <ClInclude Include="Game.h">
-      <Filter>ソース ファイル\ConnectDot\GameMain</Filter>
+      <Filter>ソース ファイル\Main\GameMain</Filter>
     </ClInclude>
     <ClInclude Include="SpriteComponent.h">
       <Filter>BaseEngine\Component\RenderComponent\SpriteComponent</Filter>
@@ -2105,9 +2123,6 @@
     <ClInclude Include="EditorLabel.h">
       <Filter>BaseEngine\Editor\Control</Filter>
     </ClInclude>
-    <ClInclude Include="EditorDragValue.h">
-      <Filter>BaseEngine\Editor\Control</Filter>
-    </ClInclude>
     <ClInclude Include="EditorProperty.h">
       <Filter>BaseEngine\Editor\Panel\InspectorPanel\Property</Filter>
     </ClInclude>
@@ -2125,6 +2140,15 @@
     </ClInclude>
     <ClInclude Include="EditorButton.h">
       <Filter>BaseEngine\Editor\Control</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorDragValueFloat.h">
+      <Filter>BaseEngine\Editor\Control\DragValue</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorDragValueInt.h">
+      <Filter>BaseEngine\Editor\Control\DragValue</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuBarPanel.h">
+      <Filter>BaseEngine\Editor\Panel\MenubarPanel</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

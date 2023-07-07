@@ -143,6 +143,7 @@
     <ClCompile Include="BaseEngineCollision.cpp" />
     <ClCompile Include="BaseEngineCore.cpp" />
     <ClCompile Include="BaseEngineInput.cpp" />
+    <ClCompile Include="BodyMask.cpp" />
     <ClCompile Include="BodyTypeTag.cpp" />
     <ClCompile Include="BroadPhaseSystem.cpp" />
     <ClCompile Include="Callable.cpp" />
@@ -164,7 +165,8 @@
     <ClCompile Include="EditorCheckBox.cpp" />
     <ClCompile Include="EditorConsoleSink.cpp" />
     <ClCompile Include="EditorControl.cpp" />
-    <ClCompile Include="EditorDragValue.cpp" />
+    <ClCompile Include="EditorDragValueFloat.cpp" />
+    <ClCompile Include="EditorDragValueInt.cpp" />
     <ClCompile Include="EditorLabel.cpp" />
     <ClCompile Include="EditorLayer.cpp" />
     <ClCompile Include="EditorPanel.cpp" />
@@ -189,6 +191,7 @@
     <ClCompile Include="DebugGlue.cpp" />
     <ClCompile Include="ManagedComponentStorage.cpp" />
     <ClCompile Include="Matrix44Utilities.cpp" />
+    <ClCompile Include="MenuBarPanel.cpp" />
     <ClCompile Include="MethodBind.cpp" />
     <ClCompile Include="MofAudio.cpp" />
     <ClCompile Include="MofAudioEngine.cpp" />
@@ -232,6 +235,7 @@
     <ClCompile Include="SetupEditorImGui.cpp" />
     <ClCompile Include="ShaderBase.cpp" />
     <ClCompile Include="PhysicsSolversCommon.cpp" />
+    <ClCompile Include="ShapeComponents.cpp" />
     <ClCompile Include="SpriteRendererComponent.cpp" />
     <ClCompile Include="SpriteRendererGlue.cpp" />
     <ClCompile Include="TagComponent.cpp" />
@@ -424,7 +428,8 @@
     <ClInclude Include="EditorCheckBox.h" />
     <ClInclude Include="EditorConsoleSink.h" />
     <ClInclude Include="EditorControl.h" />
-    <ClInclude Include="EditorDragValue.h" />
+    <ClInclude Include="EditorDragValueFloat.h" />
+    <ClInclude Include="EditorDragValueInt.h" />
     <ClInclude Include="EditorLabel.h" />
     <ClInclude Include="EditorLayer.h" />
     <ClInclude Include="EditorPanel.h" />
@@ -443,6 +448,7 @@
     <ClInclude Include="ImGuiVariantHelper.h" />
     <ClInclude Include="InspectorPanel.h" />
     <ClInclude Include="InspectorUtilities.h" />
+    <ClInclude Include="MenuBarPanel.h" />
     <ClInclude Include="MethodBind.h" />
     <ClInclude Include="OnCollisionTag.h" />
     <ClInclude Include="PhysicsContactListenerSystem.h" />

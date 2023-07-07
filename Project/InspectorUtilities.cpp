@@ -15,24 +15,63 @@ std::shared_ptr<EditorProperty> MakeEditorProperty(
       auto editor = std::make_shared<EditorPropertyCheck>();
       return editor;
     } break;
-    case VariantType::kInt8:
-      break;
-    case VariantType::kInt16:
-      break;
-    case VariantType::kInt32:
-      break;
-    case VariantType::kInt64:
-      break;
-    case VariantType::kUInt8:
-      break;
-    case VariantType::kUInt16:
-      break;
-    case VariantType::kUInt32:
-      break;
-    case VariantType::kUInt64:
-      break;
-    case VariantType::kFloat:
-      break;
+    case VariantType::kInt8: {
+      auto editor = std::make_shared<EditorPropertyInteger>();
+      using Limit = std::numeric_limits<int8_t>;
+      editor->Setup(Limit::min(), Limit::max(), 1);
+      return editor;
+    } break;
+    case VariantType::kInt16: {
+      auto editor = std::make_shared<EditorPropertyInteger>();
+      using Limit = std::numeric_limits<int16_t>;
+      editor->Setup(Limit::min(), Limit::max(), 1);
+      return editor;
+    } break;
+    case VariantType::kInt32: {
+      if (hint == PropertyHint::kLayerPhysics) {
+        auto editor = std::make_shared<EditorPropertyLayers>();
+        return editor;
+      } else {
+        auto editor = std::make_shared<EditorPropertyInteger>();
+        using Limit = std::numeric_limits<int32_t>;
+        editor->Setup(Limit::min(), Limit::max(), 1);
+        return editor;
+      }
+    } break;
+    case VariantType::kInt64: {
+      auto editor = std::make_shared<EditorPropertyInteger>();
+      using Limit = std::numeric_limits<int64_t>;
+      editor->Setup(Limit::min(), Limit::max(), 1);
+      return editor;
+    } break;
+    case VariantType::kUInt8: {
+      auto editor = std::make_shared<EditorPropertyInteger>();
+      using Limit = std::numeric_limits<uint8_t>;
+      editor->Setup(Limit::min(), Limit::max(), 1);
+      return editor;
+    } break;
+    case VariantType::kUInt16: {
+      auto editor = std::make_shared<EditorPropertyInteger>();
+      using Limit = std::numeric_limits<uint16_t>;
+      editor->Setup(Limit::min(), Limit::max(), 1);
+      return editor;
+    } break;
+    case VariantType::kUInt32: {
+      auto editor = std::make_shared<EditorPropertyInteger>();
+      using Limit = std::numeric_limits<uint32_t>;
+      editor->Setup(Limit::min(), Limit::max(), 1);
+      return editor;
+    } break;
+    case VariantType::kUInt64: {
+      auto editor = std::make_shared<EditorPropertyInteger>();
+      using Limit = std::numeric_limits<uint64_t>;
+      editor->Setup(Limit::min(), Limit::max(), 1);
+      return editor;
+    } break;
+    case VariantType::kFloat: {
+      auto editor = std::make_shared<EditorPropertyFloat>();
+      return editor;
+    } break;
     case VariantType::kDouble:
       break;
     case VariantType::kString:

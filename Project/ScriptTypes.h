@@ -35,14 +35,17 @@ namespace base_engine {
 enum class PropertyHint
 {
 	kNone,
-  kAsset
+  kAsset,
+
+  kLayerPhysics
 };
 
 struct PropertyInfo {
+  uint32_t id = 0;
   VariantType type = VariantType::kNil;
   std::string name;
-  PropertyHint hint;
-  std::string hint_name;
+  PropertyHint hint = PropertyHint::kNone;
+  std::string hint_name = "";
   std::string class_name;
 
   PropertyInfo(VariantType type = VariantType::kNil,

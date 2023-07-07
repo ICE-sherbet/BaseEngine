@@ -5,6 +5,7 @@
 #include "InspectorPanel.h"
 #include "ToolbarPanel.h"
 #include "AssetsBrowserPanel.h"
+#include "MenuBarPanel.h"
 
 namespace base_engine::editor {
 void EditorPanelManager::Initialize() {
@@ -12,6 +13,7 @@ void EditorPanelManager::Initialize() {
   panels_.emplace_back(std::make_shared<InspectorPanel>());
   panels_.emplace_back(std::make_shared<ToolbarPanel>(this));
   panels_.emplace_back(std::make_shared<AssetsBrowserPanel>());
+  panels_.emplace_back(std::make_shared<MenuBarPanel>());
 
   for (const auto& editor_panel : panels_) {
     editor_panel->Initialize(scene_context_);

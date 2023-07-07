@@ -208,14 +208,14 @@ inline physics::BodyMask DeserializeBodyMask(YAML::Node& node,
 }
 
 inline void SerializeCircle(YAML::Emitter& out, ObjectEntity& entity) {
-  if (!entity.HasComponent<physics::Circle>()) return;
+  if (!entity.HasComponent<physics::CircleShape>()) return;
   out << YAML::Key << "CircleComponent";
   out << YAML::BeginMap;
-  const auto& [radius] = entity.GetComponent<physics::Circle>();
+  const auto& [radius] = entity.GetComponent<physics::CircleShape>();
   out << YAML::Key << "Radius" << YAML::Value << radius;
   out << YAML::EndMap;
 }
-inline physics::Circle DeserializeCircle(YAML::Node& node,
+inline physics::CircleShape DeserializeCircle(YAML::Node& node,
                                          ObjectEntity& entity) {
   auto circle_node = node["CircleComponent"];
   if (!circle_node) return {0};
@@ -289,7 +289,7 @@ inline void DeserializeScriptComponent(YAML::Node& node, ObjectEntity& entity) {
     });
     Ref<IFieldStorage> storage =
         CSharpScriptEngine::GetInstance()->GetFieldStorage(entity, field_id);
-    if (!storage) return;
+    if (!storage) continue;
     storage->SetValueVariant(object);
   }
 }
@@ -297,7 +297,7 @@ inline void DeserializeScriptComponent(YAML::Node& node, ObjectEntity& entity) {
 void DeserializePhysics(YAML::Node& entity, ObjectEntity& deserialized_entity) {
   const auto rigid = DeserializeRigidBodyComponent(entity, deserialized_entity);
   const auto mask = DeserializeBodyMask(entity, deserialized_entity);
-  if (mask.shape_type_id == physics::Circle::Type()) {
+  if (mask.shape_type_id == physics::CircleShape::Type()) {
     const auto [radius] = DeserializeCircle(entity, deserialized_entity);
     physics::PhysicsObjectFactory::CreateCircle(deserialized_entity, radius,
                                                 rigid.mass, rigid.restitution);

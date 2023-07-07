@@ -20,7 +20,6 @@ class InspectorPanel : public EditorPanel {
  private:
   void RenderProperties();
   void RenderAddComponentButton(ObjectEntity& object);
-  void RenderProperty(ObjectEntity& object);
   void RenderTag(ObjectEntity& object);
   void RenderTransform(ObjectEntity& object);
   void RenderSprite(ObjectEntity& object);

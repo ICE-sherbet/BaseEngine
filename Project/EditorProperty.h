@@ -9,6 +9,8 @@
 #include "ConnectableObject.h"
 #include "EditorControl.h"
 #include "EditorLabel.h"
+#include "ObjectEntity.h"
+#include "Scene.h"
 
 namespace base_engine::editor {
 class EditorProperty : public ConnectableObject {
@@ -18,36 +20,23 @@ class EditorProperty : public ConnectableObject {
   };
 
  public:
-  void SetPropertyName(const std::string& name) {
-    property_name_ = name;
-    label_->SetText(property_name_);
-  }
-  void SetObjectAndClassName(void* object,const std::string& class_name)
-  {
-    object_ = object;
-    class_name_ = class_name;
-  }
+  void SetPropertyName(const std::string& name);
+
+  void SetObjectAndClassName(ObjectEntity& object,const std::string& class_name);
   std::string GetPropertyName();
 
   void EmitChanged(const std::string& class_name,const std::string& property,
                    const Variant& value);
   virtual void UpdateProperty();
 
-  virtual void Draw() const {
-    label_->Notification(kControlDraw);
-    for (const auto& control : controls_) {
-      control->Notification(kControlDraw);
-    }
-  }
+  virtual void Draw() const;
 
-  EditorProperty() { label_ = std::make_shared<EditorLabel>(); };
+  EditorProperty();;
 
-  void AddControl(std::shared_ptr<EditorControl> control) {
-    controls_.emplace_back(control);
-  }
+  void AddControl(std::shared_ptr<EditorControl> control);
 
- protected:
-  void* object_ = nullptr;
+protected:
+  ObjectEntity object_;
   std::string class_name_;
   std::string property_name_;
   std::shared_ptr<EditorLabel> label_;

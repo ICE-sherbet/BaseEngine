@@ -45,5 +45,6 @@ private:
   std::shared_ptr<EditorButton> cancel_button_;
 
   bool show_popup_ = false;
+  const char* draw_id_;
 };
 }  // namespace base_engine::editor

@@ -28,7 +28,6 @@ Prefab:
       ClassHandle: 1747920759
       Name: Demo.DemoBehavior.Shooting.PlayerController
       Fields:
-        speed_: 10
+        _speed: 10
         _shotInterval: 0.100000001
-        _shotIntervalCounter: 0
         _bulletPrefab: 3044122888852536289

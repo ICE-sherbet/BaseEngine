@@ -2,18 +2,16 @@
 // @brief
 // @author ICE
 // @date 2023/04/07
-// 
+//
 // @details
 
 #pragma once
 #include "Asset.h"
-#include "MonoGCHandle.h"
-
 #include "ComponentDB.h"
 #include "ComponentProperty.h"
+#include "MonoGCHandle.h"
 
-namespace base_engine::component
-{
+namespace base_engine::component {
 struct ScriptComponent {
   BE_COMPONENT(ScriptComponent)
   AssetHandle script_class_handle;
@@ -30,5 +28,12 @@ struct ScriptComponent {
       : script_class_handle(scriptClassHandle) {}
 
   static void _Bind();
+
+  [[nodiscard]] AssetHandle ScriptClassHandle() const {
+    return script_class_handle;
+  }
+  void SetScriptClassHandle(const AssetHandle& script_class_handle) {
+    this->script_class_handle = script_class_handle;
+  }
 };
-}
+}  // namespace base_engine::component

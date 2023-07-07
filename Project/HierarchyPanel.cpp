@@ -17,14 +17,6 @@ void HierarchyPanel::Initialize(const Ref<Scene>& context) {
 void HierarchyPanel::OnImGuiRender() {
   {
     ImGui::Begin("Hierarchy");
-    if (ImGui::Button("Test Button")) {
-      for (auto storage : scene_context_->GetRegistry().storage())
-      {
-        auto name = storage.second.type().name();
-        __debugbreak();
-      }
-      
-    }
     {
       ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x - 3.0f * 3.0f);
       for (const auto entity_view =

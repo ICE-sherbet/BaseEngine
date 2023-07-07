@@ -46,11 +46,11 @@ void EditorAssetPicker::UpdateMenu() { Popup(); }
 void EditorAssetPicker::Popup() {
   show_popup_ = true;
 
-  const std::string popup_name = "AssetSearchPopup";
-  ImGui::OpenPopup(popup_name.c_str());
+  ImGui::OpenPopup(draw_id_);
 }
 
 void EditorAssetPicker::Draw() {
+  draw_id_ = ui::GenerateLabelID("AssetSearchPopup");
   label_->Notification(kControlDraw);
   ImGui::SameLine();
   edit_button_->Notification(kControlDraw);
@@ -60,12 +60,28 @@ void EditorAssetPicker::Draw() {
 void EditorAssetPicker::PopupDraw() {
   const std::string popup_name = "AssetSearchPopup";
 
+  if (ImGui::BeginDragDropTarget()) {
+    const auto data = ImGui::AcceptDragDropPayload("asset_payload");
+    const auto type = AssetUtilities::AssetTypeFromString(search_type_);
+
+    if (data) {
+      if (const auto handle = *static_cast<AssetHandle*>(data->Data);
+          AssetManager::GetMutableMetadata(handle).type == type ||
+          type == AssetType::kNone) {
+        pick_ = handle;
+        AssetSelect();
+      }
+
+      ImGui::EndDragDropTarget();
+    }
+  }
+
   const auto& registry = AssetManager::GetAssetRegistry();
 
-  if (ImGui::BeginPopup(popup_name.c_str(),
+  if (ImGui::BeginPopup(draw_id_,
                         ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize)) {
-    auto type = AssetUtilities::AssetTypeFromString(search_type_);
-    if (ImGui::BeginListBox("## AssetSearchPopup")) {
+    const auto type = AssetUtilities::AssetTypeFromString(search_type_);
+    if (ImGui::BeginListBox(ui::GenerateLabelID(""))) {
       for (const auto& metadata : registry | std::views::values) {
         if (type != AssetType::kNone && metadata.type != type) continue;
         std::string preview = metadata.file_path.string();
@@ -94,7 +110,7 @@ void EditorAssetPicker::AssetSelect() {
 }
 
 void EditorAssetPicker::EditedAssetUpdate() const {
-	const auto meta = AssetManager::GetMutableMetadata(pick_);
+  const auto meta = AssetManager::GetMutableMetadata(pick_);
   if (!meta.handle) return;
   edit_button_->SetText(meta.file_path.filename().generic_string());
 }
