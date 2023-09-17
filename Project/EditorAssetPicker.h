@@ -37,6 +37,7 @@ private:
   std::string text_;
   std::string search_type_;
 
+  AssetHandle edit_ = 0;
   AssetHandle pick_ = 0;
 
   std::shared_ptr<EditorLabel> label_;

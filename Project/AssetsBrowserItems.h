@@ -91,9 +91,9 @@ class AssetsBrowserAsset : public AssetsBrowserItem {
   AssetMetadata asset_info_;
 };
 class ContentBrowserItemList {
+ public:
   static constexpr size_t kInvalidItem = std::numeric_limits<size_t>::max();
 
- public:
   using ItemList = std::vector<Ref<AssetsBrowserItem>>;
 
   ItemList::iterator begin() { return items_.begin(); }
@@ -142,9 +142,12 @@ class ContentBrowserItemList {
 
     return kInvalidItem;
   }
+  void AddItem(const Ref<AssetsBrowserItem>& item) {
+    std::scoped_lock lock(mutex_);
+    items_.push_back(item);
+  }
 
  private:
-  friend class AssetsBrowserPanel;
   std::mutex mutex_;
   ItemList items_;
 };

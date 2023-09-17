@@ -12,12 +12,6 @@
     <Filter Include="BaseEngine">
       <UniqueIdentifier>{fe4ff290-9602-4bdb-b942-9bcb61c1bce8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="BaseEngine\Actor">
-      <UniqueIdentifier>{133e7768-fa84-4e23-96b2-52c1ed08a487}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="BaseEngine\Component">
-      <UniqueIdentifier>{a0a9f92b-f8e8-409c-859a-a1a0ca319a19}</UniqueIdentifier>
-    </Filter>
     <Filter Include="BaseEngine\Math">
       <UniqueIdentifier>{602b4677-d6b8-4c4e-9b62-05322e011af5}</UniqueIdentifier>
     </Filter>
@@ -42,29 +36,8 @@
     <Filter Include="BaseEngine\Render">
       <UniqueIdentifier>{387cc02f-2ae5-4e7b-bc83-8679d47f7e31}</UniqueIdentifier>
     </Filter>
-    <Filter Include="BaseEngine\Component\RenderComponent">
-      <UniqueIdentifier>{d6e3b69b-5ec2-4d9b-bdb7-cdca76549770}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="BaseEngine\Component\RenderComponent\SpriteComponent">
-      <UniqueIdentifier>{78450f0a-d030-4b0e-a6b3-9fdaa166b0c5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="BaseEngine\Component\CollisionComponent">
-      <UniqueIdentifier>{aa8aa870-fadc-41bf-af58-a82dc71f90bc}</UniqueIdentifier>
-    </Filter>
     <Filter Include="BaseEngine\Shapes">
       <UniqueIdentifier>{cdee9ba7-6491-4b29-9321-51519e574684}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="BaseEngine\Shapes\Primitive">
-      <UniqueIdentifier>{85d0750a-865b-4187-be4b-f53df20f2a29}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="BaseEngine\Actor\Input">
-      <UniqueIdentifier>{7473ae44-da35-4b53-8b98-8d1645e23362}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="BaseEngine\Component\Input">
-      <UniqueIdentifier>{269fae4c-5f53-468d-a9da-9e19e920f4ec}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="BaseEngine\Component\RenderComponent\ShapeRenderComponent">
-      <UniqueIdentifier>{80bef507-02d6-47eb-8729-9074225e7e40}</UniqueIdentifier>
     </Filter>
     <Filter Include="BaseEngine\Utilities">
       <UniqueIdentifier>{6b18e16a-bce8-4de1-a9e2-7d4abd8dc060}</UniqueIdentifier>
@@ -78,21 +51,6 @@
     <Filter Include="BaseEngine\physics">
       <UniqueIdentifier>{7d0e0f0a-d457-45f7-bcc8-4582254b85c7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="BaseEngine\physics\Collision">
-      <UniqueIdentifier>{b67da92c-ef6a-497c-8c3b-6983daff5bb2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="BaseEngine\physics\Collision\CollisionDetector">
-      <UniqueIdentifier>{363f3ff4-1676-47d3-b441-11cc939388d6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="BaseEngine\physics\Collision\CollisionDetector\GJK">
-      <UniqueIdentifier>{526b9ec4-1a23-4790-985f-c94b37b1d300}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="BaseEngine\physics\Collision\CollisionDetector\GJK\Solver">
-      <UniqueIdentifier>{1385bb70-a388-4e6a-8b2c-5f9b4cfb0ba2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="BaseEngine\Component\PhysicsBody">
-      <UniqueIdentifier>{0307aef3-4f8b-4422-ad9e-af740f804cd9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Utilities">
       <UniqueIdentifier>{cfc6ffb4-f94c-4c04-8201-ab2f72f0636a}</UniqueIdentifier>
     </Filter>
@@ -105,17 +63,8 @@
     <Filter Include="Utilities\Observable">
       <UniqueIdentifier>{1b97721b-48a6-4337-8905-2c3434fe0594}</UniqueIdentifier>
     </Filter>
-    <Filter Include="BaseEngine\Component\AnimationComponent">
-      <UniqueIdentifier>{20603d15-2afa-496a-8962-a3bec0048cd8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="BaseEngine\Component\AnimationComponent\SpriteAnimationComponent">
-      <UniqueIdentifier>{4d492883-255a-456b-9868-be7b788c855c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Utilities\Extensions\Map">
       <UniqueIdentifier>{6cac71f4-648e-48e3-81fd-d89675c258ed}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="BaseEngine\Component\CameraComponent">
-      <UniqueIdentifier>{fd201564-2900-4d4c-9a23-975864afa56a}</UniqueIdentifier>
     </Filter>
     <Filter Include="BaseEngine\Object">
       <UniqueIdentifier>{09b45f67-41f2-4ddd-b5cc-2f1fe9c775a2}</UniqueIdentifier>
@@ -135,47 +84,14 @@
     <Filter Include="Utilities\Frozen\Types">
       <UniqueIdentifier>{ca8474b7-9632-4d6f-b793-674ad95980e3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="BaseEngine\physics\Collision\BroadPhase">
-      <UniqueIdentifier>{8798f107-2b73-4e47-8b57-7b4d6a8a36ac}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="BaseEngine\physics\Body">
-      <UniqueIdentifier>{e6750cb4-737f-402d-a6ee-792aaaf765c7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="BaseEngine\physics\ComponentData">
-      <UniqueIdentifier>{87a53e55-de24-4f18-be76-8da8eed9fd09}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="BaseEngine\physics\Math">
-      <UniqueIdentifier>{6a14975b-ace5-4840-9cf8-081aaecc9542}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="BaseEngine\physics\Shape">
-      <UniqueIdentifier>{0884103a-c71e-4e2d-8661-ff4bada72d84}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Utilities\Extensions\Enum">
       <UniqueIdentifier>{56898e89-24fb-4c5e-a46d-d7628437d555}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="BaseEngine\physics\Allocator">
-      <UniqueIdentifier>{2f5c4728-ec1f-46cf-854c-239d71b83a22}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="BaseEngine\physics\DynamicTree">
-      <UniqueIdentifier>{eda2aae1-b545-4d9c-bb38-b9bf1bde0913}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="BaseEngine\physics\World">
-      <UniqueIdentifier>{2fcfc3c8-f0fc-4dd0-9b08-9e2a128c0904}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="BaseEngine\physics\Contact">
-      <UniqueIdentifier>{87593572-edab-43fa-b699-a25304ba6cad}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="BaseEngine\physics\CallBack">
-      <UniqueIdentifier>{6f53d5bc-738b-4949-83de-99190189b489}</UniqueIdentifier>
     </Filter>
     <Filter Include="BaseEngine\Render\CameraBaseRenderer">
       <UniqueIdentifier>{d597426a-4531-49c8-b8fc-9fd5d0ca0e4b}</UniqueIdentifier>
     </Filter>
     <Filter Include="BaseEngine\Render\CanvasRenderer">
       <UniqueIdentifier>{ca742881-e499-469a-9158-4c9b3681f4cd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="BaseEngine\Component\RenderComponent\Canvas">
-      <UniqueIdentifier>{05da9ff2-099b-4821-b052-7e91b8d129bb}</UniqueIdentifier>
     </Filter>
     <Filter Include="Utilities\Extensions\Variant">
       <UniqueIdentifier>{7b5ca211-93ff-47be-bac6-2ef41f8ed522}</UniqueIdentifier>
@@ -193,9 +109,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="BaseEngine\physics\Collision\BroadPhase">
-      <UniqueIdentifier>{8798f107-2b73-4e47-8b57-7b4d6a8a36ac}</UniqueIdentifier>
-    </Filter>
     <Filter Include="BaseEngine\physics\Body">
       <UniqueIdentifier>{e6750cb4-737f-402d-a6ee-792aaaf765c7}</UniqueIdentifier>
     </Filter>
@@ -247,9 +160,6 @@
     <Filter Include="BaseEngine\Utilities\FrozenExtension\Types">
       <UniqueIdentifier>{51085b3b-a77c-44d1-bec0-ff845ed94745}</UniqueIdentifier>
     </Filter>
-    <Filter Include="BaseEngine\Component\RenderComponent\Canvas\NinePatchRenderComponent">
-      <UniqueIdentifier>{997ebe45-3f69-4ddb-884a-ac272d4e6b6b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="BaseEngine\Material">
       <UniqueIdentifier>{7795f23a-ca16-484a-bc46-afb4ee08b557}</UniqueIdentifier>
     </Filter>
@@ -264,9 +174,6 @@
     </Filter>
     <Filter Include="BaseEngine\Shader\Effect">
       <UniqueIdentifier>{f5f43ee2-980c-4dbf-b55c-b7f6dacc5d5d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="BaseEngine\Component\CameraCustomCmponent">
-      <UniqueIdentifier>{959af30e-aebc-4ef7-b9f9-cdb013320d70}</UniqueIdentifier>
     </Filter>
     <Filter Include="BaseEngine\Scene">
       <UniqueIdentifier>{2d91453c-f868-44f8-87d5-7d82a76fac04}</UniqueIdentifier>
@@ -508,6 +415,24 @@
     <Filter Include="BaseEngine\Editor\Panel\MenubarPanel">
       <UniqueIdentifier>{527bc7ee-59bf-4b28-8a2f-e5048c4d4b40}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Vendor\ImGui">
+      <UniqueIdentifier>{449be743-1b20-457e-a9b8-b3d11c544c25}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BaseEngine\Script\CSharpScript\Glue\RigidBody">
+      <UniqueIdentifier>{27d6fdaf-f069-41f9-b6c6-2c9ea420adcc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BaseEngine\Script\CSharpScript\Glue\Shapes">
+      <UniqueIdentifier>{8bcff1c3-669a-4fe4-a4c4-4399378272b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BaseEngine\Editor\Panel\InspectorPanel\Popup">
+      <UniqueIdentifier>{39b46d08-e96a-4399-8c1d-9483c0034c00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Vendor\Mof">
+      <UniqueIdentifier>{d0808310-ff1e-44ee-a628-afd43fed7415}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BaseEngine\Utilities\Dialog">
+      <UniqueIdentifier>{adb8aa7e-957f-4c7a-90a8-c4a8e5d7ce4f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -516,17 +441,11 @@
     <ClCompile Include="GameApp.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Component.cpp">
-      <Filter>BaseEngine\Component</Filter>
-    </ClCompile>
     <ClCompile Include="Vector2.cpp">
       <Filter>BaseEngine\Math\Vector</Filter>
     </ClCompile>
     <ClCompile Include="Game.cpp">
       <Filter>ソース ファイル\Main\GameMain</Filter>
-    </ClCompile>
-    <ClCompile Include="SpriteComponent.cpp">
-      <Filter>BaseEngine\Component\RenderComponent\SpriteComponent</Filter>
     </ClCompile>
     <ClCompile Include="IBaseEngineEmpty.cpp">
       <Filter>BaseEngine\Empty</Filter>
@@ -543,65 +462,8 @@
     <ClCompile Include="Sprite.cpp">
       <Filter>BaseEngine\Texture</Filter>
     </ClCompile>
-    <ClCompile Include="RenderComponent.cpp">
-      <Filter>BaseEngine\Component\RenderComponent</Filter>
-    </ClCompile>
-    <ClCompile Include="CollisionComponent.cpp">
-      <Filter>BaseEngine\Component\CollisionComponent</Filter>
-    </ClCompile>
-    <ClCompile Include="Geometry2D.cpp">
-      <Filter>BaseEngine\Shapes</Filter>
-    </ClCompile>
-    <ClCompile Include="Geometry2D.ipp">
-      <Filter>BaseEngine\Shapes</Filter>
-    </ClCompile>
-    <ClCompile Include="InputActor.cpp">
-      <Filter>BaseEngine\Actor\Input</Filter>
-    </ClCompile>
-    <ClCompile Include="InputComponent.cpp">
-      <Filter>BaseEngine\Component\Input</Filter>
-    </ClCompile>
-    <ClCompile Include="ShapeRenderComponent.cpp">
-      <Filter>BaseEngine\Component\RenderComponent\ShapeRenderComponent</Filter>
-    </ClCompile>
-    <ClCompile Include="IShape.cpp">
-      <Filter>BaseEngine\Shapes</Filter>
-    </ClCompile>
-    <ClCompile Include="Rect.cpp">
-      <Filter>BaseEngine\Shapes\Primitive</Filter>
-    </ClCompile>
-    <ClCompile Include="Circle.cpp">
-      <Filter>BaseEngine\Shapes\Primitive</Filter>
-    </ClCompile>
-    <ClCompile Include="IBaseEngineCollider.cpp">
-      <Filter>BaseEngine\physics\Collision</Filter>
-    </ClCompile>
-    <ClCompile Include="BaseEngineCollision.cpp">
-      <Filter>BaseEngine\physics\Collision</Filter>
-    </ClCompile>
-    <ClCompile Include="Point.cpp">
-      <Filter>BaseEngine\Shapes\Primitive</Filter>
-    </ClCompile>
     <ClCompile Include="VectorUtilities.cpp">
       <Filter>BaseEngine\Math\Vector</Filter>
-    </ClCompile>
-    <ClCompile Include="GJK.cpp">
-      <Filter>BaseEngine\physics\Collision\CollisionDetector\GJK</Filter>
-    </ClCompile>
-    <ClCompile Include="EpaSolver.cpp">
-      <Filter>BaseEngine\physics\Collision\CollisionDetector\GJK\Solver</Filter>
-    </ClCompile>
-    <ClCompile Include="Manifold.cpp">
-      <Filter>BaseEngine\physics\Collision\CollisionDetector\GJK</Filter>
-    </ClCompile>
-    <ClCompile Include="PhysicsBodyComponent.cpp">
-      <Filter>BaseEngine\Component\PhysicsBody</Filter>
-    </ClCompile>
-    <ClCompile Include="MofSpriteAnimationComponent.cpp">
-      <Filter>BaseEngine\Component\AnimationComponent\SpriteAnimationComponent</Filter>
-    </ClCompile>
-    <ClCompile Include="CameraComponent.cpp">
-      <Filter>BaseEngine\Component\CameraComponent</Filter>
     </ClCompile>
     <ClCompile Include="Object.cpp">
       <Filter>BaseEngine\Object</Filter>
@@ -611,45 +473,6 @@
     </ClCompile>
     <ClCompile Include="WeakRefObject.cpp">
       <Filter>BaseEngine\Object</Filter>
-    </ClCompile>
-    <ClCompile Include="PhysicsBlockAllocator.cpp">
-      <Filter>BaseEngine\physics\Allocator</Filter>
-    </ClCompile>
-    <ClCompile Include="PhysicsDynamicTree.cpp">
-      <Filter>BaseEngine\physics\DynamicTree</Filter>
-    </ClCompile>
-    <ClCompile Include="PhysicsFixture.cpp">
-      <Filter>BaseEngine\physics\Body</Filter>
-    </ClCompile>
-    <ClCompile Include="PhysicsCircleShape.cpp">
-      <Filter>BaseEngine\physics\Shape</Filter>
-    </ClCompile>
-    <ClCompile Include="PhysicsWorld.cpp">
-      <Filter>BaseEngine\physics\World</Filter>
-    </ClCompile>
-    <ClCompile Include="PhysicsContactManager.cpp">
-      <Filter>BaseEngine\physics\World</Filter>
-    </ClCompile>
-    <ClCompile Include="PhysicsContact.cpp">
-      <Filter>BaseEngine\physics\Contact</Filter>
-    </ClCompile>
-    <ClCompile Include="PhysicsContactFilter.cpp">
-      <Filter>BaseEngine\physics\CallBack</Filter>
-    </ClCompile>
-    <ClCompile Include="PhysicsContactListener.cpp">
-      <Filter>BaseEngine\physics\CallBack</Filter>
-    </ClCompile>
-    <ClCompile Include="PhysicsBody2D.cpp">
-      <Filter>BaseEngine\physics\Body</Filter>
-    </ClCompile>
-    <ClCompile Include="PhysicsPolygonShape.cpp">
-      <Filter>BaseEngine\physics\Shape</Filter>
-    </ClCompile>
-    <ClCompile Include="PhysicsPolygonContact.cpp">
-      <Filter>BaseEngine\physics\Contact</Filter>
-    </ClCompile>
-    <ClCompile Include="PhysicsCircleContact.cpp">
-      <Filter>BaseEngine\physics\Contact</Filter>
     </ClCompile>
     <ClCompile Include="IBaseEngineRender.cpp">
       <Filter>BaseEngine\Render\CameraBaseRenderer</Filter>
@@ -662,21 +485,6 @@
     </ClCompile>
     <ClCompile Include="CanvasRender.cpp">
       <Filter>BaseEngine\Render\CanvasRenderer</Filter>
-    </ClCompile>
-    <ClCompile Include="ImageComponent.cpp">
-      <Filter>BaseEngine\Component\RenderComponent\Canvas</Filter>
-    </ClCompile>
-    <ClCompile Include="ContactRayCastCallBack.cpp">
-      <Filter>BaseEngine\physics\CallBack</Filter>
-    </ClCompile>
-    <ClCompile Include="SpriteAnimationClipLoader.cpp">
-      <Filter>BaseEngine\Component\AnimationComponent\SpriteAnimationComponent</Filter>
-    </ClCompile>
-    <ClCompile Include="NinePatchImageComponent.cpp">
-      <Filter>BaseEngine\Component\RenderComponent\Canvas\NinePatchRenderComponent</Filter>
-    </ClCompile>
-    <ClCompile Include="MofSpriteMotionController.cpp">
-      <Filter>BaseEngine\Component\AnimationComponent\SpriteAnimationComponent</Filter>
     </ClCompile>
     <ClCompile Include="Material.cpp">
       <Filter>BaseEngine\Material</Filter>
@@ -692,9 +500,6 @@
     </ClCompile>
     <ClCompile Include="EffectBase.cpp">
       <Filter>BaseEngine\Shader\Effect</Filter>
-    </ClCompile>
-    <ClCompile Include="CameraCustomComponent.cpp">
-      <Filter>BaseEngine\Component\CameraCustomCmponent</Filter>
     </ClCompile>
     <ClCompile Include="Scene.cpp">
       <Filter>BaseEngine\Scene</Filter>
@@ -827,9 +632,6 @@
     </ClCompile>
     <ClCompile Include="QuaternionUtilities.cpp">
       <Filter>BaseEngine\Math\Quaternion</Filter>
-    </ClCompile>
-    <ClCompile Include="Actor.cpp">
-      <Filter>BaseEngine\Actor</Filter>
     </ClCompile>
     <ClCompile Include="PhysicsObjectFactory.cpp">
       <Filter>BaseEngine\physics\ECS\Service</Filter>
@@ -1122,25 +924,46 @@
     <ClCompile Include="MenuBarPanel.cpp">
       <Filter>BaseEngine\Editor\Panel\MenubarPanel</Filter>
     </ClCompile>
+    <ClCompile Include="EditorTextBox.cpp">
+      <Filter>BaseEngine\Editor\Control</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendor\imgui\misc\cpp\imgui_stdlib.cpp">
+      <Filter>Vendor\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="RigidBodyComponent.cpp">
+      <Filter>BaseEngine\physics\ECS\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="VelocityComponent.cpp">
+      <Filter>BaseEngine\physics\ECS\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="RigidBodyGlue.cpp">
+      <Filter>BaseEngine\Script\CSharpScript\Glue\RigidBody</Filter>
+    </ClCompile>
+    <ClCompile Include="ShapesGlue.cpp">
+      <Filter>BaseEngine\Script\CSharpScript\Glue\Shapes</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorContextMenu.cpp">
+      <Filter>BaseEngine\Editor\Control</Filter>
+    </ClCompile>
+    <ClCompile Include="InspectorContextMenu.cpp">
+      <Filter>BaseEngine\Editor\Panel\InspectorPanel\Popup</Filter>
+    </ClCompile>
+    <ClCompile Include="FileDialog.cpp">
+      <Filter>BaseEngine\Utilities\Dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="FileFilter.cpp">
+      <Filter>BaseEngine\Utilities\Dialog</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameApp.h">
       <Filter>ソース ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Actor.h">
-      <Filter>BaseEngine\Actor</Filter>
-    </ClInclude>
-    <ClInclude Include="Component.h">
-      <Filter>BaseEngine\Component</Filter>
     </ClInclude>
     <ClInclude Include="Vector2.h">
       <Filter>BaseEngine\Math\Vector</Filter>
     </ClInclude>
     <ClInclude Include="Game.h">
       <Filter>ソース ファイル\Main\GameMain</Filter>
-    </ClInclude>
-    <ClInclude Include="SpriteComponent.h">
-      <Filter>BaseEngine\Component\RenderComponent\SpriteComponent</Filter>
     </ClInclude>
     <ClInclude Include="Adapter.h">
       <Filter>BaseEngine\Adapter</Filter>
@@ -1166,80 +989,14 @@
     <ClInclude Include="Sprite.h">
       <Filter>BaseEngine\Texture</Filter>
     </ClInclude>
-    <ClInclude Include="RenderComponent.h">
-      <Filter>BaseEngine\Component\RenderComponent</Filter>
-    </ClInclude>
-    <ClInclude Include="CollisionComponent.h">
-      <Filter>BaseEngine\Component\CollisionComponent</Filter>
-    </ClInclude>
-    <ClInclude Include="Geometry2D.h">
-      <Filter>BaseEngine\Shapes</Filter>
-    </ClInclude>
-    <ClInclude Include="2DShapes.h">
-      <Filter>BaseEngine\Shapes</Filter>
-    </ClInclude>
-    <ClInclude Include="InputActor.h">
-      <Filter>BaseEngine\Actor\Input</Filter>
-    </ClInclude>
-    <ClInclude Include="InputComponent.h">
-      <Filter>BaseEngine\Component\Input</Filter>
-    </ClInclude>
-    <ClInclude Include="ShapeRenderComponent.h">
-      <Filter>BaseEngine\Component\RenderComponent\ShapeRenderComponent</Filter>
-    </ClInclude>
-    <ClInclude Include="IShape.h">
-      <Filter>BaseEngine\Shapes</Filter>
-    </ClInclude>
-    <ClInclude Include="Rect.h">
-      <Filter>BaseEngine\Shapes\Primitive</Filter>
-    </ClInclude>
     <ClInclude Include="YesNo.h">
       <Filter>BaseEngine\Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="Circle.h">
-      <Filter>BaseEngine\Shapes\Primitive</Filter>
-    </ClInclude>
-    <ClInclude Include="IBaseEngineCollider.h">
-      <Filter>BaseEngine\physics\Collision</Filter>
-    </ClInclude>
-    <ClInclude Include="BaseEngineCollision.h">
-      <Filter>BaseEngine\physics\Collision</Filter>
-    </ClInclude>
-    <ClInclude Include="Point.h">
-      <Filter>BaseEngine\Shapes\Primitive</Filter>
     </ClInclude>
     <ClInclude Include="Pow.h">
       <Filter>Constexpr\math</Filter>
     </ClInclude>
     <ClInclude Include="VectorUtilities.h">
       <Filter>BaseEngine\Math\Vector</Filter>
-    </ClInclude>
-    <ClInclude Include="GJK.h">
-      <Filter>BaseEngine\physics\Collision\CollisionDetector\GJK</Filter>
-    </ClInclude>
-    <ClInclude Include="EpaSolver.h">
-      <Filter>BaseEngine\physics\Collision\CollisionDetector\GJK\Solver</Filter>
-    </ClInclude>
-    <ClInclude Include="Manifold.h">
-      <Filter>BaseEngine\physics\Collision\CollisionDetector\GJK</Filter>
-    </ClInclude>
-    <ClInclude Include="MinkowskiSum.h">
-      <Filter>BaseEngine\physics\Collision\CollisionDetector\GJK</Filter>
-    </ClInclude>
-    <ClInclude Include="ExpandingSimplexEdge.h">
-      <Filter>BaseEngine\physics\Collision\CollisionDetector\GJK\Solver</Filter>
-    </ClInclude>
-    <ClInclude Include="ExpandingSimplex.h">
-      <Filter>BaseEngine\physics\Collision\CollisionDetector\GJK\Solver</Filter>
-    </ClInclude>
-    <ClInclude Include="PhysicsBodyComponent.h">
-      <Filter>BaseEngine\Component\PhysicsBody</Filter>
-    </ClInclude>
-    <ClInclude Include="ComponentParameter.h">
-      <Filter>BaseEngine\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="SendManifold.h">
-      <Filter>BaseEngine\physics\Collision</Filter>
     </ClInclude>
     <ClInclude Include="TupleHasElement.h">
       <Filter>Utilities\Extensions\Tuple</Filter>
@@ -1259,17 +1016,8 @@
     <ClInclude Include="include\utilities\observable\IObserver.h">
       <Filter>Utilities\Observable</Filter>
     </ClInclude>
-    <ClInclude Include="MofSpriteAnimationComponent.h">
-      <Filter>BaseEngine\Component\AnimationComponent\SpriteAnimationComponent</Filter>
-    </ClInclude>
-    <ClInclude Include="ISpriteAnimationComponent.h">
-      <Filter>BaseEngine\Component\AnimationComponent\SpriteAnimationComponent</Filter>
-    </ClInclude>
     <ClInclude Include="ParameterMap.h">
       <Filter>Utilities\Extensions\Map</Filter>
-    </ClInclude>
-    <ClInclude Include="CameraComponent.h">
-      <Filter>BaseEngine\Component\CameraComponent</Filter>
     </ClInclude>
     <ClInclude Include="Object.h">
       <Filter>BaseEngine\Object</Filter>
@@ -1298,80 +1046,8 @@
     <ClInclude Include="FrozenMacro.h">
       <Filter>Utilities\Frozen</Filter>
     </ClInclude>
-    <ClInclude Include="BroadPhase.h">
-      <Filter>BaseEngine\physics\Collision\BroadPhase</Filter>
-    </ClInclude>
-    <ClInclude Include="PhysicsBody2D.h">
-      <Filter>BaseEngine\physics\Body</Filter>
-    </ClInclude>
-    <ClInclude Include="PhysicsComponentData.h">
-      <Filter>BaseEngine\physics\ComponentData</Filter>
-    </ClInclude>
-    <ClInclude Include="PhysicsVector2.h">
-      <Filter>BaseEngine\physics\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="PhysicsFixture.h">
-      <Filter>BaseEngine\physics\Body</Filter>
-    </ClInclude>
-    <ClInclude Include="PhysicsMathUtility.h">
-      <Filter>BaseEngine\physics\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="PhysicsCollision.h">
-      <Filter>BaseEngine\physics\Collision</Filter>
-    </ClInclude>
-    <ClInclude Include="PhysicsShapes.h">
-      <Filter>BaseEngine\physics\Shape</Filter>
-    </ClInclude>
     <ClInclude Include="EnumExtension.h">
       <Filter>Utilities\Extensions\Enum</Filter>
-    </ClInclude>
-    <ClInclude Include="PhysicsBlockAllocator.h">
-      <Filter>BaseEngine\physics\Allocator</Filter>
-    </ClInclude>
-    <ClInclude Include="PhysicsTransform.h">
-      <Filter>BaseEngine\physics\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="PhysicsRotate.h">
-      <Filter>BaseEngine\physics\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="PhysicsDynamicTree.h">
-      <Filter>BaseEngine\physics\DynamicTree</Filter>
-    </ClInclude>
-    <ClInclude Include="PhysicsCommon.h">
-      <Filter>BaseEngine\physics</Filter>
-    </ClInclude>
-    <ClInclude Include="PhysicsCircleShape.h">
-      <Filter>BaseEngine\physics\Shape</Filter>
-    </ClInclude>
-    <ClInclude Include="PhysicsWorld.h">
-      <Filter>BaseEngine\physics\World</Filter>
-    </ClInclude>
-    <ClInclude Include="PhysicsContactManager.h">
-      <Filter>BaseEngine\physics\World</Filter>
-    </ClInclude>
-    <ClInclude Include="PhysicsContact.h">
-      <Filter>BaseEngine\physics\Contact</Filter>
-    </ClInclude>
-    <ClInclude Include="PhysicsContactFilter.h">
-      <Filter>BaseEngine\physics\CallBack</Filter>
-    </ClInclude>
-    <ClInclude Include="PhysicsContactListener.h">
-      <Filter>BaseEngine\physics\CallBack</Filter>
-    </ClInclude>
-    <ClInclude Include="PhysicsManifold.h">
-      <Filter>BaseEngine\physics\Contact</Filter>
-    </ClInclude>
-    <ClInclude Include="PhysicsSweep.h">
-      <Filter>BaseEngine\physics\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="PhysicsPolygonShape.h">
-      <Filter>BaseEngine\physics\Shape</Filter>
-    </ClInclude>
-    <ClInclude Include="PhysicsPolygonContact.h">
-      <Filter>BaseEngine\physics\Contact</Filter>
-    </ClInclude>
-    <ClInclude Include="PhysicsCircleContact.h">
-      <Filter>BaseEngine\physics\Contact</Filter>
     </ClInclude>
     <ClInclude Include="IBaseEngineRender.h">
       <Filter>BaseEngine\Render\CameraBaseRenderer</Filter>
@@ -1384,12 +1060,6 @@
     </ClInclude>
     <ClInclude Include="CanvasRender.h">
       <Filter>BaseEngine\Render\CanvasRenderer</Filter>
-    </ClInclude>
-    <ClInclude Include="ImageComponent.h">
-      <Filter>BaseEngine\Component\RenderComponent\Canvas</Filter>
-    </ClInclude>
-    <ClInclude Include="PhysicsWorldCallBack.h">
-      <Filter>BaseEngine\physics\CallBack</Filter>
     </ClInclude>
     <ClInclude Include="VectorFrozen.h">
       <Filter>Utilities\Frozen\Types</Filter>
@@ -1415,21 +1085,6 @@
     <ClInclude Include="EnumFlags.h">
       <Filter>Utilities\Extensions\Enum</Filter>
     </ClInclude>
-    <ClInclude Include="ContactRayCastCallBack.h">
-      <Filter>BaseEngine\physics\CallBack</Filter>
-    </ClInclude>
-    <ClInclude Include="SpriteAnimationClipLoader.h">
-      <Filter>BaseEngine\Component\AnimationComponent\SpriteAnimationComponent</Filter>
-    </ClInclude>
-    <ClInclude Include="NinePatchImageComponent.h">
-      <Filter>BaseEngine\Component\RenderComponent\Canvas\NinePatchRenderComponent</Filter>
-    </ClInclude>
-    <ClInclude Include="ISpriteAnimatable.h">
-      <Filter>BaseEngine\Component\AnimationComponent\SpriteAnimationComponent</Filter>
-    </ClInclude>
-    <ClInclude Include="MofSpriteMotionController.h">
-      <Filter>BaseEngine\Component\AnimationComponent\SpriteAnimationComponent</Filter>
-    </ClInclude>
     <ClInclude Include="resource1.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -1451,13 +1106,7 @@
     <ClInclude Include="ApplyTuple.h">
       <Filter>Utilities\Extensions\Tuple</Filter>
     </ClInclude>
-    <ClInclude Include="CameraCustomComponent.h">
-      <Filter>BaseEngine\Component\CameraCustomCmponent</Filter>
-    </ClInclude>
     <ClInclude Include="PairFrozen.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="PlayerStateUtility.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="TextArchive.h">
@@ -2149,6 +1798,30 @@
     </ClInclude>
     <ClInclude Include="MenuBarPanel.h">
       <Filter>BaseEngine\Editor\Panel\MenubarPanel</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorTextBox.h">
+      <Filter>BaseEngine\Editor\Control</Filter>
+    </ClInclude>
+    <ClInclude Include="..\vendor\imgui\misc\cpp\imgui_stdlib.h">
+      <Filter>Vendor\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="RigidBodyGlue.h">
+      <Filter>BaseEngine\Script\CSharpScript\Glue\RigidBody</Filter>
+    </ClInclude>
+    <ClInclude Include="ShapesGlue.h">
+      <Filter>BaseEngine\Script\CSharpScript\Glue\Shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorContextMenu.h">
+      <Filter>BaseEngine\Editor\Control</Filter>
+    </ClInclude>
+    <ClInclude Include="InspectorContextMenu.h">
+      <Filter>BaseEngine\Editor\Panel\InspectorPanel\Popup</Filter>
+    </ClInclude>
+    <ClInclude Include="FileDialog.h">
+      <Filter>BaseEngine\Utilities\Dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="FileFilter.h">
+      <Filter>BaseEngine\Utilities\Dialog</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

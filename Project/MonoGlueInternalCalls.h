@@ -15,3 +15,5 @@
 #include "SpriteRendererGlue.h"
 #include "TextureGlue.h"
 #include "TransformGlue.h"
+#include "RigidBodyGlue.h"
+#include "ShapesGlue.h"

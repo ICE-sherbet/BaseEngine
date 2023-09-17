@@ -29,11 +29,8 @@ struct ScriptComponent {
 
   static void _Bind();
 
-  [[nodiscard]] AssetHandle ScriptClassHandle() const {
-    return script_class_handle;
-  }
-  void SetScriptClassHandle(const AssetHandle& script_class_handle) {
-    this->script_class_handle = script_class_handle;
-  }
+  [[nodiscard]] AssetHandle ScriptClassHandle() const;
+
+  void SetScriptClassHandle(const AssetHandle& script_class_handle);
 };
 }  // namespace base_engine::component

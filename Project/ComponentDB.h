@@ -10,6 +10,7 @@
 #include <string_view>
 #include <unordered_map>
 
+#include "Becs/SparseSet.h"
 #include "MethodBind.h"
 #include "ScriptTypes.h"
 
@@ -29,10 +30,18 @@ class ComponentDB {
   struct ClassInfo {
     std::string name;
     uint32_t id;
+    size_t size;
+    std::function<void(std::shared_ptr<becs::basic_sparse_set<>>&,
+                       std::allocator<becs::Entity>)>
+        registry_pool_factory{};
     std::vector<PropertyInfo> properties{};
     std::unordered_map<std::string, PropertyInfo> property_map{};
     std::unordered_map<std::string, PropertySetGet> property_setget{};
     std::unordered_map<std::string, std::shared_ptr<MethodBind>> method_map{};
+    std::vector<uint32_t> require_components{};
+
+    ClassInfo(const std::string& name, uint32_t id, size_t size)
+        : name(name), id(id), size(size) {}
   };
 
   ComponentDB() = delete;
@@ -41,7 +50,10 @@ class ComponentDB {
 
   template <class T>
   static void AddClass() {
-    AddClassImpl(T::_GetClassNameStatic(), T::_GetHash());
+    auto info =
+        AddClassImpl(T::_GetClassNameStatic(), T::_GetHash(), T::_GetSize());
+    info->registry_pool_factory = &T::_CreateRegistryPool;
+    classes_bind_event_map_[T::_GetHash()] = &T::_Bind;
   }
 
   static std::shared_ptr<MethodBind> BindMethodImpl(
@@ -74,8 +86,7 @@ class ComponentDB {
 
   static void GetPropertyList(const std::string& class_name,
                               std::list<PropertyInfo>* list);
-  static void GetPropertyList(uint32_t class_id,
-                              std::list<PropertyInfo>* list);
+  static void GetPropertyList(uint32_t class_id, std::list<PropertyInfo>* list);
 
   /**
    * \brief 指定クラスのプロパティを取得する
@@ -92,6 +103,14 @@ class ComponentDB {
                              const std::string& property_name,
                              const Variant& value);
 
+  static void AddRequireComponent(const std::string& class_name,
+                                  const std::string& require_component);
+  static void AddRequireComponent(uint32_t class_id,
+                                  uint32_t require_class_id);
+  static void GetRequireComponent(const std::string& class_name,
+                                  std::list<uint32_t>* list);
+  static void GetRequireComponent(uint32_t class_id, std::list<uint32_t>* list);
+
   static void GetClassHash(std::list<uint32_t>* list);
 
   static void GetClassList(std::list<uint32_t>* list);
@@ -100,12 +119,16 @@ class ComponentDB {
 
   static std::shared_ptr<ClassInfo> GetClass(const std::string& name);
 
-private:
-  static void AddClassImpl(std::string_view class_name, uint32_t id);
+ private:
+  static std::shared_ptr<ClassInfo> AddClassImpl(std::string_view class_name,
+                                                 uint32_t id, size_t size);
 
   static std::unordered_map<std::string, std::shared_ptr<ClassInfo>>
       classes_name_map_;
   static std::unordered_map<uint32_t, std::shared_ptr<ClassInfo>>
       classes_id_map_;
+  static std::unordered_map<uint32_t, std::function<void()>>
+      classes_bind_event_map_;
+  
 };
 }  // namespace base_engine

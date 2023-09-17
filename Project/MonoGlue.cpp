@@ -13,7 +13,9 @@
 #include "ManagedComponentStorage.h"
 #include "MonoGlueInternalCalls.h"
 #include "ObjectEntity.h"
+#include "RigidBodyComponent.h"
 #include "TypeUtilities.h"
+#include "VelocityComponent.h"
 
 namespace base_engine {
 class MonoGlue::Impl {
@@ -33,6 +35,10 @@ class MonoGlue::Impl {
   void RegisterManagedComponent() const {
     std::string_view component_type_name =
         TypeUtilities::GetTypeName<TComponent, true>();
+    RegisterManagedComponent<TComponent>(component_type_name);
+  }
+  template <typename TComponent>
+  void RegisterManagedComponent(std::string_view component_type_name) const {
     std::string component_name =
         fmt::format("BaseEngine_ScriptCore.Components.{}", component_type_name);
 
@@ -47,6 +53,7 @@ class MonoGlue::Impl {
     }
   }
 };
+;
 
 void MonoGlue::Impl::Clear() {
   ManagedComponentStorage::GetInstance()->Clear();
@@ -57,6 +64,8 @@ void MonoGlue::Impl::RegisterComponentTypes() {
   RegisterManagedComponent<TransformComponent>();
   RegisterManagedComponent<SpriteRendererComponent>();
   RegisterManagedComponent<AudioComponent>();
+  RegisterManagedComponent<physics::RigidBodyComponent>("RigidBodyComponent");
+  RegisterManagedComponent<physics::VelocityComponent>("VelocityComponent");
 }
 
 void MonoGlue::Impl::RegisterInternalCalls() {
@@ -70,6 +79,8 @@ void MonoGlue::Impl::RegisterInternalCalls() {
   RegisterInternalCallGlues<SpriteGlue>();
   RegisterInternalCallGlues<TextureGlue>();
   RegisterInternalCallGlues<TransformGlue>();
+  RegisterInternalCallGlues<RigidBodyGlue>();
+  RegisterInternalCallGlues<ShapesGlue>();
 }
 
 MonoGlue::Impl::~Impl() {}

@@ -18,6 +18,12 @@ struct BodyMask {
   int tag_type_id;
   uint32_t body_mask;
   uint32_t target_mask;
+  BodyMask() {
+    shape_type_id = 0;
+    tag_type_id = 0;
+    body_mask = 0xFFFFFFFFu;
+    target_mask = 0xFFFFFFFFu;
+  }
 
   BodyMask(const int shape_id, const int tag_id) {
     shape_type_id = shape_id;

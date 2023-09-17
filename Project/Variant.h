@@ -105,7 +105,6 @@ class Variant {
   explicit operator Vector3() const;
   explicit operator Vector4() const;
 
-
   void Visit(auto visitor);
   void Visit(auto visitor) const;
 
@@ -179,6 +178,7 @@ void Variant::Visit(auto visitor) {
       visitor(data_.double_value);
       break;
     case VariantType::kString:
+      visitor(operator std::string());
       break;
     case VariantType::kRECT2D:
       break;
@@ -187,12 +187,16 @@ void Variant::Visit(auto visitor) {
     case VariantType::kRECT2I:
       break;
     case VariantType::kVECTOR2F:
+      visitor(operator Vector2());
       break;
     case VariantType::kVECTOR3F:
+      visitor(operator Vector3());
       break;
     case VariantType::kVECTOR4F:
+      visitor(operator Vector4());
       break;
     case VariantType::kCOLOR:
+      visitor(operator Vector4());
       break;
     case VariantType::MANAGED:
       break;
@@ -243,6 +247,7 @@ void Variant::Visit(auto visitor) const {
       visitor(data_.double_value);
       break;
     case VariantType::kString:
+      visitor(operator std::string());
       break;
     case VariantType::kRECT2D:
       break;
@@ -251,12 +256,16 @@ void Variant::Visit(auto visitor) const {
     case VariantType::kRECT2I:
       break;
     case VariantType::kVECTOR2F:
+      visitor(operator Vector2());
       break;
     case VariantType::kVECTOR3F:
+      visitor(operator Vector3());
       break;
     case VariantType::kVECTOR4F:
+      visitor(operator Vector4());
       break;
     case VariantType::kCOLOR:
+      visitor(operator Vector4());
       break;
     case VariantType::MANAGED:
       break;
@@ -266,4 +275,5 @@ void Variant::Visit(auto visitor) const {
     default:;
   }
 }
+
 }  // namespace base_engine

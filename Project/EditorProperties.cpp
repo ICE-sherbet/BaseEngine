@@ -3,6 +3,7 @@
 #include <imgui/imgui.h>
 
 #include "ComponentDB.h"
+#include "EditorTextBox.h"
 #include "ImGuiUtilities.h"
 #include "ObjectEntity.h"
 
@@ -150,6 +151,29 @@ void EditorPropertyVector3::ValueChanged(float dummy) {
   v3.z = drag_values_[2]->Value();
 
   EmitChanged(class_name_, GetPropertyName(), static_cast<Variant>(v3));
+}
+
+EditorPropertyText::EditorPropertyText() {
+  text_box_ = std::make_shared<EditorTextBox>();
+  text_box_->Connect(
+      "TextChanged",
+      make_callable_function_pointer(this, &EditorPropertyText::TextChanged));
+
+  AddControl(text_box_);
+}
+
+void EditorPropertyText::Draw() const { EditorProperty::Draw(); }
+
+void EditorPropertyText::UpdateProperty() {
+  Variant r_value;
+  object_.TryGetProperty(class_name_, property_name_, r_value);
+
+  const auto v = static_cast<std::string>(r_value);
+  text_box_->SetText(v);
+}
+
+void EditorPropertyText::TextChanged(const std::string& text) {
+  EmitChanged(class_name_, GetPropertyName(), static_cast<Variant>(text));
 }
 
 void EditorPropertyVector3::Draw() const {

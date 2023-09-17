@@ -1,0 +1,28 @@
+Prefab:
+  - Entity: 637619272531673660
+    HierarchyComponent:
+      Parent: 0
+      Children:
+        []
+    TagComponent:
+      tag: E_Bullet
+    RigidBodyComponent:
+      {}
+    TransformComponent:
+      position: {x: 0, y: 0, z: 0}
+      rotation: {x: 0, y: 0, z: 0}
+      scale: {x: 1, y: 1, z: 1}
+    CircleShape:
+      radius: 3
+    SpriteRendererComponent:
+      color: {x: 1, y: 1, z: 1, w: 1}
+      texture: 4210465566744799997
+      uv_start: {x: 0, y: 0}
+      uv_end: {x: 1, y: 1}
+      pivot: {x: 0.5, y: 0.5}
+      uv_start: {x: 0, y: 0}
+    BodyMask:
+      body_mask: 0
+      target_mask: 1
+    VelocityComponent:
+      {}

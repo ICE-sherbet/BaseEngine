@@ -1,0 +1,29 @@
+Prefab:
+  - Entity: 2282615759610821096
+    HierarchyComponent:
+      Parent: 0
+      Children:
+        []
+    ScriptComponent:
+      script: 4036747412
+      _speed: 1
+      _bulletPrefab: 9884008990779901808
+      _shotIntervalMax: 2
+    TagComponent:
+      tag: Invader-Player
+    TransformComponent:
+      position: {x: 720, y: 780, z: 0}
+      rotation: {x: 0, y: 0, z: 0}
+      scale: {x: 1, y: 1, z: 1}
+    CircleShape:
+      radius: 32
+    SpriteRendererComponent:
+      color: {x: 1, y: 1, z: 1, w: 1}
+      texture: 12791073604198274305
+      uv_start: {x: 0, y: 0}
+      uv_end: {x: 1, y: 1}
+      pivot: {x: 0.5, y: 0.5}
+      uv_start: {x: 0, y: 0}
+    BodyMask:
+      body_mask: 1
+      target_mask: 0

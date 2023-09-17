@@ -26,6 +26,12 @@ void InspectorPanel::Initialize(const Ref<Scene>& context) {
   fixed_class_.emplace_back(component::TagComponent::_GetClassNameStatic());
   fixed_class_.emplace_back(
       component::TransformComponent::_GetClassNameStatic());
+
+  context_menu_ = std::make_unique<InspectorContextMenu>("Component Menu");
+  context_menu_->BuildRoot();
+  context_menu_->Connect("OnRemovedComponent",
+                         make_callable_function_pointer(
+                             this, &InspectorPanel::OnRemovedComponent));
 }
 
 void InspectorPanel::OnImGuiRender() {
@@ -45,29 +51,40 @@ void InspectorPanel::RenderProperties() {
   if (!object.HasComponent<component::TagComponent>()) {
     return;
   }
+  if (redraw_) GenerateProperties(object);
   ui::PushID();
   ImGui::BeginGroup();
+
+  const auto ComponentDraw = [this](const std::string& clazz) {
+    const auto open =
+        ImGui::CollapsingHeader(clazz.c_str(), ImGuiTreeNodeFlags_DefaultOpen);
+    // TODO RemoveComponentを実装する
+    if (ImGui::IsItemClicked(ImGuiMouseButton_Right)) {
+      context_menu_->SetTargetObject(scene_context_, select_item_,
+                                     ComponentDB::GetClass(clazz)->id);
+      context_menu_->Show();
+    }
+
+    if (!open) return;
+    for (const auto& property : properties_map_[clazz]) {
+      property->UpdateProperty();
+      property->Draw();
+    }
+  };
+
   std::map<std::string, bool> drawing_class;
   for (const auto& fixed_class : fixed_class_) {
     drawing_class[fixed_class] = true;
-    if (!ImGui::CollapsingHeader(fixed_class.c_str(),
-                                 ImGuiTreeNodeFlags_DefaultOpen))
-      continue;
-    for (const auto& property : properties_map_[fixed_class]) {
-      property->UpdateProperty();
-      property->Draw();
-    }
+    ComponentDraw(fixed_class);
   }
-  for (auto& [class_name, properties] : properties_map_) {
+  for (const auto& class_name : properties_map_ | std::views::keys) {
     if (drawing_class.contains(class_name)) continue;
-    if (!ImGui::CollapsingHeader(class_name.c_str(),
-                                 ImGuiTreeNodeFlags_DefaultOpen))
-      continue;
-    for (const auto& property : properties) {
-      property->UpdateProperty();
-      property->Draw();
-    }
+    ComponentDraw(class_name);
   }
+
+  context_menu_->RenderBegin();
+  context_menu_->Render();
+  context_menu_->RenderEnd();
   ImGui::EndGroup();
   RenderAddComponentButton(object);
 
@@ -112,110 +129,34 @@ void InspectorPanel::RenderAddComponentButton(ObjectEntity& object) {
     std::list<uint32_t> class_list;
     ComponentDB::GetClassList(&class_list);
     for (const uint32_t hash : class_list) {
-      if (!r.storage(hash)) continue;
-      if (r.storage(hash)->contains(object.GetHandle())) continue;
-      if (const auto clazz = ComponentDB::GetClass(hash);
-          ImGui::MenuItem(clazz->name.c_str())) {
-        r.storage(hash)->try_emplace(object.GetHandle(), false);
-        GenerateProperties(object);
-        ImGui::CloseCurrentPopup();
+      if (r.valid(hash) && r.storage(hash)->contains(object.GetHandle()))
+        continue;
+      const auto clazz = ComponentDB::GetClass(hash);
+      if (!ImGui::MenuItem(clazz->name.c_str())) continue;
+      if (!r.valid(hash)) {
+        const auto require_component = ComponentDB::GetClass(hash);
+        r.create_pool(hash, require_component->registry_pool_factory);
       }
+      r.storage(hash)->try_emplace(object.GetHandle(), false);
+      std::list<uint32_t> require_list;
+      ComponentDB::GetRequireComponent(clazz->id, &require_list);
+      for (const auto require : require_list) {
+        if (!r.valid(require)) {
+          const auto require_component = ComponentDB::GetClass(require);
+          r.create_pool(require, require_component->registry_pool_factory);
+        }
+        if (r.storage(require)->contains(object.GetHandle())) continue;
+        r.storage(require)->try_emplace(object.GetHandle(), false);
+      }
+
+      GenerateProperties(object);
+
+      ImGui::CloseCurrentPopup();
     }
     ImGui::EndPopup();
   }
 }
 
-void InspectorPanel::RenderTag(ObjectEntity& object) {
-  if (ImGui::CollapsingHeader("Name", ImGuiTreeNodeFlags_DefaultOpen)) {
-    ImGui::BeginGroup();
-    auto&& tag = object.GetComponent<component::TagComponent>();
-    char buffer[256] = {};
-    strcpy_s(buffer, sizeof(buffer), tag.tag.c_str());
-    if (ImGui::InputText("##Name", buffer, sizeof(buffer))) {
-      tag.tag = std::string(buffer);
-    }
-    ImGui::EndGroup();
-  }
-}
-
-void InspectorPanel::RenderTransform(ObjectEntity& object) {
-  if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen)) {
-    ImGui::BeginGroup();
-
-    const ImVec2 cursor = ImGui::GetCursorPos();
-    // ImGui::SetCursorPos(ImVec2(cursor.x, cursor.y + 4));
-
-    auto&& transform = object.GetComponent<component::TransformComponent>();
-
-    auto pos = transform.GetLocalTranslation();
-    ImGui::DragFloat3("position", pos.fv, 1,
-                      -(std::numeric_limits<float>::max)(),
-                      (std::numeric_limits<float>::max)());
-
-    transform.SetLocalTranslation(pos);
-
-    auto rotate =
-        transform.GetLocalRotationEuler() / std::numbers::pi_v<float> * 180.0f;
-    ImGui::DragFloat3("rotate", rotate.fv, 1,
-                      -(std::numeric_limits<float>::max)(),
-                      (std::numeric_limits<float>::max)());
-    transform.SetLocalRotationEuler(rotate * std::numbers::pi_v<float> /
-                                    180.0f);
-
-    ImGui::EndGroup();
-  }
-}
-
-void InspectorPanel::RenderSprite(ObjectEntity& object) {
-  if (!object.HasComponent<component::SpriteRendererComponent>()) return;
-
-  if (ImGui::CollapsingHeader("Sprite", ImGuiTreeNodeFlags_DefaultOpen)) {
-    ImGui::BeginGroup();
-    auto& sprite_component =
-        object.GetComponent<component::SpriteRendererComponent>();
-    ImGuiHelper::AssetReferenceField("Texture", &sprite_component.texture,
-                                     AssetType::kTexture);
-
-    ImGui::ColorEdit4(
-        "Color", sprite_component.color.fv,
-        ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_AlphaBar);
-    ImGui::EndGroup();
-  }
-}
-
-void InspectorPanel::RenderScript(ObjectEntity& object) {
-  if (!object.HasComponent<component::ScriptComponent>()) return;
-
-  if (ImGui::CollapsingHeader("Script", ImGuiTreeNodeFlags_DefaultOpen)) {
-    ImGui::BeginGroup();
-    auto&& sc = object.GetComponent<component::ScriptComponent>();
-
-    if (ImGuiHelper::AssetReferenceField("Script", &sc.script_class_handle,
-                                         AssetType::kScript)) {
-      CSharpScriptEngine::GetInstance()->InitializeScriptEntity(object);
-    }
-
-    const auto script_class =
-        CSharpScriptEngine::GetInstance()->GetManagedClassById(
-            CSharpScriptEngine::GetInstance()->GetScriptClassIdFromComponent(
-                sc));
-    if (script_class) {
-      if (!script_class->fields.empty()) {
-        for (const auto field_id : script_class->fields) {
-          const auto field =
-              CSharpScriptEngine::GetInstance()->GetFieldById(field_id);
-          auto storage = CSharpScriptEngine::GetInstance()->GetFieldStorage(
-              object, field_id);
-          if (storage == nullptr) continue;
-          Variant variant = storage->GetValueVariant();
-          if (ImGuiHelper::VariantField(field->field_info.name, &variant))
-            storage->SetValueVariant(variant);
-        }
-      }
-    }
-    ImGui::EndGroup();
-  }
-}
 void FilterCombo(const char* label, uint32_t* mask) {
   const auto is_single = std::has_single_bit(*mask);
   const auto max_bit = std::bit_floor(*mask);
@@ -246,33 +187,11 @@ void FilterCombo(const char* label, uint32_t* mask) {
     ImGui::EndCombo();
   }
 }
-void InspectorPanel::RenderRigidBody(ObjectEntity& object) {
-  if (!object.HasComponent<physics::RigidBodyComponent>()) return;
-  if (!ImGui::CollapsingHeader("RigidBody", ImGuiTreeNodeFlags_DefaultOpen))
-    return;
-
-  auto& rigid = object.GetComponent<physics::RigidBodyComponent>();
-  auto& mask = object.GetComponent<physics::BodyMask>();
-  ImGui::Text("Collision Filter");
-  FilterCombo("Body Mask", &mask.body_mask);
-  FilterCombo("Target Mask", &mask.target_mask);
-}
-
-void InspectorPanel::RenderCircleShape(ObjectEntity& object) {
-  if (!object.HasComponent<physics::CircleShape>()) return;
-  if (!ImGui::CollapsingHeader("CircleShape Shape", ImGuiTreeNodeFlags_DefaultOpen))
-    return;
-
-  auto& circle = object.GetComponent<physics::CircleShape>();
-  ImGui::InputFloat("Radius", &circle.radius);
-}
-
 void InspectorPanel::GenerateProperties(ObjectEntity& object) {
   properties_map_.clear();
-
+  redraw_ = false;
   auto& registry = scene_context_->GetRegistry();
   for (const auto& storage : registry.storage()) {
-
     auto clazz = ComponentDB::GetClass(storage.first);
     if (!clazz) continue;
     auto data = storage.second.try_get(object.GetHandle());
@@ -294,6 +213,7 @@ void InspectorPanel::GenerateProperties(ObjectEntity& object) {
       editor->Connect("PropertyChanged",
                       make_callable_function_pointer(
                           this, &InspectorPanel::PropertyChanged));
+
       properties.emplace_back(editor);
     }
   }
@@ -302,12 +222,18 @@ void InspectorPanel::GenerateProperties(ObjectEntity& object) {
 void InspectorPanel::PropertyChanged(const std::string& class_name,
                                      const std::string& property,
                                      const Variant& value) {
-	ObjectEntity object =
-      scene_context_->TryGetEntityWithUUID(select_item_);
+  ObjectEntity object = scene_context_->TryGetEntityWithUUID(select_item_);
   if (!object) return;
-	const auto clazz = ComponentDB::GetClass(class_name);
+  const auto clazz = ComponentDB::GetClass(class_name);
+  if (clazz->property_map.contains(property)) {
+    if (clazz->property_map[property].hint == PropertyHint::kAsset) {
+      redraw_ = true;
+    }
+  }
   object.TrySetProperty(class_name, property, value);
 }
+
+void InspectorPanel::OnRemovedComponent(uint32_t class_id) { redraw_ = true; }
 
 void InspectorPanel::SetSceneContext(const Ref<Scene>& context) {
   scene_context_ = context;

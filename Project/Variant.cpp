@@ -11,7 +11,10 @@ void CopyUnbox(T& value, MonoObject* obj) {
   value = *static_cast<T*>(mono_object_unbox(obj));
 }
 
-Variant::Variant() : data_() { this->type_ = VariantType::kNil; }
+Variant::Variant() : data_() {
+  data_.int64_value = 0;
+  this->type_ = VariantType::kNil;
+}
 
 Variant::Variant(VariantType type) : data_() {
   this->type_ = type;
@@ -55,7 +58,7 @@ Variant::Variant(VariantType type) : data_() {
       this->data_.double_value = 0;
       break;
     case VariantType::kString:
-      new (this->data_.mem) std::string("");
+      new (this->data_.mem)(std::shared_ptr)(std::make_shared<std::string>(""));
       break;
     case VariantType::kRECT2D:
       break;

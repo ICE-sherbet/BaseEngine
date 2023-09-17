@@ -68,7 +68,7 @@ void EditorAssetPicker::PopupDraw() {
       if (const auto handle = *static_cast<AssetHandle*>(data->Data);
           AssetManager::GetMutableMetadata(handle).type == type ||
           type == AssetType::kNone) {
-        pick_ = handle;
+        edit_ = handle;
         AssetSelect();
       }
 
@@ -81,6 +81,7 @@ void EditorAssetPicker::PopupDraw() {
   if (ImGui::BeginPopup(draw_id_,
                         ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize)) {
     const auto type = AssetUtilities::AssetTypeFromString(search_type_);
+    auto click = ImGui::IsMouseDown(ImGuiMouseButton_Left);
     if (ImGui::BeginListBox(ui::GenerateLabelID(""))) {
       for (const auto& metadata : registry | std::views::values) {
         if (type != AssetType::kNone && metadata.type != type) continue;
@@ -89,8 +90,8 @@ void EditorAssetPicker::PopupDraw() {
           preview = metadata.file_path.string();
         }
         if (ImGui::Selectable(ui::GenerateLabelID(preview),
-                              metadata.handle == pick_)) {
-          pick_ = metadata.handle;
+                              !click && (edit_ == metadata.handle))) {
+          edit_ = metadata.handle;
         }
       }
 
@@ -106,7 +107,7 @@ void EditorAssetPicker::PopupDraw() {
 void EditorAssetPicker::AssetSelect() {
   ClosePopup();
   EditedAssetUpdate();
-  EmitSignal("AssetSelected", pick_);
+  EmitSignal("AssetSelected", edit_);
 }
 
 void EditorAssetPicker::EditedAssetUpdate() const {

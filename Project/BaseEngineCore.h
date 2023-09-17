@@ -8,7 +8,6 @@ class IBaseEngineEmpty;
 class IBaseEngineTexture;
 class IBaseEngineRender;
 class IBaseEngineCanvasRender;
-class IBaseEngineCollider;
 class IBaseEngineAssetManager;
 class IBaseEngineAudioEngine;
 
@@ -21,7 +20,6 @@ class BaseEngineCore {
              BaseEngineComponent<IBaseEngineRender>,
              BaseEngineComponent<IBaseEngineCanvasRender>,
              BaseEngineComponent<IBaseEngineAssetManager>,
-             BaseEngineComponent<IBaseEngineCollider>,
              BaseEngineComponent<IBaseEngineAudioEngine>>
       components_;
 

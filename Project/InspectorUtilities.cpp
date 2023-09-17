@@ -74,8 +74,10 @@ std::shared_ptr<EditorProperty> MakeEditorProperty(
     } break;
     case VariantType::kDouble:
       break;
-    case VariantType::kString:
-      break;
+    case VariantType::kString: {
+      auto editor = std::make_shared<EditorPropertyText>();
+      return editor;
+    } break;
     case VariantType::kRECT2D:
       break;
     case VariantType::kRECT2F:

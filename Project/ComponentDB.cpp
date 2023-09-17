@@ -1,13 +1,19 @@
 ﻿#include "ComponentDB.h"
 
+#include "Becs/EntityFwd.h"
+#include "Becs/Registry.h"
 #include "BodyMask.h"
+#include "BoundingBox.h"
 #include "DataComponents.h"
+#include "RigidBodyComponent.h"
 #include "ShapeComponents.h"
-
+#include "VelocityComponent.h"
 namespace base_engine {
 using ClassInfoPtr = std::shared_ptr<ComponentDB::ClassInfo>;
 std::unordered_map<std::string, ClassInfoPtr> ComponentDB::classes_name_map_;
 std::unordered_map<uint32_t, ClassInfoPtr> ComponentDB::classes_id_map_;
+std::unordered_map<uint32_t, std::function<void()>>
+    ComponentDB::classes_bind_event_map_;
 
 void ComponentDB::Initialize() {
   using namespace component;
@@ -19,6 +25,13 @@ void ComponentDB::Initialize() {
 
   physics::BodyMask::_Initialize();
   physics::CircleShape::_Initialize();
+  physics::BoundingBox::_Initialize();
+  physics::RigidBodyComponent::_Initialize();
+  physics::VelocityComponent::_Initialize();
+
+  for (const auto& bind_func : classes_bind_event_map_ | std::views::values) {
+    bind_func();
+  }
 }
 
 std::shared_ptr<MethodBind> ComponentDB::BindMethodImpl(
@@ -122,6 +135,42 @@ bool ComponentDB::TrySetProperty(void* object, const std::string& class_name,
   return true;
 }
 
+void ComponentDB::AddRequireComponent(const std::string& class_name,
+                                      const std::string& require_component) {
+  const auto seeker = GetClass(class_name);
+  const auto require = GetClass(require_component);
+  if (seeker && require) {
+    seeker->require_components.emplace_back(require->id);
+  }
+}
+
+void ComponentDB::AddRequireComponent(uint32_t class_id,
+                                      uint32_t require_class_id) {
+  const auto seeker = GetClass(class_id);
+  const auto require = GetClass(require_class_id);
+  if (seeker && require) {
+    seeker->require_components.emplace_back(require->id);
+  }
+}
+
+void ComponentDB::GetRequireComponent(const std::string& class_name,
+                                      std::list<uint32_t>* list) {
+  const auto seeker = GetClass(class_name);
+  if (!seeker) return;
+  for (const auto& require : seeker->require_components) {
+    list->emplace_back(require);
+  }
+}
+
+void ComponentDB::GetRequireComponent(uint32_t class_id,
+                                      std::list<uint32_t>* list) {
+  const auto seeker = GetClass(class_id);
+  if (!seeker) return;
+  for (const auto& require : seeker->require_components) {
+    list->emplace_back(require);
+  }
+}
+
 void ComponentDB::GetClassHash(std::list<uint32_t>* list) {
   for (const auto& clazz : classes_name_map_ | std::views::values) {
     list->emplace_back(clazz->id);
@@ -134,7 +183,8 @@ void ComponentDB::GetClassList(std::list<uint32_t>* list) {
   }
 }
 
-std::shared_ptr<ComponentDB::ClassInfo> ComponentDB::GetClass(const uint32_t id) {
+std::shared_ptr<ComponentDB::ClassInfo> ComponentDB::GetClass(
+    const uint32_t id) {
   if (!classes_id_map_.contains(id)) return nullptr;
   return classes_id_map_[id];
 }
@@ -145,10 +195,12 @@ std::shared_ptr<ComponentDB::ClassInfo> ComponentDB::GetClass(
   return classes_name_map_[name];
 }
 
-void ComponentDB::AddClassImpl(std::string_view class_name, uint32_t id) {
+std::shared_ptr<ComponentDB::ClassInfo> ComponentDB::AddClassImpl(
+    std::string_view class_name, uint32_t id, size_t size) {
   const auto info =
-      std::make_shared<ClassInfo>(ClassInfo{class_name.data(), id});
+      std::make_shared<ClassInfo>(ClassInfo{class_name.data(), id, size});
   classes_name_map_[class_name.data()] = info;
   classes_id_map_[id] = info;
+  return info;
 }
 }  // namespace base_engine

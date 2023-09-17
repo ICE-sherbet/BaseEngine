@@ -13,5 +13,7 @@ void BodyMask::_Bind() {
   ADD_PROPERTY(PropertyInfo(VariantType::kInt32, "target_mask",
                             PropertyHint::kLayerPhysics),
                "SetTargetMask", "GetTargetMask");
+
+
 }
 }  // namespace base_engine::physics

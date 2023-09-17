@@ -8,13 +8,17 @@
 #pragma once
 #include "ShapeComponents.h"
 #include "Vector2.h"
+#include "ComponentDB.h"
+#include "ComponentProperty.h"
 
 namespace base_engine::physics {
 
 struct BoundingBox {
-  Vector2 min;
-  Vector2 max;
+  BE_COMPONENT(BoundingBox)
+  Vector2 min{};
+  Vector2 max{};
 
+  BoundingBox() = default;
   BoundingBox(const Vector2& min, const Vector2& max) : min{min}, max{max} {}
   BoundingBox(const float min_x, const float min_y, const float max_x,
               const float max_y)
@@ -24,5 +28,7 @@ struct BoundingBox {
     const auto radius_size = Vector2(radius, radius);
     return {pos - radius_size, pos + radius_size};
   }
+
+  static void _Bind(){}
 };
 }  // namespace base_engine::physics

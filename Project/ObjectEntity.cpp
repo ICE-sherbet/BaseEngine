@@ -129,17 +129,18 @@ bool ObjectEntity::TryGetProperty(const std::string& class_name,
                                   Variant& return_value) const {
   if (!scene_) return false;
   if (HasComponent<component::ScriptComponent>() &&
-      class_name == component::ScriptComponent::_GetClassNameStatic()) {
+      class_name == component::ScriptComponent::_GetClassNameStatic() && property_name != "script") {
     const auto class_id =
         CSharpScriptEngine::GetInstance()->GetScriptClassIdFromComponent(
             GetComponent<component::ScriptComponent>());
-    const auto& fields = CSharpScriptEngine::GetInstance()
-                             ->GetManagedClassById(class_id)
-                             ->fields;
-    for (uint32_t value : fields) {
-      auto field =
-          CSharpScriptEngine::GetInstance()->GetFieldStorage(*this, value);
-      if (field && field->GetFieldInfo()->field_info.name == property_name) {
+    if (class_id == 0) return false;
+    const auto managed_class =
+        CSharpScriptEngine::GetInstance()->GetManagedClassById(class_id);
+    if (!managed_class) return false;
+    for (const uint32_t value : managed_class->fields) {
+      if (auto field =
+              CSharpScriptEngine::GetInstance()->GetFieldStorage(*this, value);
+          field && field->GetFieldInfo()->field_info.name == property_name) {
         return_value = field->GetValueVariant();
         return true;
       }
@@ -171,10 +172,15 @@ bool ObjectEntity::TrySetProperty(const std::string& class_name,
     }
   }
   auto& registry = scene_->GetRegistry();
-  const auto class_id = ComponentDB::GetClass(class_name)->id;
+  auto clazz = ComponentDB::GetClass(class_name);
+  const auto class_id = clazz->id;
+
+  if (!registry.valid(class_id)) {
+    registry.create_pool(class_id, clazz->registry_pool_factory);
+  }
   for (const auto& [id, storage] : registry.storage()) {
     if (class_id != id) continue;
-
+    if (!storage.contains(GetHandle())) storage.try_emplace(GetHandle(), false);
     const auto data = storage.try_get(GetHandle());
     if (!data) continue;
 
@@ -189,13 +195,29 @@ bool ObjectEntity::TrySetProperty(const std::string& class_name,
                                   const Variant& value) {
   if (HasComponent<component::ScriptComponent>() &&
       class_name == component::ScriptComponent::_GetClassNameStatic()) {
+
+    if (property_name == "script")
+    {
+      auto& registry = scene_->GetRegistry();
+
+      const auto data =
+          registry.storage(component::ScriptComponent::_GetHash())
+              ->try_get(GetHandle());
+      bool result =
+          ComponentDB::TrySetProperty(data, class_name, property_name, value);
+      CSharpScriptEngine::GetInstance()->InitializeScriptEntity(*this);
+      return result;
+    }
     const auto class_id =
         CSharpScriptEngine::GetInstance()->GetScriptClassIdFromComponent(
             GetComponent<component::ScriptComponent>());
-    const auto& fields = CSharpScriptEngine::GetInstance()
-                             ->GetManagedClassById(class_id)
-                             ->fields;
-    for (uint32_t field : fields) {
+    if (class_id == 0) {
+      return false;
+    }
+    const auto managed_class =
+        CSharpScriptEngine::GetInstance()->GetManagedClassById(class_id);
+    if (!managed_class) return false;
+    for (const uint32_t field : managed_class->fields) {
       auto storage =
           CSharpScriptEngine::GetInstance()->GetFieldStorage(*this, field);
       if (storage &&
@@ -206,7 +228,12 @@ bool ObjectEntity::TrySetProperty(const std::string& class_name,
     }
   }
   auto& registry = scene_->GetRegistry();
-  const auto class_id = ComponentDB::GetClass(class_name)->id;
+  auto clazz = ComponentDB::GetClass(class_name);
+  const auto class_id = clazz->id;
+
+  if (!registry.valid(class_id)) {
+    registry.create_pool(class_id, clazz->registry_pool_factory);
+  }
   for (const auto& [id, storage] : registry.storage()) {
     if (class_id != id) continue;
 

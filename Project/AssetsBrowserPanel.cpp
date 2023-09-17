@@ -7,10 +7,44 @@
 #include "AssetsBrowserSetting.h"
 #include "EditorTextureResource.h"
 #include "ImGuiUtilities.h"
+#include "Prefab.h"
 #include "SelectManager.h"
 #include "imgui.h"
 
 namespace base_engine::editor {
+
+class AssetsBrowserPanel::AssetsCreator {
+ public:
+  AssetsCreator(AssetsBrowserPanel& assets_browser_panel)
+      : owner_(assets_browser_panel) {}
+
+  template <std::derived_from<Asset> T, typename... Args>
+  Ref<T> CreateAsset(const std::string& filename, Args&&... args) {
+    return CreateAssetInDirectory<T>(filename, owner_.current_directory_,
+                                     std::forward<Args>(args)...);
+  }
+  template <std::derived_from<Asset> T, typename... Args>
+  Ref<T> CreateAssetInDirectory(const std::string& filename,
+                                Ref<DirectoryInfo>& directory, Args&&... args) {
+	  const auto filepath = directory->filepath / filename;
+
+    Ref<T> asset = AssetManager::GetEditorAssetManager()->CreateNewAsset<T>(
+        filepath.filename().string(), directory->filepath.string(),
+        std::forward<Args>(args)...);
+    if (!asset) return nullptr;
+
+    directory->assets.push_back(asset->handle_);
+
+    const auto& metadata =
+        AssetManager::GetEditorAssetManager()->GetMetadata(asset->handle_);
+
+    return asset;
+  }
+
+ private:
+  AssetsBrowserPanel& owner_;
+};
+
 std::mutex AssetsBrowserPanel::lock_mutex_;
 
 struct AssetsBrowserPanel::BrowserPanelTheme {
@@ -22,6 +56,7 @@ struct AssetsBrowserPanel::BrowserPanelTheme {
 
 AssetsBrowserPanel::AssetsBrowserPanel() {
   theme_ = std::make_unique<BrowserPanelTheme>();
+  assets_creator_ = std::make_unique<AssetsCreator>(*this);
 }
 
 void AssetsBrowserPanel::OnImGuiRender() {
@@ -38,9 +73,12 @@ void AssetsBrowserPanel::Initialize(const Ref<Scene>& context) {
   AssetManager::GetEditorAssetManager()->SetAssetChangeCallback(
       [this](auto events) { OnFileSystemChanged(events); });
   ChangeDirectory(base_directory_);
+  scene_context_ = context;
 }
 
-void AssetsBrowserPanel::SetSceneContext(const Ref<Scene>& context) {}
+void AssetsBrowserPanel::SetSceneContext(const Ref<Scene>& context) {
+  scene_context_ = context;
+}
 
 Ref<DirectoryInfo> AssetsBrowserPanel::GetDirectory(
     const std::filesystem::path& filepath) const {
@@ -99,10 +137,10 @@ AssetHandle AssetsBrowserPanel::ProcessDirectory(
 
 void AssetsBrowserPanel::ChangeDirectory(Ref<DirectoryInfo>& directory) {
   if (!directory) return;
-  current_items_.items_.clear();
+  current_items_.Clear();
   for (const auto& directory_info :
        directory->sub_directories | std::views::values) {
-    current_items_.items_.emplace_back(
+    current_items_.AddItem(
         Ref<AssetsBrowserDirectory>::Create(directory_info));
   }
   for (const auto asset_handle : directory->assets) {
@@ -121,7 +159,7 @@ void AssetsBrowserPanel::ChangeDirectory(Ref<DirectoryInfo>& directory) {
         }
       }
       auto item = Ref<AssetsBrowserAsset>::Create(metadata, icon);
-      current_items_.items_.push_back(item);
+      current_items_.AddItem(item);
     }
   }
 
@@ -173,8 +211,11 @@ void AssetsBrowserPanel::RenderTopBar() {
 
   ImGui::EndChild();
 }
+std::mutex AssetsBrowserPanel::LockMutex;
 
 void AssetsBrowserPanel::RenderCurrentDirectoryContent() {
+  std::scoped_lock<std::mutex> lock(LockMutex);
+
   constexpr float padding_for_outline = 2.0f;
   const float scroll_barr_offset = 20.0f + ImGui::GetStyle().ScrollbarSize;
   const float panel_width =
@@ -183,6 +224,7 @@ void AssetsBrowserPanel::RenderCurrentDirectoryContent() {
                           theme_->padding + padding_for_outline;
   const int column_count = static_cast<int>(panel_width / cell_size);
   if (ImGui::BeginTable("AssetsBrowserPanelTable", column_count)) {
+
     for (auto& item : current_items_) {
       ImGui::TableNextColumn();
       item->OnRenderBegin();
@@ -205,6 +247,27 @@ void AssetsBrowserPanel::RenderCurrentDirectoryContent() {
       }
     }
     ImGui::EndTable();
+
+    if (ImGui::BeginDragDropTarget()) {
+      if (const auto data =
+              ImGui::AcceptDragDropPayload("scene_entity_hierarchy")) {
+        const size_t count = data->DataSize / sizeof(UUID);
+
+        for (size_t i = 0; i < count; i++) {
+          const UUID entity_id = *(static_cast<UUID*>(data->Data) + i);
+          auto entity = scene_context_->TryGetEntityWithUUID(entity_id);
+
+          if (!entity) {
+            continue;
+          }
+
+          Ref<Prefab> prefab = assets_creator_->CreateAsset<Prefab>(
+              entity.GetComponent<component::TagComponent>().Tag() + ".prefab");
+          prefab->Create(entity);
+        }
+      }
+      ImGui::EndDragDropTarget();
+    }
   }
 }
 

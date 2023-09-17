@@ -296,7 +296,20 @@ class BasicRegistry {
 
     return static_cast<storage_for_type<Type> &>(*cpool);
   }
+  template <typename Factor>
+  void create_pool(const id_type id, Factor factor) {
+    auto &cpool = pools[id];
 
+    if (!cpool) {
+      factor(cpool, get_allocator());
+
+      cpool->bind(forward_as_any(*this));
+    }
+  }
+
+  bool valid(const id_type id) const noexcept {
+		return pools.contains(id);
+	}
   template <typename Type>
   [[nodiscard]] const auto &assure(
       const id_type id = type_hash<Type>::value()) const {

@@ -7,10 +7,15 @@
 
 #pragma once
 
+#include "ComponentDB.h"
+#include "ComponentProperty.h"
 #include "Vector2.h"
 
 namespace base_engine::physics {
+
 struct RigidBodyComponent {
+  BE_COMPONENT(RigidBodyComponent)
+
   /**
    * \brief 反発係数
    */
@@ -42,6 +47,8 @@ struct RigidBodyComponent {
         inverse_MMOI(1.0f / mmoi) {}
 
   RigidBodyComponent() = default;
+
+  static void _Bind();
 };
 
 }  // namespace base_engine::physics

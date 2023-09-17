@@ -40,11 +40,18 @@ Vector3 TransformComponent::GetLocalTranslation() const {
 }
 
 void TransformComponent::SetLocalScale(const Vector3& scale) {
+  if (scale_ == scale) return;
   scale_ = scale;
   UpdateTransform();
 }
 
-Vector3 TransformComponent::GetLocalScale() const { return scale_; }
+Vector3 TransformComponent::GetLocalScale() const
+{
+  if (local_dirty_) {
+    const_cast<TransformComponent*>(this)->UpdateFormValues();
+  }
+	return scale_;
+}
 
 void TransformComponent::SetLocalRotationEuler(const Vector3& euler) {
   rotation_euler_ = euler;
@@ -96,11 +103,11 @@ void TransformComponent::_Bind() {
                           &TransformComponent::SetLocalRotationEuler);
   ComponentDB::BindMethod("GetLocalRotationEuler",
                           &TransformComponent::GetLocalRotationEuler);
-  ADD_PROPERTY(PropertyInfo(VariantType::kVECTOR3F, "rotationEuler"),
+  ADD_PROPERTY(PropertyInfo(VariantType::kVECTOR3F, "rotation"),
                "SetLocalRotationEuler", "GetLocalRotationEuler");
 
   ComponentDB::BindMethod("SetLocalScale", &TransformComponent::SetLocalScale);
-  ComponentDB::BindMethod("GetLocalSetLocalScale",
+  ComponentDB::BindMethod("GetLocalScale",
                           &TransformComponent::GetLocalScale);
   ADD_PROPERTY(PropertyInfo(VariantType::kVECTOR3F, "scale"), "SetLocalScale",
                "GetLocalScale");

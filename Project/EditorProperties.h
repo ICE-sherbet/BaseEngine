@@ -11,6 +11,8 @@
 #include "EditorDragValueFloat.h"
 #include "EditorDragValueInt.h"
 #include "EditorProperty.h"
+#include "EditorTextBox.h"
+
 namespace base_engine::editor {
 class EditorPropertyCheck : public EditorProperty {
  public:
@@ -80,6 +82,21 @@ class EditorPropertyVector3 : public EditorProperty {
  private:
   std::array<std::shared_ptr<EditorDragValueFloat>, 3> drag_values_;
 };
+
+class EditorPropertyText : public EditorProperty {
+ public:
+  EditorPropertyText();
+
+  void Draw() const override;
+  void UpdateProperty() override;
+
+ private:
+  void TextChanged(const std::string& text);
+
+ private:
+  std::shared_ptr<EditorTextBox> text_box_;
+};
+
 
 class EditorPropertyAsset : public EditorProperty {
  public:

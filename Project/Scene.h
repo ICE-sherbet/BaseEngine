@@ -8,13 +8,12 @@
 #pragma once
 #include "Asset.h"
 #include "Becs/Entity.h"
+#include "Becs/Registry.h"
 #include "IBecsSystem.h"
-#include "IdComponent.h"
 #include "Matrix44.h"
 #include "Ref.h"
 #include "TransformComponent.h"
 #include "UUID.h"
-#include "Becs/Registry.h"
 
 namespace base_engine {
 class Prefab;
@@ -64,8 +63,12 @@ class Scene final : public Asset {
 
   void UnParentEntity(ObjectEntity entity) const;
   void UnParentEntity(ObjectEntity entity, bool world_position_stays) const;
+  void SetParentEntity(ObjectEntity entity, ObjectEntity parent) const;
+  void SetParentEntity(ObjectEntity entity, ObjectEntity parent,
+                       bool world_position_stays) const;
 
   void ConvertToWorldSpace(ObjectEntity entity) const;
+  void ConvertToLocalSpace(ObjectEntity entity) const;
 
   Matrix44 GetWorldSpaceTransformMatrix(const ObjectEntity entity) const;
 
@@ -85,7 +88,6 @@ class Scene final : public Asset {
   std::string_view GetName() const { return scene_name_; }
   void SetName(const std::string& name) { scene_name_ = name; }
   bool IsPlaying() const { return is_playing_; }
-
 
   Scene();
   Scene(const std::string& name) : scene_name_(name) {}

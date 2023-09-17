@@ -22,7 +22,11 @@ class AssetsBrowserPanel : public EditorPanel {
 
   Ref<DirectoryInfo> GetDirectory(const std::filesystem::path& filepath) const;
 
+  static std::mutex LockMutex;
+
  private:
+  class AssetsCreator;
+  std::unique_ptr<AssetsCreator> assets_creator_;
   AssetHandle ProcessDirectory(const std::filesystem::path& directory_path,
                                const Ref<DirectoryInfo>& parent);
 
@@ -49,6 +53,7 @@ class AssetsBrowserPanel : public EditorPanel {
 
   std::unordered_map<AssetHandle, Ref<DirectoryInfo>> directories_;
 
+  Ref<Scene> scene_context_;
   static std::mutex lock_mutex_;
 };
 }  // namespace base_engine::editor

@@ -1,8 +1,10 @@
 ﻿#include "MenuBarPanel.h"
 #include "ImGuiUtilities.h"
 #include <imgui.h>
+#include <Framework/Window/Windows/DefWindowProc.h>
 
 #include "CSharpScriptEngine.h"
+#include "SceneSerializer.h"
 
 namespace base_engine::editor
 {
@@ -12,8 +14,18 @@ void MenuBarPanel::OnImGuiRender()
   {
     if (ImGui::BeginMenu("File"))
     {
-      ImGui::EndMenu();
+      if (ImGui::MenuItem("New Scene"))
+      {
+      	Ref<Scene>::Create("Sample");
+      }
+      if (ImGui::MenuItem("Save"))
+      {
+        
+      }
+	    ImGui::EndMenu();
     }
+
+
     if (ImGui::BeginMenu("Edit")) {
       if (ImGui::MenuItem(ui::GenerateLabelID("Reload C# Assembly")))
       {
