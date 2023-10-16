@@ -145,9 +145,6 @@
     <Filter Include="BaseEngine\Render\CanvasRenderer">
       <UniqueIdentifier>{ca742881-e499-469a-9158-4c9b3681f4cd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="BaseEngine\Component\RenderComponent\Canvas">
-      <UniqueIdentifier>{05da9ff2-099b-4821-b052-7e91b8d129bb}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Utilities\Extensions\Variant">
       <UniqueIdentifier>{7b5ca211-93ff-47be-bac6-2ef41f8ed522}</UniqueIdentifier>
     </Filter>
@@ -432,6 +429,9 @@
     </Filter>
     <Filter Include="BaseEngine\Utilities\Dialog">
       <UniqueIdentifier>{adb8aa7e-957f-4c7a-90a8-c4a8e5d7ce4f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BaseEngine\Platform">
+      <UniqueIdentifier>{2aff7280-2690-4131-9bb4-0d99dd0a0093}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -954,6 +954,9 @@
     <ClCompile Include="FileFilter.cpp">
       <Filter>BaseEngine\Utilities\Dialog</Filter>
     </ClCompile>
+    <ClCompile Include="Renderer.cpp">
+      <Filter>BaseEngine\Render</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameApp.h">
@@ -1112,9 +1115,6 @@
     <ClInclude Include="TextArchive.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="PlayerStateUtility.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="TextArchive.h">
       <Filter>Utilities\Frozen\Archive</Filter>
     </ClInclude>
@@ -1184,9 +1184,6 @@
     <ClInclude Include="Becs\SparseSet.h">
       <Filter>Utilities\Becs\Entity</Filter>
     </ClInclude>
-    <ClInclude Include="Becs\Group.h">
-      <Filter>Utilities\Becs\Entity</Filter>
-    </ClInclude>
     <ClInclude Include="Becs\View.h">
       <Filter>Utilities\Becs\Entity</Filter>
     </ClInclude>
@@ -1213,9 +1210,6 @@
     </ClInclude>
     <ClInclude Include="Becs\SignalHandlerMixin.h">
       <Filter>Utilities\Becs\Entity</Filter>
-    </ClInclude>
-    <ClInclude Include="Becs\CompressedPair.h">
-      <Filter>Utilities\Becs\Core</Filter>
     </ClInclude>
     <ClInclude Include="DataComponents.h">
       <Filter>BaseEngine\DataComponents</Filter>
@@ -1822,6 +1816,12 @@
     </ClInclude>
     <ClInclude Include="FileFilter.h">
       <Filter>BaseEngine\Utilities\Dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="Becs\CompressedPair.h">
+      <Filter>Utilities\Becs\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer.h">
+      <Filter>BaseEngine\Render</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

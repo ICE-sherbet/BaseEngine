@@ -1,9 +1,11 @@
 Prefab:
-  - Entity: 15583952072349058110
+  - Entity: 1446236568694843789
     HierarchyComponent:
       Parent: 0
       Children:
         []
+    ScriptComponent:
+      script: 1391968702
     TagComponent:
       tag: P_Bullet
     TransformComponent:

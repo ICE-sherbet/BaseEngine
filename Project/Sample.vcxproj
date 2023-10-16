@@ -223,6 +223,7 @@
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="MofShader.cpp" />
     <ClCompile Include="MofShaderImpl.cpp" />
+    <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="RigidBodyComponent.cpp" />
     <ClCompile Include="RigidBodyGlue.cpp" />
     <ClCompile Include="Scene.cpp" />
@@ -359,7 +360,6 @@
     <ClInclude Include="Becs\Delegate.h" />
     <ClInclude Include="Becs\Entity.h" />
     <ClInclude Include="Becs\EntityFwd.h" />
-    <ClInclude Include="Becs\Group.h" />
     <ClInclude Include="Becs\BecsIterator.h" />
     <ClInclude Include="Becs\HashedString.h" />
     <ClInclude Include="Becs\Registry.h" />
@@ -425,6 +425,7 @@
     <ClInclude Include="PhysicsTesterCommon.h" />
     <ClInclude Include="Prefab.h" />
     <ClInclude Include="PrefabComponent.h" />
+    <ClInclude Include="Renderer.h" />
     <ClInclude Include="RigidBodyGlue.h" />
     <ClInclude Include="SceneAssetSerializer.h" />
     <ClInclude Include="SceneSerializer.h" />

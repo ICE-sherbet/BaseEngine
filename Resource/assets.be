@@ -8,6 +8,9 @@ Assets:
   - Handle: 4210465566744799997
     FilePath: E_missile.png
     Type: Texture
+  - Handle: 4292881887859582206
+    FilePath: P_missile - ÉRÉsÅ[.png
+    Type: Texture
   - Handle: 5678834361069689022
     FilePath: P_missile.png
     Type: Texture
