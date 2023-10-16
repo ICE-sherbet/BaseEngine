@@ -23,6 +23,7 @@ private:
   void DrawEntityNode(const ObjectEntity& entity);
 private:
   Ref<Scene> scene_context_;
+  UUID selected_entity_ = 0;
   std::unique_ptr<HierarchyContextMenu> context_menu_;
 };
 }  // namespace base_engine::editor

@@ -21,7 +21,7 @@ class ConnectableObject {
       signal_map_[signal] = SignalData();
     }
     SignalData* sd = &signal_map_[signal];
-    ;
+    
     const Callable target = callable;
 
     SignalData::Slot slot{};
@@ -58,8 +58,8 @@ class ConnectableObject {
 
     for (auto slot_map = s->slot_map; auto& map : slot_map) {
       Connection& c = map.second.conn;
-
-      c.callable.Call(args, args_count);
+      Variant ret;
+      c.callable.Call(args, args_count, ret);
     }
   }
 

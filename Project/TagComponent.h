@@ -8,8 +8,13 @@
 #pragma once
 #include <string>
 
+#include "ComponentDB.h"
+#include "ComponentProperty.h"
+
 namespace base_engine::component {
 struct TagComponent {
+  BE_COMPONENT(TagComponent)
+
   std::string tag = "None";
 
   TagComponent() = default;
@@ -25,5 +30,10 @@ struct TagComponent {
 
   operator std::string&() { return tag; }
   operator const std::string&() const { return tag; }
+
+  [[nodiscard]] std::string Tag() const { return tag; }
+  void SetTag(const std::string& tag) { this->tag = tag; }
+
+  static void _Bind();
 };
 }  // namespace base_engine::component

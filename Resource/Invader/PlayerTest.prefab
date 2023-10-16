@@ -1,0 +1,30 @@
+Prefab:
+  - Entity: 15360798690796007407
+    HierarchyComponent:
+      Parent: 0
+      Children:
+        []
+    ScriptComponent:
+      script: 1747920759
+      _speed: 10
+      _shotInterval: 0.100000001
+      _shotIntervalCounter: 0
+      _bulletPrefab: 9884008990779901808
+    TagComponent:
+      tag: PlayerTest
+    TransformComponent:
+      position: {x: 720, y: 780, z: 0}
+      rotation: {x: 0, y: 0, z: 0}
+      scale: {x: 1, y: 1, z: 1}
+    CircleShape:
+      radius: 100
+    SpriteRendererComponent:
+      color: {x: 1, y: 1, z: 1, w: 1}
+      texture: 12630102728575510015
+      uv_start: {x: 0, y: 0}
+      uv_end: {x: 1, y: 1}
+      pivot: {x: 0.5, y: 0.5}
+      uv_start: {x: 0, y: 0}
+    BodyMask:
+      body_mask: 0
+      target_mask: 0

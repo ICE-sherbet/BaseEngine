@@ -25,7 +25,10 @@ std::string MonoScriptUtilities::ResolveMonoClassName(MonoClass* mono_class) {
 }
 
 VariantType MonoScriptUtilities::GetVariantTypeFromMonoType(
-    MonoType* monoType) {
+    MonoType* monoType, PropertyHint* hint, std::string* hint_name) {
+  PropertyHint hint_type_result = PropertyHint::kNone;
+  std::string hint_name_result;
+  VariantType result = VariantType::kNil;
   int32_t typeEncoding = mono_type_get_type(monoType);
   MonoClass* typeClass = mono_type_get_class(monoType);
   auto GetClass = [](const std::string& name) {
@@ -33,45 +36,82 @@ VariantType MonoScriptUtilities::GetVariantTypeFromMonoType(
         CSharpScriptEngine::GetInstance()->GetCoreImage(),
         "BaseEngine_ScriptCore", name.c_str());
   };
+  auto GetSystemClass = [](const char* nameSpace, const char* name) {
+    return mono_class_from_name(mono_get_corlib(), nameSpace, name);
+  };
   switch (typeEncoding) {
     case MONO_TYPE_VOID:
-      return VariantType::kVoid;
+      result = VariantType::kVoid;
+      break;
     case MONO_TYPE_BOOLEAN:
-      return VariantType::kBool;
+      result = VariantType::kBool;
+      break;
     case MONO_TYPE_CHAR:
-      return VariantType::kUInt16;
+      result = VariantType::kUInt16;
+      break;
     case MONO_TYPE_I1:
-      return VariantType::kInt8;
+      result = VariantType::kInt8;
+      break;
     case MONO_TYPE_I2:
-      return VariantType::kInt16;
+      result = VariantType::kInt16;
+      break;
     case MONO_TYPE_I4:
-      return VariantType::kInt32;
+      result = VariantType::kInt32;
+      break;
     case MONO_TYPE_I8:
-      return VariantType::kInt64;
+      result = VariantType::kInt64;
+      break;
     case MONO_TYPE_U1:
-      return VariantType::kUInt8;
+      result = VariantType::kUInt8;
+      break;
     case MONO_TYPE_U2:
-      return VariantType::kUInt16;
+      result = VariantType::kUInt16;
+      break;
     case MONO_TYPE_U4:
-      return VariantType::kUInt32;
+      result = VariantType::kUInt32;
+      break;
     case MONO_TYPE_U8:
-      return VariantType::kUInt64;
+      result = VariantType::kUInt64;
+      break;
     case MONO_TYPE_R4:
-      return VariantType::kFloat;
+      result = VariantType::kFloat;
+      break;
     case MONO_TYPE_R8:
-      return VariantType::kDouble;
+      result = VariantType::kDouble;
+      break;
     case MONO_TYPE_STRING:
-      return VariantType::kString;
+      result = VariantType::kString;
+      break;
     case MONO_TYPE_VALUETYPE: {
-      if (typeClass == GetClass("Vector3F")) return VariantType::VECTOR3F;
-      if (typeClass == GetClass("Vector2F")) return VariantType::VECTOR2F;
+      if (typeClass == GetClass("Vector3F")) result = VariantType::kVECTOR3F;
+      if (typeClass == GetClass("Vector2F")) result = VariantType::kVECTOR2F;
+      break;
     }
     case MONO_TYPE_CLASS: {
-      if (typeClass == GetClass("Prefab")) return VariantType::kAssetHandle;
+      if (typeClass == GetClass("Prefab")) {
+        hint_type_result = PropertyHint::kAsset;
+        hint_name_result = "Prefab";
+        result = VariantType::kAssetHandle;
+      }
       if (typeClass == GetClass("AssetHandle"))
-        return VariantType::kAssetHandle;
+        result = VariantType::kAssetHandle;
     }
+    break;
+    case MONO_TYPE_GENERICINST: {
+      MonoClass* p = mono_class_from_name(
+          mono_get_corlib(), "System.Collections.Generic", "List`1");
+      auto na = mono_type_get_name(monoType);
+      if (typeClass == GetSystemClass("System.Collections.Generic", "List`1"))
+        result = VariantType::kVoid;
+    } break;
   }
+  if (hint) {
+    *hint = hint_type_result;
+  }
+  if (hint_name) {
+    *hint_name = hint_name_result;
+  }
+  return result;
 }
 
 MonoObject* MonoScriptUtilities::GetFieldValueObject(
@@ -105,10 +145,11 @@ void MonoScriptUtilities::SetFieldVariant(MonoObject* class_instance,
 
   const auto field_instance = mono_field_get_value_object(
       CSharpScriptEngine::GetInstance()->GetCoreDomain(), class_field,
-                                       class_instance);
-  
+      class_instance);
+
   if (!field_instance) return;
-  const std::string name = mono_class_get_name(mono_object_get_class(field_instance));
+  const std::string name =
+      mono_class_get_name(mono_object_get_class(field_instance));
   if (name == "Prefab") {
     data.Visit([class_instance, class_field](auto value) {
       void* field_data = CSharpScriptEngine::GetInstance()->CreateManagedObject(
@@ -139,8 +180,9 @@ Variant MonoScriptUtilities::GetFieldVariant(MonoObject* class_instance,
     MonoClassField* class_field = mono_class_get_field_from_name(
         object_class, field_info->field_info.name.data());
 
-    MonoObject* obj = mono_field_get_value_object( CSharpScriptEngine::GetInstance()->GetCoreDomain(),
-                                                  class_field, class_instance);
+    MonoObject* obj = mono_field_get_value_object(
+        CSharpScriptEngine::GetInstance()->GetCoreDomain(), class_field,
+        class_instance);
 
     const Variant variant{obj, field_info->field_info.type};
     return variant;

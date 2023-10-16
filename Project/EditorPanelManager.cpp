@@ -4,12 +4,16 @@
 #include "imgui.h"
 #include "InspectorPanel.h"
 #include "ToolbarPanel.h"
+#include "AssetsBrowserPanel.h"
+#include "MenuBarPanel.h"
 
 namespace base_engine::editor {
 void EditorPanelManager::Initialize() {
   panels_.emplace_back(std::make_shared<HierarchyPanel>());
   panels_.emplace_back(std::make_shared<InspectorPanel>());
   panels_.emplace_back(std::make_shared<ToolbarPanel>(this));
+  panels_.emplace_back(std::make_shared<AssetsBrowserPanel>());
+  panels_.emplace_back(std::make_shared<MenuBarPanel>());
 
   for (const auto& editor_panel : panels_) {
     editor_panel->Initialize(scene_context_);
@@ -40,7 +44,6 @@ void EditorPanelManager::OnUpdate() {
 	ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
   ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
   ImGui::End();
-  
 }
 
 void EditorPanelManager::OnRender()

@@ -35,11 +35,15 @@ struct MonoClassTypeInfo {
 using MonoFieldHandle = uint32_t;
 struct MonoFieldInfo {
   MonoClassHandle id = 0;
-  PropertyInfo field_info;
+  PropertyInfo field_info{};
   MonoType* type = nullptr;
   uint64_t attribute_flags = 0;
   MonoClassField* mono_field = nullptr;
   uint32_t size;
+
+  bool HasFlag(FieldFlags flag) const {
+    return attribute_flags & static_cast<uint64_t>(flag);
+  }
 };
 
 using MonoMethodHandle = uint32_t;

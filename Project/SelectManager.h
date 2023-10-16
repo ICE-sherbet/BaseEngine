@@ -16,12 +16,14 @@ class SelectManager : public ConnectableObject {
  public:
   static SelectManager* Instance();
 
-  void SelectItem(UUID item);
+  void SelectItem(const std::string& context, UUID item);
 
-  [[nodiscard]] UUID GetSelectItem() const;
+  [[nodiscard]] UUID GetSelectItem(const std::string& context) const;
+  [[nodiscard]] bool IsSelectItem(const std::string& context, UUID item) const;
 
-private:
-  UUID select_item_;
+ private:
+  using SelectAssetContextMap = std::unordered_map<std::string, UUID>;
+  SelectAssetContextMap select_map_;
   static SelectManager* instance_;
 };
 }  // namespace base_engine::editor

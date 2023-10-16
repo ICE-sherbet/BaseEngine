@@ -35,7 +35,7 @@ class CSharpScriptEngine {
   void InitMono();
 
   void LoadMonoAssembly();
-
+  void ReloadMonoAssembly();
   void InitializeRuntime();
   void ShutdownRuntime();
   void ShutdownRuntimeScriptEntity(ObjectEntity entity);
@@ -51,7 +51,7 @@ class CSharpScriptEngine {
   void InitializeRuntimeDuplicatedEntities();
 	void ShutdownScriptEntity(ObjectEntity entity, bool erase = true);
   MonoDomain* GetCoreDomain() const;
-  ;
+  
   MonoImage* GetCoreImage();
   Ref<AssemblyInfo> GetCoreAssembly() {
     return mono_state_.core_assembly_info_;
@@ -86,6 +86,32 @@ class CSharpScriptEngine {
 
   static void CallMethod(MonoObject* monoObject, MonoMethodInfo* managedMethod,
                          const void** parameters);
+
+  template <typename... TArgs>
+  static void CallMethod(const std::string& className,
+                         const std::string& methodName, TArgs&&... args) {
+
+    constexpr size_t argsCount = sizeof...(args);
+
+    MonoClassTypeInfo* clazz =
+        GetInstance()->storage_->GetManagedClassByName(className);
+    if (clazz == nullptr) {
+      return;
+    }
+
+    MonoMethodInfo* method = GetInstance()->storage_->GetSpecificManagedMethod(
+        clazz, methodName, argsCount);
+    if (method == nullptr) {
+      return;
+    }
+
+    if constexpr (argsCount > 0) {
+      const void* data[] = {&args...};
+      CallMethod(nullptr, method, data);
+    } else {
+      CallMethod(nullptr, method, nullptr);
+    }
+  }
 
   template <typename... TArgs>
   static void CallMethod(MonoObject* managedObject,

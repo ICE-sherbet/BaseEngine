@@ -11,35 +11,24 @@
 #include <unordered_map>
 #include <vector>
 
+#include "EditorContextMenu.h"
 #include "ObjectEntity.h"
 #include "Scene.h"
 #include "UUID.h"
 
 namespace base_engine::editor {
-class HierarchyContextMenu {
+class HierarchyContextMenu : public EditorContextMenu {
  public:
   explicit HierarchyContextMenu(const std::string& name);
 
-  void Show();
-  void Render();
+  void Render() override;
 
-  void BuildRoot();
+  void BuildRoot() override;
 
   void SetTargetObject(const Ref<Scene>& scene, UUID target_object);
 
  private:
-  std::string name_;
-  struct ItemEvents {
-    ItemEvents(
-        const std::function<void()>& callback,
-        const std::function<bool()>& validate = []() { return false; });
-
-    std::function<void()> callback;
-    std::function<bool()> validate;
-  };
-  std::unordered_map<std::string, ItemEvents> menu_items_;
-  inline static size_t id_ = 0;
-
+  
   Ref<Scene> scene_ = nullptr;
   UUID target_object_ = 0;
 };

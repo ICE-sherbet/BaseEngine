@@ -51,18 +51,124 @@ void AddInternalCall() {
 
   mono_add_internal_call(cs_method_name.c_str(), static_cast<void*>(F));
 }
+char* ReadBytes(const std::string& filepath, uint32_t* outSize) {
+  std::ifstream stream(filepath, std::ios::binary | std::ios::ate);
 
+  if (!stream) {
+    // Failed to open the file
+    return nullptr;
+  }
+
+  std::streampos end = stream.tellg();
+  stream.seekg(0, std::ios::beg);
+  uint32_t size = end - stream.tellg();
+
+  if (size == 0) {
+    // File is empty
+    return nullptr;
+  }
+
+  char* buffer = new char[size];
+  stream.read((char*)buffer, size);
+  stream.close();
+
+  *outSize = size;
+  return buffer;
+}
 void CSharpScriptEngine::LoadMonoAssembly() {
   MonoImageOpenStatus status;
 
   mono_state_.core_assembly_info_ = Ref<AssemblyInfo>::Create();
+  uint32_t fileSize = 0;
+  char* file_data = ReadBytes(kCoreMonoAssemblyPath, &fileSize);
+
+  auto image =
+      mono_image_open_from_data_full(file_data, fileSize, 1, &status, 0);
+
+  mono_state_.core_assembly_info_->Assembly =
+      mono_assembly_load_from_full(image, kCoreMonoAssemblyPath, &status, 0);
+
+  mono_image_close(image);
+  delete[] file_data;
 
   mono_state_.core_assembly_info_->AssemblyImage =
-      mono_image_open_full(kCoreMonoAssemblyPath, &status, 0);
+      mono_assembly_get_image(mono_state_.core_assembly_info_->Assembly);
+}
 
-  mono_state_.core_assembly_info_->Assembly = mono_assembly_load_from_full(
-      mono_state_.core_assembly_info_->AssemblyImage, kCoreMonoAssemblyPath,
-      &status, 0);
+void CSharpScriptEngine::ReloadMonoAssembly() {
+  std::unordered_map<
+      UUID, std::unordered_map<UUID, std::unordered_map<uint32_t, Variant>>>
+      old_field_values;
+  for (auto& [sceneID, entityMap] : scene_state_.script_entities) {
+    auto scene = scene_state_.scene_context;
+
+    if (!scene) continue;
+
+    for (const auto& entity_id : entityMap) {
+      auto entity = scene->TryGetEntityWithUUID(entity_id);
+
+      if (!entity.HasComponent<component::ScriptComponent>()) continue;
+
+      const auto sc = entity.GetComponent<component::ScriptComponent>();
+      old_field_values[sceneID][entity_id] =
+          std::unordered_map<uint32_t, Variant>();
+
+      for (auto field_id : sc.field_ids) {
+        Ref<IFieldStorage> storage =
+            scene_state_.field_map[entity_id][field_id];
+
+        if (!storage) continue;
+
+        if (const auto field_info = storage->GetFieldInfo();
+            !field_info->HasFlag(FieldFlags::kPublic))
+          continue;
+
+        old_field_values[sceneID][entity_id][field_id] =
+            storage->GetValueVariant();
+      }
+
+      ShutdownScriptEntity(entity, false);
+
+      entity.GetComponent<component::ScriptComponent>().field_ids.clear();
+    }
+
+    entityMap.clear();
+  }
+  scene_state_.script_entities.clear();
+  mono_domain_set(mono_get_root_domain(), false);
+  mono_domain_unload(mono_state_.domain_);
+
+
+	std::string domain_name = "BE_Runtime";
+	mono_state_.domain_ =
+      mono_domain_create_appdomain(domain_name.data(), nullptr);
+  mono_domain_set(mono_state_.domain_, true);
+  mono_domain_set_config(mono_state_.domain_, ".", "");
+	LoadMonoAssembly();
+  storage_ = std::make_unique<MonoScriptCacheStorage>();
+  storage_->Init();
+  storage_->GenerateCacheForAssembly(mono_state_.core_assembly_info_);
+
+  glue_ = std::make_unique<MonoGlue>();
+  glue_->RegisterGlue();
+  for (auto& entity_field_map : old_field_values | std::views::values) {
+    auto scene = scene_state_.scene_context;
+
+    for (auto& [entityID, fieldMap] : entity_field_map) {
+      auto entity = scene->GetEntityWithUUID(entityID);
+      InitializeScriptEntity(entity);
+
+      const auto& sc = entity.GetComponent<component::ScriptComponent>();
+
+      for (auto& [fieldID, fieldValue] : fieldMap) {
+        Ref<IFieldStorage> storage = scene_state_.field_map[entityID][fieldID];
+
+        if (!storage) continue;
+
+        storage->SetValueVariant(fieldValue);
+      }
+    }
+  }
 }
 
 void CSharpScriptEngine::InitializeRuntime() {
@@ -122,6 +228,8 @@ void CSharpScriptEngine::InitializeScriptEntity(ObjectEntity entity) {
 
   for (auto field_id : class_info->fields) {
     MonoFieldInfo* field_info = GetFieldById(field_id);
+
+    if (!field_info->HasFlag(FieldFlags::kPublic)) continue;
     if (field_info == nullptr) continue;
     scene_state_.field_map[entity_id][field_id] =
         Ref<FieldStorage>::Create(field_info);
@@ -130,6 +238,7 @@ void CSharpScriptEngine::InitializeScriptEntity(ObjectEntity entity) {
   }
 
   if (!scene_state_.script_entities.contains(scene_id)) {
+    if (scene_id != scene_state_.scene_context->GetUUID()) return;
     scene_state_.script_entities[scene_id] = std::vector<UUID>();
   }
   scene_state_.script_entities[scene_id].emplace_back(entity_id);
@@ -264,11 +373,6 @@ void CSharpScriptEngine::InitMono() {
 
   glue_ = std::make_unique<MonoGlue>();
   glue_->RegisterGlue();
-  auto obj = CSharpScriptEngine::GetInstance()->CreateManagedObject(
-      CSharpScriptEngine::GetInstance()->GetManagedClassByName(
-          "System.Diagnostics.StackTrace"));
-  auto p = mono_object_get_class(obj);
-  int n = 3;
 }
 
 CSharpScriptEngine::~CSharpScriptEngine() = default;

@@ -4,7 +4,6 @@
 #include "IBaseEngineTexture.h"
 #include "IBaseEngineRender.h"
 #include "IBaseEngineCanvasRender.h"
-#include "IBaseEngineCollider.h"
 #include "IBaseEngineAssetManager.h"
 #include "IBaseEngineAudioEngine.h"
 namespace base_engine {

@@ -8,30 +8,37 @@
 #pragma once
 #include "Vector2.h"
 
+#include "ComponentDB.h"
+#include "ComponentProperty.h"
+
 namespace base_engine::physics {
+
 struct VelocityComponent {
+  BE_COMPONENT(VelocityComponent)
   /**
    * \brief 線形速度\n
    * 物体が移動する速さと方向を表すベクトル量
    */
-  Vector2 linear;
+  Vector2 linear{};
 
   /**
    * \brief 物体に働く外力を表すベクトル量
    */
-  Vector2 force;
+  Vector2 force{};
 
   /**
    * \brief 角速度\n
    * 物体が回転する速さを表す量
    */
-  float angular;
+  float angular = 0;
 
   /**
    * \brief ねじりモーメント\n
    * 回転軸に働く力
    */
-  float torque;
+  float torque = 0;
+  VelocityComponent() = default;
+  static void _Bind();
 };
 
 }  // namespace base_engine::physics

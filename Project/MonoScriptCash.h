@@ -37,6 +37,7 @@ class MonoScriptCacheStorage {
   MonoClassTypeInfo* GetManagedClassById(uint32_t class_id) const;
   MonoClassTypeInfo* GetMonoObjectClass(MonoObject* mono_object) const;
   MonoFieldInfo* GetFieldById(uint32_t field_id) const;
+  MonoFieldInfo* GetFieldByName(const std::string& field_name) const;
 
   MonoMethodInfo* GetSpecificManagedMethod(
       const MonoClassTypeInfo* managed_class, const std::string& name,

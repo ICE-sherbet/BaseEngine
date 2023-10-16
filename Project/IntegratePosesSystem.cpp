@@ -12,7 +12,7 @@ void IntegratePosesSystem::OnInit() {}
 
 void IntegratePosesSystem::OnUpdate() {
   // TODO SharedDataの概念を実装する
-  /*
+  
   for (const auto bodies =
            GetScene()
                ->GetAllEntitiesWith<component::TransformComponent,
@@ -49,7 +49,6 @@ void IntegratePosesSystem::OnUpdate() {
 
     velocity.force = Vector2(0, 0);
     velocity.torque = 0;
-  }
-  */
+  } 
 }
 }  // namespace base_engine::physics

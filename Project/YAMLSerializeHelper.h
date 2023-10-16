@@ -115,4 +115,22 @@ struct convert<base_engine::AssetHandle> {
     return true;
   }
 };
+
+template <>
+struct convert<base_engine::Variant> {
+  static Node encode(const base_engine::Variant& rhs) {
+    Node node;
+    float buf[6];
+    std::memcpy(buf, &rhs, sizeof(rhs));
+    for (int i = 0; i < 6; ++i) {
+      node.push_back(buf[i]);
+    }
+    return node;
+  }
+
+  static bool decode(const Node& node, base_engine::Variant& rhs) {
+    auto type = node.as<int>();
+    return true;
+  }
+};
 }  // namespace YAML

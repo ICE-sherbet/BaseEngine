@@ -20,7 +20,7 @@ class MonoScriptUtilities {
   MonoScriptUtilities() = delete;
 
   static std::string ResolveMonoClassName(MonoClass* mono_class);
-  static VariantType GetVariantTypeFromMonoType(MonoType* monoType);
+  static VariantType GetVariantTypeFromMonoType(MonoType* monoType,PropertyHint* hint = nullptr,std::string* hint_name = nullptr);
   static MonoObject* GetFieldValueObject(MonoObject* class_instance,
                                          std::string_view field_name,
                                          bool is_property);

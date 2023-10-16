@@ -179,6 +179,24 @@ void Scene::UnParentEntity(ObjectEntity entity,
   entity.SetParentUUID(0);
 }
 
+void Scene::SetParentEntity(ObjectEntity entity, ObjectEntity parent) const {
+  SetParentEntity(entity, parent, true);
+}
+
+void Scene::SetParentEntity(ObjectEntity entity, ObjectEntity parent,
+                            bool world_position_stays) const {
+  if (entity.GetParentUUID() == parent.GetUUID()) return;
+
+  UnParentEntity(entity, world_position_stays);
+
+  entity.SetParentUUID(parent.GetUUID());
+  parent.Children().push_back(entity.GetUUID());
+  parent.GetComponent<component::TransformComponent>().SetChildren(
+      parent.Children());
+
+  ConvertToLocalSpace(entity);
+}
+
 void Scene::ConvertToWorldSpace(ObjectEntity entity) const {
   if (const ObjectEntity parent = TryGetEntityWithUUID(entity.GetParentUUID());
       !parent)
@@ -188,6 +206,19 @@ void Scene::ConvertToWorldSpace(ObjectEntity entity) const {
   auto& entity_transform = entity.GetComponent<TransformComponent>();
   entity_transform.SetLocalTransform(transform);
 }
+
+void Scene::ConvertToLocalSpace(ObjectEntity entity) const {
+  const auto parent = TryGetEntityWithUUID(entity.GetParentUUID());
+
+  if (!parent) return;
+
+  auto& entity_transform = entity.GetComponent<TransformComponent>();
+  const auto parent_transform = GetWorldSpaceTransformMatrix(parent);
+  const auto local_transform =
+      mat::Inverse(parent_transform) * entity_transform.GetGlobalTransform();
+  entity_transform.SetLocalTransform(local_transform);
+}
+
 namespace detail {
 bool IsGlobalDirty(ObjectEntity entity) {
   TransformComponent& transform = entity.GetComponent<TransformComponent>();
@@ -308,12 +339,19 @@ void Scene::PhysicsUpdate() {
 }
 
 void Scene::OnUpdate(const float time) {
+  BE_PROFILE_FUNC();
+  if (is_playing_) {
+    OnUpdateRuntime(time);
+  } else {
+    OnUpdateEditor(time);
+  }
+}
+
+void Scene::OnUpdateRuntime(float time) {
   PhysicsUpdate();
   ScriptOnUpdate(time);
   CSharpScriptEngine::GetInstance()->InitializeRuntimeDuplicatedEntities();
 }
-
-void Scene::OnUpdateRuntime(float time) {}
 
 void Scene::OnUpdateEditor(float time) {}
 
@@ -348,7 +386,8 @@ void Scene::OnRender(float time) {
           {0, 0, static_cast<MofFloat>(texture->texture_->GetWidth()),
            static_cast<MofFloat>(texture->texture_->GetHeight())},
           Mof::CVector4Utilities::ToU32Color(spriteRendererComponent.color),
-          {0.5, 0.5, 0});
+          {spriteRendererComponent.Pivot().x, spriteRendererComponent.Pivot().y,
+           0});
 
     } else {
       BE_CORE_INFO("UUID:{0} テクスチャデータの参照がありません。",
@@ -403,6 +442,6 @@ void Scene::CopyTo(Scene* to) {
   CopyComponent<physics::VelocityComponent>(to->registry_, registry_,
                                             entity_map);
   CopyComponent<physics::BodyMask>(to->registry_, registry_, entity_map);
-  CopyComponent<physics::Circle>(to->registry_, registry_, entity_map);
+  CopyComponent<physics::CircleShape>(to->registry_, registry_, entity_map);
   CopyComponent<physics::BoundingBox>(to->registry_, registry_, entity_map);
 }

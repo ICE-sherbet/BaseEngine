@@ -208,15 +208,15 @@ inline physics::BodyMask DeserializeBodyMask(YAML::Node& node,
 }
 
 inline void SerializeCircle(YAML::Emitter& out, ObjectEntity& entity) {
-  if (!entity.HasComponent<physics::Circle>()) return;
+  if (!entity.HasComponent<physics::CircleShape>()) return;
   out << YAML::Key << "CircleComponent";
   out << YAML::BeginMap;
-  const auto& [radius] = entity.GetComponent<physics::Circle>();
+  const auto& [radius] = entity.GetComponent<physics::CircleShape>();
   out << YAML::Key << "Radius" << YAML::Value << radius;
   out << YAML::EndMap;
 }
-inline physics::Circle DeserializeCircle(YAML::Node& node,
-                                         ObjectEntity& entity) {
+inline physics::CircleShape DeserializeCircle(YAML::Node& node,
+                                              ObjectEntity& entity) {
   auto circle_node = node["CircleComponent"];
   if (!circle_node) return {0};
   return {circle_node["Radius"].as<float>()};
@@ -262,14 +262,15 @@ inline void SerializeScriptComponent(YAML::Emitter& out, ObjectEntity& entity) {
 inline void DeserializeScriptComponent(YAML::Node& node, ObjectEntity& entity) {
   auto script_node = node["ScriptComponent"];
   if (!script_node) return;
-  auto asset_handle = script_node["ClassHandle"].as<AssetHandle>();
-  auto name = script_node["Name"].as<std::string>();
+  auto asset_handle = script_node["script"].as<AssetHandle>();
 
   if (asset_handle == 0) {
     return;
   }
 
-  auto& sc = entity.AddComponent<ScriptComponent>(asset_handle);
+  auto& sc = entity.HasComponent<ScriptComponent>()
+                 ? entity.GetComponent<ScriptComponent>()
+                 : entity.AddComponent<ScriptComponent>(asset_handle);
   CSharpScriptEngine::GetInstance()->InitializeScriptEntity(entity);
 
   const auto script_class =
@@ -289,7 +290,7 @@ inline void DeserializeScriptComponent(YAML::Node& node, ObjectEntity& entity) {
     });
     Ref<IFieldStorage> storage =
         CSharpScriptEngine::GetInstance()->GetFieldStorage(entity, field_id);
-    if (!storage) return;
+    if (!storage) continue;
     storage->SetValueVariant(object);
   }
 }
@@ -297,7 +298,7 @@ inline void DeserializeScriptComponent(YAML::Node& node, ObjectEntity& entity) {
 void DeserializePhysics(YAML::Node& entity, ObjectEntity& deserialized_entity) {
   const auto rigid = DeserializeRigidBodyComponent(entity, deserialized_entity);
   const auto mask = DeserializeBodyMask(entity, deserialized_entity);
-  if (mask.shape_type_id == physics::Circle::Type()) {
+  if (mask.shape_type_id == physics::CircleShape::Type()) {
     const auto [radius] = DeserializeCircle(entity, deserialized_entity);
     physics::PhysicsObjectFactory::CreateCircle(deserialized_entity, radius,
                                                 rigid.mass, rigid.restitution);
@@ -314,18 +315,73 @@ void DeserializeEntities(YAML::Node& entities_node, Ref<Scene> scene) {
 
     std::string name;
     if (auto tag_component = entity["TagComponent"])
-      name = tag_component["Tag"].as<std::string>();
+      name = tag_component["tag"].as<std::string>();
 
     ObjectEntity deserialized_entity = scene->CreateEntityWithUUID(uuid, name);
+
+    auto& registry = scene->GetRegistry();
+    std::vector<uint64_t> fix_component = {};
+
+    for (const auto& node : entity) {
+      auto class_name = node.first.as<std::string>();
+      auto clazz = ComponentDB::GetClass(class_name);
+      if (!clazz) {
+        BE_CORE_INFO("ComponentDB has not class {0}", class_name);
+        continue;
+      }
+      bool skip = false;
+      for (const uint64_t component_id : fix_component) {
+        if (component_id == clazz->id) {
+          skip = true;
+        }
+      }
+      if (skip) continue;
+
+      if (clazz->id == ScriptComponent::_GetHash()) {
+        std::list<PropertyInfo> property_infos;
+        deserialized_entity.GetClassPropertyList(clazz->id, &property_infos);
+
+        for (const auto& property_info : property_infos) {
+          if (!node.second[property_info.name]) {
+            BE_CORE_ASSERT("ファイル読み込みエラー プロパティ名 不一致");
+            continue;
+          }
+
+          Variant s_value{property_info.type};
+          s_value.Visit(
+              [&node, &property_info, &s_value]<typename T>(T&& value) {
+                value = node.second[property_info.name]
+                            .as<std::remove_reference_t<T>>();
+                s_value = Variant(value);
+              });
+          deserialized_entity.TrySetProperty(class_name, property_info,
+                                             s_value);
+        }
+        CSharpScriptEngine::GetInstance()->InitializeScriptEntity(
+            deserialized_entity);
+      }
+      std::list<PropertyInfo> property_infos;
+      deserialized_entity.GetClassPropertyList(clazz->id, &property_infos);
+      if (!registry.valid(clazz->id)) {
+        registry.create_pool(clazz->id, clazz->registry_pool_factory);
+        registry.storage(clazz->id)->try_emplace(deserialized_entity, false);
+      }
+      for (const auto& property_info : property_infos) {
+        if (!node.second[property_info.name]) {
+          BE_CORE_ASSERT("ファイル読み込みエラー プロパティ名 不一致");
+          continue;
+        }
+        Variant s_value{property_info.type};
+        s_value.Visit([&node, &property_info, &s_value]<typename T>(T&& value) {
+          value =
+              node.second[property_info.name].as<std::remove_reference_t<T>>();
+          s_value = Variant(value);
+        });
+        deserialized_entity.TrySetProperty(class_name, property_info, s_value);
+      }
+    }
+    // DeserializeScriptComponent(entity, deserialized_entity);
     DeserializeHierarchyComponent(entity, deserialized_entity);
-    DeserializeTransformComponent(entity, deserialized_entity);
-    DeserializeSpriteRendererComponent(entity, deserialized_entity);
-    DeserializeAudioComponent(entity, deserialized_entity);
-
-    DeserializeScriptComponent(entity, deserialized_entity);
-
-    DeserializePhysics(entity, deserialized_entity);
-
     auto& transform = deserialized_entity.GetComponent<TransformComponent>();
     auto& hierarchy = deserialized_entity.GetComponent<HierarchyComponent>();
 
@@ -354,19 +410,38 @@ void SceneSerializer::SerializeEntity(YAML::Emitter& out,
   out << YAML::BeginMap;
   out << YAML::Key << "Entity";
   out << YAML::Value << uuid;
-  SerializeTagComponent(out, entity);
+
   SerializeHierarchyComponent(out, entity);
-  SerializeTransformComponent(out, entity);
+  auto& registry = entity.GetScene()->GetRegistry();
+  std::vector<uint64_t> fix_component = {};
+  for (const auto& storage : registry.storage()) {
+    bool skip = false;
+    for (const uint64_t component_id : fix_component) {
+      if (component_id == storage.first) {
+        skip = true;
+      }
+    }
+    if (skip) continue;
 
-  SerializeSpriteRendererComponent(out, entity);
-  SerializeAudioComponent(out, entity);
+    auto clazz = ComponentDB::GetClass(storage.first);
+    if (!clazz) continue;
+    auto data = storage.second.try_get(entity.GetHandle());
+    if (!data) continue;
+    std::list<PropertyInfo> property_infos;
+    entity.GetClassPropertyList(storage.first, &property_infos);
+    auto class_name = ComponentDB::GetClass(storage.first)->name;
+    out << YAML::Key << class_name;
+    out << YAML::BeginMap;
 
-  // Physics
-  SerializeRigidBodyComponent(out, entity);
-  SerializeBodyMask(out, entity);
-  SerializeCircle(out, entity);
-
-  SerializeScriptComponent(out, entity);
+    for (const auto& property_info : property_infos) {
+      Variant r_value;
+      entity.TryGetProperty(class_name, property_info, r_value);
+      r_value.Visit([&out, &property_info](auto&& value) {
+        out << YAML::Key << property_info.name << YAML::Value << value;
+      });
+    }
+    out << YAML::EndMap;
+  }
 
   out << YAML::EndMap;
 }

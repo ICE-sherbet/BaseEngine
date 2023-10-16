@@ -14,6 +14,9 @@
 #include "Vector2.h"
 #include "Vector3.h"
 
+#include "ComponentDB.h"
+#include "ComponentProperty.h"
+
 namespace base_engine {
 class Scene;
 }
@@ -24,6 +27,8 @@ namespace base_engine::component {
 
 class TransformComponent {
  public:
+  BE_COMPONENT(TransformComponent)
+
   TransformComponent();
   TransformComponent(const TransformComponent& other) = default;
 
@@ -80,7 +85,9 @@ class TransformComponent {
   Vector2 rotation_vector_;
 
 
- private:
+  static void _Bind();
+
+private:
   Matrix44 local_transform_;
   Vector3 position_ = Vec3::kZero;
   Vector3 scale_ = Vec3::kOne;

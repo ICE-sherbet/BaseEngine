@@ -330,13 +330,14 @@ class basic_storage
     swap(element_at(lhs), element_at(rhs));
   }
 
-  void copy(Entity src_entity, std::shared_ptr<basic_sparse_set<>>& dst,
-            Entity dst_entity) const override
-  {
+  void copy(Entity src_entity, std::shared_ptr<basic_sparse_set<>> &dst,
+            Entity dst_entity) const override {
     if (!dst) {
       dst = std::make_shared<basic_storage<Type>>();
     }
-    dst->try_emplace(dst_entity, false, try_get(src_entity));
+    if (base_type::contains(src_entity)) {
+      dst->try_emplace(dst_entity, false, try_get(src_entity));
+    }
   }
 
  private:
@@ -441,7 +442,7 @@ class basic_storage
   basic_storage(basic_storage &&other, const allocator_type &allocator) noexcept
       : base_type{std::move(other), allocator},
         payload{std::move(other.payload), allocator} {}
-
+  ~basic_storage() {}
   void swap(basic_storage &other) {
     using std::swap;
     base_type::swap(other);
