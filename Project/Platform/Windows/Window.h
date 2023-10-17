@@ -6,9 +6,13 @@
 // @details
 
 #pragma once
-#include <GLFW/glfw3.h>
+#include <string>
 
-#include "IWindow.h"
+#include "../../../IWindow.h"
+
+struct GLFWwindow;
+struct GLFWcursor;
+
 namespace base_engine {
 struct WindowSpecification {
   std::string Title = "BE";
@@ -28,8 +32,8 @@ class Window : public IWindow {
   void Update() override;
 
  private:
-  GLFWwindow* m_Window = nullptr;
-  GLFWcursor* m_ImGuiMouseCursors[9] = {0};
+  struct GLFWwindow* m_Window = nullptr;
+  struct GLFWcursor* m_ImGuiMouseCursors[9] = {0};
   WindowSpecification m_Specification;
   struct WindowData {
     std::string Title;

@@ -1,13 +1,14 @@
 ﻿#include "Window.h"
 
+#include <GLFW/glfw3.h>
+
 namespace base_engine {
 static bool s_GLFWInitialized = false;
 
-Window::Window(const WindowSpecification& specification): m_Specification(specification)
-{}
+Window::Window(const WindowSpecification& specification)
+    : m_Specification(specification) {}
 
-void Window::Init()
-{
+void Window::Init() {
   m_Data.Title = m_Specification.Title;
   m_Data.Width = m_Specification.Width;
   m_Data.Height = m_Specification.Height;
@@ -15,14 +16,13 @@ void Window::Init()
   if (!s_GLFWInitialized) {
     int success = glfwInit();
 
-    if (!success)
-    {
+    if (!success) {
       __debugbreak();
     }
     s_GLFWInitialized = true;
   }
 
-    glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+  glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 
   if (m_Specification.Fullscreen) {
     GLFWmonitor* primaryMonitor = glfwGetPrimaryMonitor();
@@ -43,8 +43,6 @@ void Window::Init()
   }
 }
 
-void Window::Update()
-{
-}
+void Window::Update() { glfwPollEvents(); }
 
-}
+}  // namespace base_engine

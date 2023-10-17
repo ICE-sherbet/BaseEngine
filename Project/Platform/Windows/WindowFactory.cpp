@@ -5,10 +5,10 @@
 //
 // @details
 
-#include "IWindow.h"
+#include "../../../IWindow.h"
 #include "Window.h"
 
 namespace base_engine {
 
-IWindow* IWindow::Create() { return new Window; }
+IWindow* IWindow::Create() { return new Window(); }
 }  // namespace base_engine
