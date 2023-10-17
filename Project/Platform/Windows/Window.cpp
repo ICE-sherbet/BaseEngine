@@ -8,6 +8,8 @@ static bool s_GLFWInitialized = false;
 Window::Window(const WindowSpecification& specification)
     : specification_(specification) {}
 
+Window::~Window() { glfwDestroyWindow(window_); }
+
 void Window::Init() {
   data_.Title = specification_.Title;
   data_.Width = specification_.Width;
@@ -35,16 +37,15 @@ void Window::Init() {
     glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
 
     window_ = glfwCreateWindow(mode->width, mode->height, data_.Title.c_str(),
-                                primaryMonitor, nullptr);
+                               primaryMonitor, nullptr);
   } else {
-    window_ = glfwCreateWindow((int)specification_.Width,
-                                (int)specification_.Height,
-                                data_.Title.c_str(), nullptr, nullptr);
+    window_ =
+        glfwCreateWindow((int)specification_.Width, (int)specification_.Height,
+                         data_.Title.c_str(), nullptr, nullptr);
   }
 }
 
 void Window::Update() { glfwPollEvents(); }
 
-bool Window::IsShow()
-{ return glfwWindowShouldClose(window_) == GLFW_FALSE; }
+bool Window::IsShow() { return glfwWindowShouldClose(window_) == GLFW_FALSE; }
 }  // namespace base_engine

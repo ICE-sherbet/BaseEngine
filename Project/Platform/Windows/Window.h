@@ -27,8 +27,8 @@ class Window : public IWindow {
  public:
   explicit Window(
       const WindowSpecification& specification = WindowSpecification());
-
-  void Init() override;
+  ~Window() override;
+	void Init() override;
   void Update() override;
   bool IsShow() override;
 
