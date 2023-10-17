@@ -6,12 +6,12 @@ namespace base_engine {
 static bool s_GLFWInitialized = false;
 
 Window::Window(const WindowSpecification& specification)
-    : m_Specification(specification) {}
+    : specification_(specification) {}
 
 void Window::Init() {
-  m_Data.Title = m_Specification.Title;
-  m_Data.Width = m_Specification.Width;
-  m_Data.Height = m_Specification.Height;
+  data_.Title = specification_.Title;
+  data_.Width = specification_.Width;
+  data_.Height = specification_.Height;
 
   if (!s_GLFWInitialized) {
     int success = glfwInit();
@@ -24,7 +24,7 @@ void Window::Init() {
 
   glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 
-  if (m_Specification.Fullscreen) {
+  if (specification_.Fullscreen) {
     GLFWmonitor* primaryMonitor = glfwGetPrimaryMonitor();
     const GLFWvidmode* mode = glfwGetVideoMode(primaryMonitor);
 
@@ -34,17 +34,17 @@ void Window::Init() {
     glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
     glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
 
-    m_Window = glfwCreateWindow(mode->width, mode->height, m_Data.Title.c_str(),
+    window_ = glfwCreateWindow(mode->width, mode->height, data_.Title.c_str(),
                                 primaryMonitor, nullptr);
   } else {
-    m_Window = glfwCreateWindow((int)m_Specification.Width,
-                                (int)m_Specification.Height,
-                                m_Data.Title.c_str(), nullptr, nullptr);
+    window_ = glfwCreateWindow((int)specification_.Width,
+                                (int)specification_.Height,
+                                data_.Title.c_str(), nullptr, nullptr);
   }
 }
 
 void Window::Update() { glfwPollEvents(); }
 
 bool Window::IsShow()
-{ return glfwWindowShouldClose(m_Window) == GLFW_FALSE; }
+{ return glfwWindowShouldClose(window_) == GLFW_FALSE; }
 }  // namespace base_engine

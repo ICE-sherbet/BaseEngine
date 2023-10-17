@@ -33,15 +33,15 @@ class Window : public IWindow {
   bool IsShow() override;
 
 private:
-  struct GLFWwindow* m_Window = nullptr;
-  struct GLFWcursor* m_ImGuiMouseCursors[9] = {0};
-  WindowSpecification m_Specification;
+  struct GLFWwindow* window_ = nullptr;
+  struct GLFWcursor* ImGuiMouseCursors_[9] = {0};
+  WindowSpecification specification_;
   struct WindowData {
     std::string Title;
     uint32_t Width, Height;
   };
 
-  WindowData m_Data;
-  float m_LastFrameTime = 0.0f;
+  WindowData data_;
+  float last_frame_time_ = 0.0f;
 };
 }  // namespace base_engine
