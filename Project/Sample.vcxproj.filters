@@ -433,6 +433,18 @@
     <Filter Include="BaseEngine\Platform">
       <UniqueIdentifier>{2aff7280-2690-4131-9bb4-0d99dd0a0093}</UniqueIdentifier>
     </Filter>
+    <Filter Include="BaseEngine\Platform\Windows">
+      <UniqueIdentifier>{df9e3916-9c1b-45ae-8544-e7b611e6e9fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BaseEngine\Platform\Vulkan">
+      <UniqueIdentifier>{3b38a9dd-d983-42d1-8183-d6010815856a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BaseEngine\Platform\Windows\Window">
+      <UniqueIdentifier>{d11690a2-f2a9-4685-9cf7-865701eaf5e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BaseEngine\Core\Window">
+      <UniqueIdentifier>{6e32291c-54bd-454d-9fc9-8441aeea08fa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -956,6 +968,12 @@
     </ClCompile>
     <ClCompile Include="Renderer.cpp">
       <Filter>BaseEngine\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\Windows\Window.cpp">
+      <Filter>BaseEngine\Platform\Windows\Window</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\Windows\WindowFactory.cpp">
+      <Filter>BaseEngine\Platform\Windows\Window</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1823,6 +1841,12 @@
     <ClInclude Include="Renderer.h">
       <Filter>BaseEngine\Render</Filter>
     </ClInclude>
+    <ClInclude Include="IWindow.h">
+      <Filter>BaseEngine\Core\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\Windows\Window.h">
+      <Filter>BaseEngine\Platform\Windows\Window</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="LICENSE">
@@ -1831,6 +1855,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Sample.rc">

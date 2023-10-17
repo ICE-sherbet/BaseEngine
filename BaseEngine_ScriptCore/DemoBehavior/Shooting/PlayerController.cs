@@ -50,7 +50,7 @@ namespace Demo.DemoBehavior.Shooting
                 move += new Vector3F(0, _speed, 0);
             }
 
-            if (_shotIntervalCounter>_shotInterval && Input.GetKey(KeyCode.Shift))
+            if (_shotIntervalCounter>_shotInterval && Input.GetKey(KeyCode.Space))
             {
                 _shotIntervalCounter = 0f;
                 var bullet = Scene.InstantiatePrefab(_bulletPrefab);

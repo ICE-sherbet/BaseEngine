@@ -59,7 +59,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;BE_DEBUG;BE_ENABLE_PROFILING;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)\vendor\imgui;$(SolutionDir)\vendor;$(SolutionDir)\vendor\mono\x86;$(SolutionDir)\Library\Include;$(ProjectDir)\include\utilities\observable;$(SolutionDir)\vendor\optick\src;$(SolutionDir)\vendor\yaml-cpp\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\vendor\imgui;$(SolutionDir)\vendor;$(SolutionDir)vendor\mono\x86;$(SolutionDir)\Library\Include;$(ProjectDir)\include\utilities\observable;$(SolutionDir)\vendor\optick\src;$(SolutionDir)\vendor\yaml-cpp\include;$(SolutionDir)Project</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -216,6 +216,8 @@
     <ClCompile Include="PhysicsContactListenerSystem.cpp" />
     <ClCompile Include="PhysicsObjectFactory.cpp" />
     <ClCompile Include="PhysicsTesterCommon.cpp" />
+    <ClCompile Include="Platform\Windows\Window.cpp" />
+    <ClCompile Include="Platform\Windows\WindowFactory.cpp" />
     <ClCompile Include="Prefab.cpp" />
     <ClCompile Include="Quaternion.cpp" />
     <ClCompile Include="QuaternionUtilities.cpp" />
@@ -418,11 +420,13 @@
     <ClInclude Include="InspectorContextMenu.h" />
     <ClInclude Include="InspectorPanel.h" />
     <ClInclude Include="InspectorUtilities.h" />
+    <ClInclude Include="IWindow.h" />
     <ClInclude Include="MenuBarPanel.h" />
     <ClInclude Include="MethodBind.h" />
     <ClInclude Include="OnCollisionTag.h" />
     <ClInclude Include="PhysicsContactListenerSystem.h" />
     <ClInclude Include="PhysicsTesterCommon.h" />
+    <ClInclude Include="Platform\Windows\Window.h" />
     <ClInclude Include="Prefab.h" />
     <ClInclude Include="PrefabComponent.h" />
     <ClInclude Include="Renderer.h" />
@@ -565,6 +569,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Sample.rc" />
@@ -579,5 +584,12 @@
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="..\packages\glfw.3.3.8\build\native\glfw.targets" Condition="Exists('..\packages\glfw.3.3.8\build\native\glfw.targets')" />
   </ImportGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>このプロジェクトは、このコンピューター上にない NuGet パッケージを参照しています。それらのパッケージをダウンロードするには、[NuGet パッケージの復元] を使用します。詳細については、http://go.microsoft.com/fwlink/?LinkID=322105 を参照してください。見つからないファイルは {0} です。</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\glfw.3.3.8\build\native\glfw.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\glfw.3.3.8\build\native\glfw.targets'))" />
+  </Target>
 </Project>
