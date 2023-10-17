@@ -45,4 +45,6 @@ void Window::Init() {
 
 void Window::Update() { glfwPollEvents(); }
 
+bool Window::IsShow()
+{ return glfwWindowShouldClose(m_Window) == GLFW_FALSE; }
 }  // namespace base_engine

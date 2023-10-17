@@ -30,8 +30,9 @@ class Window : public IWindow {
 
   void Init() override;
   void Update() override;
+  bool IsShow() override;
 
- private:
+private:
   struct GLFWwindow* m_Window = nullptr;
   struct GLFWcursor* m_ImGuiMouseCursors[9] = {0};
   WindowSpecification m_Specification;
