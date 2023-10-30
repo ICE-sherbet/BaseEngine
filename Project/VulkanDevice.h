@@ -90,6 +90,9 @@ class VulkanDevice : public RefCounted {
   uint32_t GetGraphicsIndex() const;
 
   VkDevice GetVulkanDevice() const { return logical_device_; }
+  VkPhysicalDevice GetVulkanPhysicalDevice() const {
+    return physical_device_->GetVulkanPhysicalDevice();
+  }
 
  private:
   VkDevice logical_device_ = nullptr;

@@ -6,12 +6,18 @@
 // @details
 
 #pragma once
-#include <GLFW/glfw3.h>
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+
+#define VK_USE_PLATFORM_WIN32_KHR
+#define GLFW_INCLUDE_VULKAN
+#define GLFW_EXPOSE_NATIVE_WIN32
+
 #include <vulkan/vulkan.h>
+#include <GLFW/glfw3.h>
 
 #include "Assert.h"
 #include "VulkanDevice.h"
-
 namespace base_engine {
 class VulkanSwapChain {
  public:
