@@ -14,6 +14,8 @@ struct GLFWwindow;
 struct GLFWcursor;
 
 namespace base_engine {
+class RendererContext;
+
 struct WindowSpecification {
   std::string Title = "BE";
   uint32_t Width = 1280;
@@ -28,11 +30,11 @@ class Window : public IWindow {
   explicit Window(
       const WindowSpecification& specification = WindowSpecification());
   ~Window() override;
-	void Init() override;
+  void Init() override;
   void Update() override;
   bool IsShow() override;
 
-private:
+ private:
   struct GLFWwindow* window_ = nullptr;
   struct GLFWcursor* ImGuiMouseCursors_[9] = {0};
   WindowSpecification specification_;
@@ -43,5 +45,7 @@ private:
 
   WindowData data_;
   float last_frame_time_ = 0.0f;
+
+  Ref<RendererContext> renderer_context_;
 };
 }  // namespace base_engine

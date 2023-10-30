@@ -10,6 +10,7 @@ class IBaseEngineRender;
 class IBaseEngineCanvasRender;
 class IBaseEngineAssetManager;
 class IBaseEngineAudioEngine;
+class IBaseEngineRendererContext;
 
 class BaseEngineCore {
  private:
@@ -18,6 +19,7 @@ class BaseEngineCore {
   std::tuple<BaseEngineComponent<IBaseEngineEmpty>,
              BaseEngineComponent<IBaseEngineTexture>,
              BaseEngineComponent<IBaseEngineRender>,
+             BaseEngineComponent<IBaseEngineRendererContext>,
              BaseEngineComponent<IBaseEngineCanvasRender>,
              BaseEngineComponent<IBaseEngineAssetManager>,
              BaseEngineComponent<IBaseEngineAudioEngine>>

@@ -2,6 +2,9 @@
 
 #include <GLFW/glfw3.h>
 
+#include "../../BaseEngineCore.h"
+#include "../../Renderer.h"
+
 namespace base_engine {
 static bool s_GLFWInitialized = false;
 
@@ -29,7 +32,7 @@ void Window::Init() {
   if (specification_.Fullscreen) {
     GLFWmonitor* primaryMonitor = glfwGetPrimaryMonitor();
     const GLFWvidmode* mode = glfwGetVideoMode(primaryMonitor);
-
+    glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
     glfwWindowHint(GLFW_DECORATED, false);
     glfwWindowHint(GLFW_RED_BITS, mode->redBits);
     glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
@@ -43,6 +46,10 @@ void Window::Init() {
         glfwCreateWindow((int)specification_.Width, (int)specification_.Height,
                          data_.Title.c_str(), nullptr, nullptr);
   }
+
+  BASE_ENGINE(RendererContext)->Init();
+  renderer_context_ = BASE_ENGINE(RendererContext)->GetRendererContext();
+  
 }
 
 void Window::Update() { glfwPollEvents(); }

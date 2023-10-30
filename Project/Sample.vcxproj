@@ -59,7 +59,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;BE_DEBUG;BE_ENABLE_PROFILING;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)\vendor\imgui;$(SolutionDir)\vendor;$(SolutionDir)vendor\mono\x86;$(SolutionDir)\Library\Include;$(ProjectDir)\include\utilities\observable;$(SolutionDir)\vendor\optick\src;$(SolutionDir)\vendor\yaml-cpp\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\vendor\imgui;$(SolutionDir)\vendor;$(SolutionDir)vendor\mono\x86;$(SolutionDir)\Library\Include;$(ProjectDir)\include\utilities\observable;$(SolutionDir)\vendor\optick\src;$(SolutionDir)\vendor\yaml-cpp\include;$(SolutionDir)vendor\glfw\x86\include;$(VK_SDK_PATH)\Include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -68,9 +68,9 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)vendor\mono\x86;$(SolutionDir)\Library\Library;$(SolutionDir)vendor\yaml-cpp;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)vendor\mono\x86;$(SolutionDir)\Library\Library;$(SolutionDir)vendor\yaml-cpp;$(SolutionDir)vendor\glfw\x86\;$(VK_SDK_PATH)\Bin32;$(VK_SDK_PATH)\Lib32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>LIBCMTD</IgnoreSpecificDefaultLibraries>
-      <AdditionalDependencies>mono-2.0-sgen.lib;OptickCore.lib;;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>mono-2.0-sgen.lib;OptickCore.lib;glfw3.lib;vulkan-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -226,6 +226,7 @@
     <ClCompile Include="MofShader.cpp" />
     <ClCompile Include="MofShaderImpl.cpp" />
     <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="RendererContext.cpp" />
     <ClCompile Include="RigidBodyComponent.cpp" />
     <ClCompile Include="RigidBodyGlue.cpp" />
     <ClCompile Include="Scene.cpp" />
@@ -271,6 +272,11 @@
     <ClCompile Include="Vector2.cpp" />
     <ClCompile Include="VectorUtilities.cpp" />
     <ClCompile Include="VelocityComponent.cpp" />
+    <ClCompile Include="VulkanContext.cpp" />
+    <ClCompile Include="VulkanDevice.cpp" />
+    <ClCompile Include="VulkanRendererContext.cpp" />
+    <ClCompile Include="VulkanSwapChain.cpp" />
+    <ClCompile Include="VulkanUtilities.cpp" />
     <ClCompile Include="WeakRefObject.cpp" />
     <ClCompile Include="WinMain.cpp" />
   </ItemGroup>
@@ -430,6 +436,7 @@
     <ClInclude Include="Prefab.h" />
     <ClInclude Include="PrefabComponent.h" />
     <ClInclude Include="Renderer.h" />
+    <ClInclude Include="RendererContext.h" />
     <ClInclude Include="RigidBodyGlue.h" />
     <ClInclude Include="SceneAssetSerializer.h" />
     <ClInclude Include="SceneSerializer.h" />
@@ -439,6 +446,11 @@
     <ClInclude Include="TestComponent.h" />
     <ClInclude Include="ToolbarPanel.h" />
     <ClInclude Include="Variant.h" />
+    <ClInclude Include="VulkanContext.h" />
+    <ClInclude Include="VulkanDevice.h" />
+    <ClInclude Include="VulkanRendererContext.h" />
+    <ClInclude Include="VulkanSwapChain.h" />
+    <ClInclude Include="VulkanUtilities.h" />
     <ClInclude Include="YAMLSerializeHelper.h" />
     <ClInclude Include="SolveContact.h" />
     <ClInclude Include="ContactSolverReferenceService.h" />

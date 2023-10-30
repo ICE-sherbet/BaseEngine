@@ -15,6 +15,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 #endif
 {
   base_engine::Log::Init();
+  base_engine::BaseEngineCore engine_;
+
   auto window = base_engine::IWindow::Create();
   window->Init();
   while (window->IsShow()) {
@@ -34,8 +36,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
   Info.WindowCreateInfo.hIcon = icon;
   ;
   // Info.GraphicsCreateInfo.bWindowed = true;
-  pFrame->Initialize(&Info);
-  pFrame->Run();
+//  pFrame->Initialize(&Info);
+//  pFrame->Run();
   MOF_SAFE_DELETE(pFrame);
   return 0;
 }
