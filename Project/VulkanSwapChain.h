@@ -6,12 +6,11 @@
 // @details
 
 #pragma once
+#include <GLFW/glfw3.h>
 #include <vulkan/vulkan.h>
 
-#include "VulkanDevice.h"
-#include <GLFW/glfw3.h>
-
 #include "Assert.h"
+#include "VulkanDevice.h"
 
 namespace base_engine {
 class VulkanSwapChain {
@@ -85,7 +84,6 @@ class VulkanSwapChain {
   };
   std::vector<SwapchainImage> m_Images;
 
-
   std::vector<VkFramebuffer> m_Framebuffers;
 
   struct SwapchainCommandBuffer {
@@ -95,9 +93,7 @@ class VulkanSwapChain {
   std::vector<SwapchainCommandBuffer> m_CommandBuffers;
 
   struct {
-    // Swap chain
     VkSemaphore PresentComplete = VK_NULL_HANDLE;
-    // Command buffer
     VkSemaphore RenderComplete = VK_NULL_HANDLE;
   } m_Semaphores;
   VkSubmitInfo m_SubmitInfo;
