@@ -9,6 +9,7 @@
 #include <string>
 
 #include "../../../IWindow.h"
+#include "../../VulkanSwapChain.h"
 
 struct GLFWwindow;
 struct GLFWcursor;
@@ -33,6 +34,9 @@ class Window : public IWindow {
   void Init() override;
   void Update() override;
   bool IsShow() override;
+  void* GetNativeWindow() override { return window_; }
+
+  VulkanSwapChain& GetSwapChain() { return swap_chain_; }
 
  private:
   struct GLFWwindow* window_ = nullptr;
@@ -47,5 +51,6 @@ class Window : public IWindow {
   float last_frame_time_ = 0.0f;
 
   Ref<RendererContext> renderer_context_;
+  VulkanSwapChain swap_chain_;
 };
 }  // namespace base_engine

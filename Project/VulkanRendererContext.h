@@ -6,7 +6,7 @@
 // @details
 
 #pragma once
-#include "Renderer.h"
+#include "BaseEngineRenderer.h"
 #include "VulkanContext.h"
 
 namespace base_engine {

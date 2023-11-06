@@ -454,6 +454,24 @@
     <Filter Include="BaseEngine\Platform\Vulkan\SwapChain">
       <UniqueIdentifier>{042b00f4-b912-423b-88e9-db6f6a4b324d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="BaseEngine\Render\Buffer">
+      <UniqueIdentifier>{3ddfe5d3-eb2b-4818-96bc-05363c88032e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BaseEngine\Platform\Vulkan\Buffer">
+      <UniqueIdentifier>{a79a6e16-37c9-4185-896b-5732e3f67127}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BaseEngine\Render\RenderCommand">
+      <UniqueIdentifier>{267d27a0-6755-4329-b495-f86b610471d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BaseEngine\Core\Thread">
+      <UniqueIdentifier>{f5e8f868-e61d-403f-83ae-2cb7dcfa7d0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BaseEngine\Core\Application">
+      <UniqueIdentifier>{d8cd59f1-7125-41b7-bfcd-a87fa9b5e132}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BaseEngine\Platform\Vulkan\ImGui">
+      <UniqueIdentifier>{208b1017-4b77-4c09-824f-26e146138779}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -975,7 +993,7 @@
     <ClCompile Include="FileFilter.cpp">
       <Filter>BaseEngine\Utilities\Dialog</Filter>
     </ClCompile>
-    <ClCompile Include="Renderer.cpp">
+    <ClCompile Include="BaseEngineRenderer.cpp">
       <Filter>BaseEngine\Render</Filter>
     </ClCompile>
     <ClCompile Include="Platform\Windows\Window.cpp">
@@ -1001,6 +1019,36 @@
     </ClCompile>
     <ClCompile Include="VulkanSwapChain.cpp">
       <Filter>BaseEngine\Platform\Vulkan\SwapChain</Filter>
+    </ClCompile>
+    <ClCompile Include="RendererApi.cpp">
+      <Filter>BaseEngine\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanRenderer.cpp">
+      <Filter>BaseEngine\Platform\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="RendererSubmit.cpp">
+      <Filter>BaseEngine\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="VertexBuffer.cpp">
+      <Filter>BaseEngine\Render\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanVertexBuffer.cpp">
+      <Filter>BaseEngine\Platform\Vulkan\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderCommandQueue.cpp">
+      <Filter>BaseEngine\Render\RenderCommand</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderThread.cpp">
+      <Filter>BaseEngine\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Thread.cpp">
+      <Filter>BaseEngine\Core\Thread</Filter>
+    </ClCompile>
+    <ClCompile Include="Application.cpp">
+      <Filter>BaseEngine\Core\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanImGuiLayer.cpp">
+      <Filter>BaseEngine\Platform\Vulkan\ImGui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1865,7 +1913,7 @@
     <ClInclude Include="Becs\CompressedPair.h">
       <Filter>Utilities\Becs\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Renderer.h">
+    <ClInclude Include="BaseEngineRenderer.h">
       <Filter>BaseEngine\Render</Filter>
     </ClInclude>
     <ClInclude Include="IWindow.h">
@@ -1891,6 +1939,36 @@
     </ClInclude>
     <ClInclude Include="VulkanSwapChain.h">
       <Filter>BaseEngine\Platform\Vulkan\SwapChain</Filter>
+    </ClInclude>
+    <ClInclude Include="RendererApi.h">
+      <Filter>BaseEngine\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanRenderer.h">
+      <Filter>BaseEngine\Platform\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="RendererSubmit.h">
+      <Filter>BaseEngine\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="VertexBuffer.h">
+      <Filter>BaseEngine\Render\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanVertexBuffer.h">
+      <Filter>BaseEngine\Platform\Vulkan\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderCommandQueue.h">
+      <Filter>BaseEngine\Render\RenderCommand</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderThread.h">
+      <Filter>BaseEngine\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Thread.h">
+      <Filter>BaseEngine\Core\Thread</Filter>
+    </ClInclude>
+    <ClInclude Include="Application.h">
+      <Filter>BaseEngine\Core\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanImGuiLayer.h">
+      <Filter>BaseEngine\Platform\Vulkan\ImGui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

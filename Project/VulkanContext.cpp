@@ -41,10 +41,23 @@ void VulkanContext::InitInstance() {
   app_info.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
   app_info.apiVersion = VK_API_VERSION_1_2;
 
+#define VK_KHR_WIN32_SURFACE_EXTENSION_NAME "VK_KHR_win32_surface"
+  std::vector instance_extensions = {VK_KHR_SURFACE_EXTENSION_NAME,
+                                     VK_KHR_WIN32_SURFACE_EXTENSION_NAME};
+  instance_extensions.push_back(
+      VK_EXT_DEBUG_UTILS_EXTENSION_NAME);  // Very little performance hit, can
+                                           // be used in Release.
+  instance_extensions.push_back(VK_EXT_DEBUG_REPORT_EXTENSION_NAME);
+  instance_extensions.push_back(
+      VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME);
+
   VkInstanceCreateInfo instance_create_info{};
   instance_create_info.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
   instance_create_info.pApplicationInfo = &app_info;
   instance_create_info.pNext = nullptr;
+  instance_create_info.enabledExtensionCount =
+      (uint32_t)instance_extensions.size();
+  instance_create_info.ppEnabledExtensionNames = instance_extensions.data();
   auto err = vkCreateInstance(&instance_create_info, nullptr, &instance_);
   if (VK_SUCCESS != err) {
     BE_CORE_ERROR("Vulkan error.");

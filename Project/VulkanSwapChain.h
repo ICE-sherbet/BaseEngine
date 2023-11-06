@@ -13,8 +13,8 @@
 #define GLFW_INCLUDE_VULKAN
 #define GLFW_EXPOSE_NATIVE_WIN32
 
-#include <vulkan/vulkan.h>
 #include <GLFW/glfw3.h>
+#include <vulkan/vulkan.h>
 
 #include "Assert.h"
 #include "VulkanDevice.h"
@@ -24,8 +24,9 @@ class VulkanSwapChain {
   VulkanSwapChain() = default;
 
   void Init(VkInstance instance, const Ref<VulkanDevice>& device);
-  void InitSurface(GLFWwindow* windowHandle);
-  void Create(uint32_t* width, uint32_t* height, bool vsync);
+  void InitSurface(GLFWwindow* window_handle);
+  void Create(GLFWwindow* window_handle, bool vsync);
+  void Create(uint32_t width, uint32_t height, bool vsync);
   void Destroy();
 
   void OnResize(uint32_t width, uint32_t height);
@@ -70,7 +71,7 @@ class VulkanSwapChain {
  private:
   uint32_t AcquireNextImage();
 
-  void FindImageFormatAndColorSpace();
+  void SelectSurfaceFormat(VkFormat select_format);
 
  private:
   VkInstance m_Instance = nullptr;
@@ -114,7 +115,7 @@ class VulkanSwapChain {
   uint32_t m_Width = 0, m_Height = 0;
 
   VkSurfaceKHR m_Surface;
-
+  VkExtent2D m_extent;
   friend class VulkanContext;
 };
 }  // namespace base_engine

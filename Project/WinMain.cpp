@@ -1,5 +1,6 @@
 #include <GLFW/glfw3.h>
 
+#include "Application.h"
 #include "GameApp.h"
 #include "GameWindow.h"
 #include "IWindow.h"
@@ -17,12 +18,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
   base_engine::Log::Init();
   base_engine::BaseEngineCore engine_;
 
-  auto window = base_engine::IWindow::Create();
-  window->Init();
-  while (window->IsShow()) {
-    window->Update();
-  }
-  delete window;
+  base_engine::ApplicationSpecification specification{};
+  specification.width = 360;
+  specification.height = 640;
+  base_engine::Application application{specification};
+  application.Run();
+
   //_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
   Mof::LPFramework pFrame = new Mof::CDX11GameFramework();
   Mof::WINDOWSGAMEFRAMEWORKINITIALIZEINFO Info;

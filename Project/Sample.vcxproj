@@ -59,7 +59,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;BE_DEBUG;BE_ENABLE_PROFILING;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)\vendor\imgui;$(SolutionDir)\vendor;$(SolutionDir)vendor\mono\x86;$(SolutionDir)\Library\Include;$(ProjectDir)\include\utilities\observable;$(SolutionDir)\vendor\optick\src;$(SolutionDir)\vendor\yaml-cpp\include;$(SolutionDir)vendor\glfw\x86\include;$(VK_SDK_PATH)\Include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\vendor\imgui;$(SolutionDir)\vendor;$(SolutionDir)vendor\mono\x86;$(SolutionDir)\Library\Include;$(ProjectDir)\include\utilities\observable;$(SolutionDir)\vendor\optick\src;$(SolutionDir)\vendor\yaml-cpp\include;$(SolutionDir)vendor\glfw\x86\include;$(VK_SDK_PATH)\Include;$(SolutionDir)vendor\VulkanMemoryAllocator</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -129,6 +129,7 @@
     <ClCompile Include="..\vendor\yaml-cpp\src\singledocparser.cpp" />
     <ClCompile Include="..\vendor\yaml-cpp\src\stream.cpp" />
     <ClCompile Include="..\vendor\yaml-cpp\src\tag.cpp" />
+    <ClCompile Include="Application.cpp" />
     <ClCompile Include="ApplyStaticGravitySystem.cpp" />
     <ClCompile Include="Asset.cpp" />
     <ClCompile Include="AssetImporter.cpp" />
@@ -225,8 +226,12 @@
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="MofShader.cpp" />
     <ClCompile Include="MofShaderImpl.cpp" />
-    <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="BaseEngineRenderer.cpp" />
+    <ClCompile Include="RenderCommandQueue.cpp" />
+    <ClCompile Include="RendererApi.cpp" />
     <ClCompile Include="RendererContext.cpp" />
+    <ClCompile Include="RendererSubmit.cpp" />
+    <ClCompile Include="RenderThread.cpp" />
     <ClCompile Include="RigidBodyComponent.cpp" />
     <ClCompile Include="RigidBodyGlue.cpp" />
     <ClCompile Include="Scene.cpp" />
@@ -249,6 +254,7 @@
     <ClCompile Include="TagComponent.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TextureGlue.cpp" />
+    <ClCompile Include="Thread.cpp" />
     <ClCompile Include="ToolbarPanel.cpp" />
     <ClCompile Include="TransformComponent.cpp" />
     <ClCompile Include="TransformGlue.cpp" />
@@ -272,11 +278,15 @@
     <ClCompile Include="Vector2.cpp" />
     <ClCompile Include="VectorUtilities.cpp" />
     <ClCompile Include="VelocityComponent.cpp" />
+    <ClCompile Include="VertexBuffer.cpp" />
     <ClCompile Include="VulkanContext.cpp" />
     <ClCompile Include="VulkanDevice.cpp" />
+    <ClCompile Include="VulkanImGuiLayer.cpp" />
+    <ClCompile Include="VulkanRenderer.cpp" />
     <ClCompile Include="VulkanRendererContext.cpp" />
     <ClCompile Include="VulkanSwapChain.cpp" />
     <ClCompile Include="VulkanUtilities.cpp" />
+    <ClCompile Include="VulkanVertexBuffer.cpp" />
     <ClCompile Include="WeakRefObject.cpp" />
     <ClCompile Include="WinMain.cpp" />
   </ItemGroup>
@@ -342,6 +352,7 @@
     <ClInclude Include="..\vendor\yaml-cpp\src\tag.h" />
     <ClInclude Include="..\vendor\yaml-cpp\src\token.h" />
     <ClInclude Include="Adapter.h" />
+    <ClInclude Include="Application.h" />
     <ClInclude Include="ApplyStaticGravitySystem.h" />
     <ClInclude Include="Assert.h" />
     <ClInclude Include="Asset.h" />
@@ -435,8 +446,12 @@
     <ClInclude Include="Platform\Windows\Window.h" />
     <ClInclude Include="Prefab.h" />
     <ClInclude Include="PrefabComponent.h" />
-    <ClInclude Include="Renderer.h" />
+    <ClInclude Include="BaseEngineRenderer.h" />
+    <ClInclude Include="RenderCommandQueue.h" />
+    <ClInclude Include="RendererApi.h" />
     <ClInclude Include="RendererContext.h" />
+    <ClInclude Include="RendererSubmit.h" />
+    <ClInclude Include="RenderThread.h" />
     <ClInclude Include="RigidBodyGlue.h" />
     <ClInclude Include="SceneAssetSerializer.h" />
     <ClInclude Include="SceneSerializer.h" />
@@ -444,13 +459,18 @@
     <ClInclude Include="SetupEditorImGui.h" />
     <ClInclude Include="ShapesGlue.h" />
     <ClInclude Include="TestComponent.h" />
+    <ClInclude Include="Thread.h" />
     <ClInclude Include="ToolbarPanel.h" />
     <ClInclude Include="Variant.h" />
+    <ClInclude Include="VertexBuffer.h" />
     <ClInclude Include="VulkanContext.h" />
     <ClInclude Include="VulkanDevice.h" />
+    <ClInclude Include="VulkanImGuiLayer.h" />
+    <ClInclude Include="VulkanRenderer.h" />
     <ClInclude Include="VulkanRendererContext.h" />
     <ClInclude Include="VulkanSwapChain.h" />
     <ClInclude Include="VulkanUtilities.h" />
+    <ClInclude Include="VulkanVertexBuffer.h" />
     <ClInclude Include="YAMLSerializeHelper.h" />
     <ClInclude Include="SolveContact.h" />
     <ClInclude Include="ContactSolverReferenceService.h" />

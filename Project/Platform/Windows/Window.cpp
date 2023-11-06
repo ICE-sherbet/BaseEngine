@@ -3,7 +3,8 @@
 #include <GLFW/glfw3.h>
 
 #include "../../BaseEngineCore.h"
-#include "../../Renderer.h"
+#include "..\..\BaseEngineRenderer.h"
+#include "../../VulkanContext.h"
 
 namespace base_engine {
 static bool s_GLFWInitialized = false;
@@ -49,6 +50,10 @@ void Window::Init() {
 
   BASE_ENGINE(RendererContext)->Init();
   renderer_context_ = BASE_ENGINE(RendererContext)->GetRendererContext();
+  Ref<VulkanContext> context = renderer_context_.As<VulkanContext>();
+  swap_chain_.Init(VulkanContext::GetVkInstance(), context->GetDevice());
+  swap_chain_.InitSurface(window_);
+  swap_chain_.Create(window_, false);
   
 }
 

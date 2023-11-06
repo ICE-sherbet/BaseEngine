@@ -1,4 +1,4 @@
-﻿// @Renderer.h
+﻿// @BaseEngineRenderer.h
 // @brief
 // @author ICE
 // @date 2023/10/16
@@ -16,6 +16,7 @@ class IBaseEngineRendererContext {
   virtual ~IBaseEngineRendererContext() = default;
 
   virtual void Init() = 0;
+  
   virtual Ref<RendererContext> GetRendererContext() = 0;
 };
 }  // namespace base_engine

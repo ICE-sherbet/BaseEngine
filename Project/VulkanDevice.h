@@ -33,6 +33,7 @@ class VulkanPhysicalDevice : public RefCounted {
   void GetGraphicDeviceQueue(VkDevice device, VkQueue* queue) const;
 
   QueueFamilyIndices GetIndices() const { return queue_family_indices_; }
+  VkFormat GetDepthFormat() const { return depth_format_; }
 
   static Ref<VulkanPhysicalDevice> Select();
 
@@ -94,7 +95,16 @@ class VulkanDevice : public RefCounted {
     return physical_device_->GetVulkanPhysicalDevice();
   }
 
+  VkFormat GetDepthFormat() { return physical_device_->GetDepthFormat(); }
+
+  VkCommandBuffer CreateSecondaryCommandBuffer(const char* debug_name);
+  VkCommandBuffer GetCommandBuffer(bool begin);
+  void FlushCommandBuffer(VkCommandBuffer command_buffer);
+
  private:
+  Ref<VulkanCommandPool> GetThreadLocalCommandPool();
+	Ref<VulkanCommandPool> GetOrCreateThreadLocalCommandPool();
+
   VkDevice logical_device_ = nullptr;
   Ref<VulkanPhysicalDevice> physical_device_;
   VkPhysicalDeviceFeatures enabled_features_;

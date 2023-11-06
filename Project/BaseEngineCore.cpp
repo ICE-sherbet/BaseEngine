@@ -6,7 +6,7 @@
 #include "IBaseEngineCanvasRender.h"
 #include "IBaseEngineAssetManager.h"
 #include "IBaseEngineAudioEngine.h"
-#include "Renderer.h"
+#include "BaseEngineRenderer.h"
 namespace base_engine {
 namespace detail {
 template <size_t I, class Tuple>

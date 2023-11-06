@@ -6,7 +6,7 @@
 
 namespace base_engine {
 VulkanPhysicalDevice::VulkanPhysicalDevice() {
-	const auto instance = VulkanContext::GetVkInstance();
+  const auto instance = VulkanContext::GetVkInstance();
   uint32_t device_count = 0;
   vkEnumeratePhysicalDevices(instance, &device_count, nullptr);
 
@@ -173,8 +173,7 @@ VkCommandBuffer VulkanCommandPool::AllocateCommandBuffer(
 }
 
 void VulkanCommandPool::FlushCommandBuffer(
-    const VkCommandBuffer command_buffer) const
-{
+    const VkCommandBuffer command_buffer) const {
   FlushCommandBuffer(command_buffer,
                      VulkanContext::GetCurrentDevice()->GetGraphicsQueue());
 }
@@ -250,5 +249,47 @@ void VulkanDevice::AllocateCommandBuffers(
 
 uint32_t VulkanDevice::GetGraphicsIndex() const {
   return physical_device_->GetIndices().graphics;
+}
+
+VkCommandBuffer VulkanDevice::CreateSecondaryCommandBuffer(
+    const char* debug_name) {
+  VkCommandBuffer cmd_buffer;
+
+  VkCommandBufferAllocateInfo cmdBufAllocateInfo = {};
+  cmdBufAllocateInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+  cmdBufAllocateInfo.commandPool =
+      GetOrCreateThreadLocalCommandPool()->GetGraphicsCommandPool();
+  cmdBufAllocateInfo.level = VK_COMMAND_BUFFER_LEVEL_SECONDARY;
+  cmdBufAllocateInfo.commandBufferCount = 1;
+
+  vkAllocateCommandBuffers(logical_device_, &cmdBufAllocateInfo, &cmd_buffer);
+  return cmd_buffer;
+}
+
+VkCommandBuffer VulkanDevice::GetCommandBuffer(const bool begin) {
+  return GetOrCreateThreadLocalCommandPool()->AllocateCommandBuffer(begin,
+                                                                    false);
+}
+
+void VulkanDevice::FlushCommandBuffer(const VkCommandBuffer command_buffer) {
+  GetThreadLocalCommandPool()->FlushCommandBuffer(command_buffer);
+}
+
+Ref<VulkanCommandPool> VulkanDevice::GetThreadLocalCommandPool() {
+  const auto thread_id = std::this_thread::get_id();
+  const auto command_pool_it = command_pools_.find(thread_id);
+  BE_CORE_ASSERT(command_pool_it != command_pools_.end(),
+                 "Command pool not found for thread.");
+  return command_pool_it->second;
+}
+
+Ref<VulkanCommandPool> VulkanDevice::GetOrCreateThreadLocalCommandPool() {
+  const auto thread_id = std::this_thread::get_id();
+  const auto command_pool_it = command_pools_.find(thread_id);
+  if (command_pool_it != command_pools_.end()) return command_pool_it->second;
+
+  Ref<VulkanCommandPool> command_pool = Ref<VulkanCommandPool>::Create();
+  command_pools_[thread_id] = command_pool;
+  return command_pool;
 }
 }  // namespace base_engine
