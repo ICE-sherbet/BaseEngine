@@ -1050,6 +1050,9 @@
     <ClCompile Include="VulkanImGuiLayer.cpp">
       <Filter>BaseEngine\Platform\Vulkan\ImGui</Filter>
     </ClCompile>
+    <ClCompile Include="ImGuiLayer.cpp">
+      <Filter>BaseEngine\Editor\ImGui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameApp.h">
@@ -1969,6 +1972,9 @@
     </ClInclude>
     <ClInclude Include="VulkanImGuiLayer.h">
       <Filter>BaseEngine\Platform\Vulkan\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGuiLayer.h">
+      <Filter>BaseEngine\Editor\ImGui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

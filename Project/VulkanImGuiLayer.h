@@ -6,13 +6,14 @@
 // @details
 
 #pragma once
+#include "ImGuiLayer.h"
 
 namespace base_engine {
-class VulkanImGuiLayer {
+class VulkanImGuiLayer : public ImGuiLayer {
  public:
-  void Init();
+  void Init() override;
 
-  void Begin();
-  void End();
+  void Begin() override;
+  void End() override;
 };
 }  // namespace base_engine

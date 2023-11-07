@@ -21,6 +21,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
   base_engine::ApplicationSpecification specification{};
   specification.width = 360;
   specification.height = 640;
+  specification.title = "BaseEngine";
+  specification.enable_editor = true;
   base_engine::Application application{specification};
   application.Run();
 

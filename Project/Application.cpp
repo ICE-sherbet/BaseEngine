@@ -18,18 +18,23 @@ VulkanSwapChain GetSwapChain() {
 }  // namespace
 
 Application::Application(const ApplicationSpecification& spec)
-    : render_thread_(spec.threading_policy) {
+    : render_thread_(spec.threading_policy),
+      enable_editor_(spec.enable_editor) {
   instance_ = this;
   Renderer::Init();
 
   window_ = std::unique_ptr<IWindow>(base_engine::IWindow::Create());
   window_->Init();
+
+  if (enable_editor_) {
+    imgui_layer_ = std::make_unique<VulkanImGuiLayer>();
+    imgui_layer_->Init();
+  }
 }
 
 void Application::Run() {
   is_running_ = true;
-  VulkanImGuiLayer layer;
-  layer.Init();
+
   while (is_running_) {
     render_thread_.BlockUntilRenderComplete();
 
@@ -38,10 +43,10 @@ void Application::Run() {
 
     Renderer::Submit([&]() { GetSwapChain().BeginFrame(); });
 
-    Application* app = this;
-
-    Renderer::Submit([&layer]() { layer.Begin(); });
-    Renderer::Submit([&layer]() { layer.End(); });
+    if (enable_editor_) {
+      Renderer::Submit([&]() { imgui_layer_->Begin(); });
+      Renderer::Submit([&]() { imgui_layer_->End(); });
+    }
 
     Renderer::Submit([&]() { GetSwapChain().Present(); });
   }
