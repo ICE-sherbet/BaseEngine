@@ -21,11 +21,10 @@ class RendererApi {
   virtual void BeginFrame() = 0;
   virtual void EndFrame() = 0;
 
-  static RendererApiType Current() { return current_renderer_api_; }
-  static void SetApi(RendererApiType api);
+  static constexpr RendererApiType Current() { return current_renderer_api_; }
 
  private:
-  inline static RendererApiType current_renderer_api_ =
+  static constexpr RendererApiType current_renderer_api_ =
       RendererApiType::kVulkan;
 };
 
@@ -41,9 +40,16 @@ class Renderer {
   static void Submit(FuncT&& func) {
     submit_->Submit(std::forward<FuncT>(func));
   }
+
+  template <typename FuncT>
+  static void SubmitResourceFree(FuncT&& func) {
+    submit_->SubmitResourceFree(std::forward<FuncT>(func));
+  }
   static void RenderThreadFunc(RenderThread* render_thread);
   static void WaitAndRender(RenderThread* render_thread);
   static void SwapQueues();
+  static uint32_t RT_GetCurrentFrameIndex();
+  static RenderCommandQueue& GetRenderResourceReleaseQueue(uint32_t index);
 
  private:
   static inline RendererSubmit* submit_ = nullptr;

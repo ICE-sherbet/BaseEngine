@@ -80,9 +80,8 @@ class VertexBuffer : public RefCounted {
  public:
   virtual ~VertexBuffer() {}
 
-  virtual void SetData(void* buffer, uint32_t size, uint32_t offset = 0) = 0;
-  virtual void RT_SetData(void* buffer, uint32_t size, uint32_t offset = 0) = 0;
-  virtual void Bind() const = 0;
+  virtual void SetData(void* buffer, uint64_t size, uint64_t offset = 0) = 0;
+  virtual void RT_SetData(void* buffer, uint64_t size, uint64_t offset = 0) = 0;
 
   virtual unsigned int GetSize() const = 0;
 

@@ -44,12 +44,7 @@ void RenderMof::AddTexture(ITexturePtr texture, const Vector& position,
                            const Vector& scale, float angle, const Rect& uv,
                            const Color& color, Mof::TextureAlignment alignment,
                            const Material& material) {
-  const auto shader =
-      std::dynamic_pointer_cast<MofShader>(material.GetShader());
-  CGraphicsUtilities::RenderTexture(
-      roundf(position.x + camera_center_position_.x),
-      roundf(position.y + camera_center_position_.y), color, alignment, texture,
-      shader->GetShader(), shader->GetShaderBind());
+
 }
 
 void RenderMof::AddLine(const Vector& position1, const Vector& position2,

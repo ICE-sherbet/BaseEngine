@@ -157,9 +157,6 @@
     <Filter Include="BaseEngine\Utilities\FrozenExtension\Types">
       <UniqueIdentifier>{51085b3b-a77c-44d1-bec0-ff845ed94745}</UniqueIdentifier>
     </Filter>
-    <Filter Include="BaseEngine\Material">
-      <UniqueIdentifier>{7795f23a-ca16-484a-bc46-afb4ee08b557}</UniqueIdentifier>
-    </Filter>
     <Filter Include="BaseEngine\Shader">
       <UniqueIdentifier>{a4a52628-2e8c-4e37-b661-eab1291985e8}</UniqueIdentifier>
     </Filter>
@@ -472,6 +469,24 @@
     <Filter Include="BaseEngine\Platform\Vulkan\ImGui">
       <UniqueIdentifier>{208b1017-4b77-4c09-824f-26e146138779}</UniqueIdentifier>
     </Filter>
+    <Filter Include="BaseEngine\Platform\Vulkan\Allocator">
+      <UniqueIdentifier>{bdb67ec1-315b-407f-b25c-739c37eca471}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BaseEngine\Platform\Vulkan\Texture">
+      <UniqueIdentifier>{3c6d0818-92cf-4325-8b92-3df00626a0c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BaseEngine\Render\Material">
+      <UniqueIdentifier>{8fce19e8-c8fd-4db1-88be-e4f8c38b0185}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BaseEngine\Render\Shader">
+      <UniqueIdentifier>{65c7a40e-e42f-4603-a142-32d7deef8c21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BaseEngine\Platform\Vulkan\Shader">
+      <UniqueIdentifier>{8a9d2a25-9111-47bc-a60b-87e430dfbfbb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BaseEngine\Platform\Vulkan\ShaderCompiler">
+      <UniqueIdentifier>{1474b7ad-a704-4ef0-b2dd-fcfd215985cb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -524,9 +539,6 @@
     </ClCompile>
     <ClCompile Include="CanvasRender.cpp">
       <Filter>BaseEngine\Render\CanvasRenderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Material.cpp">
-      <Filter>BaseEngine\Material</Filter>
     </ClCompile>
     <ClCompile Include="ShaderBase.cpp">
       <Filter>BaseEngine\Shader</Filter>
@@ -1050,6 +1062,27 @@
     <ClCompile Include="VulkanImGuiLayer.cpp">
       <Filter>BaseEngine\Platform\Vulkan\ImGui</Filter>
     </ClCompile>
+    <ClCompile Include="VulkanAllocator.cpp">
+      <Filter>BaseEngine\Platform\Vulkan\Allocator</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteRenderer.cpp">
+      <Filter>BaseEngine\Platform\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanTexture.cpp">
+      <Filter>BaseEngine\Platform\Vulkan\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>BaseEngine\Render\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>BaseEngine\Render\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanShader.cpp">
+      <Filter>BaseEngine\Platform\Vulkan\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanShaderCompiler.cpp">
+      <Filter>BaseEngine\Platform\Vulkan\ShaderCompiler</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameApp.h">
@@ -1183,9 +1216,6 @@
     </ClInclude>
     <ClInclude Include="resource1.h">
       <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Material.h">
-      <Filter>BaseEngine\Material</Filter>
     </ClInclude>
     <ClInclude Include="ShaderBase.h">
       <Filter>BaseEngine\Shader</Filter>
@@ -1969,6 +1999,42 @@
     </ClInclude>
     <ClInclude Include="VulkanImGuiLayer.h">
       <Filter>BaseEngine\Platform\Vulkan\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Buffer.h">
+      <Filter>BaseEngine\Platform\Vulkan\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanAllocator.h">
+      <Filter>BaseEngine\Platform\Vulkan\Allocator</Filter>
+    </ClInclude>
+    <ClInclude Include="GPUMemoryStats.h">
+      <Filter>BaseEngine\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteRenderer.h">
+      <Filter>BaseEngine\Platform\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanTexture.h">
+      <Filter>BaseEngine\Platform\Vulkan\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>BaseEngine\Render\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>BaseEngine\Render\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanShader.h">
+      <Filter>BaseEngine\Platform\Vulkan\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanShaderCompiler.h">
+      <Filter>BaseEngine\Platform\Vulkan\ShaderCompiler</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanShaderResource.h">
+      <Filter>BaseEngine\Platform\Vulkan\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanReflectionData.h">
+      <Filter>BaseEngine\Platform\Vulkan\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderPreprocessor.h">
+      <Filter>BaseEngine\Platform\Vulkan\Shader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

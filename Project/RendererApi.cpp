@@ -1,12 +1,11 @@
 ﻿#include "RendererApi.h"
 
+#include "Application.h"
 #include "Assert.h"
 #include "VulkanRenderer.h"
+#include "VulkanSwapChain.h"
 
 namespace base_engine {
-void RendererApi::SetApi(const RendererApiType api) {
-  current_renderer_api_ = api;
-}
 
 static RendererApi* InitRendererAPI() {
   switch (RendererApi::Current()) {
@@ -34,15 +33,9 @@ void Renderer::Shutdown() {
   submit_ = nullptr;
 }
 
-void Renderer::BeginFrame()
-{
-  renderer_api_->BeginFrame();
-}
+void Renderer::BeginFrame() { renderer_api_->BeginFrame(); }
 
-void Renderer::EndFrame()
-{
-	renderer_api_->EndFrame();
-}
+void Renderer::EndFrame() { renderer_api_->EndFrame(); }
 
 void Renderer::RenderThreadFunc(RenderThread* render_thread) {
   while (render_thread->IsRunning()) {
@@ -51,20 +44,19 @@ void Renderer::RenderThreadFunc(RenderThread* render_thread) {
 }
 
 void Renderer::WaitAndRender(RenderThread* render_thread) {
-
   {
     render_thread->WaitAndSet(RenderThread::State::kKick,
                               RenderThread::State::kBusy);
-//    performanceTimers.RenderThreadWaitTime = waitTimer.ElapsedMillis();
+    //    performanceTimers.RenderThreadWaitTime = waitTimer.ElapsedMillis();
   }
 
   submit_->Execute();
   render_thread->Set(RenderThread::State::kIdle);
-
 }
 
-void Renderer::SwapQueues()
-{
-	submit_->SwapQueues();
+void Renderer::SwapQueues() { submit_->SwapQueues(); }
+
+uint32_t Renderer::RT_GetCurrentFrameIndex() {
+  return VulkanSwapChain::Get()->GetCurrentBufferIndex();
 }
 }  // namespace base_engine

@@ -3,8 +3,11 @@
 #include "Application.h"
 
 namespace base_engine {
+VulkanSwapChain* VulkanSwapChain::instance_ = nullptr;
+
 void VulkanSwapChain::Init(VkInstance instance,
                            const Ref<VulkanDevice>& device) {
+  instance_ = this; 
   m_Instance = instance;
   m_Device = device;
 }
@@ -274,6 +277,11 @@ void VulkanSwapChain::Create(uint32_t width, uint32_t height, bool vsync) {
                           &m_Framebuffers[i]);
     }
   }
+}
+
+void VulkanSwapChain::Destroy()
+{
+  instance_ = nullptr;
 }
 
 void VulkanSwapChain::OnResize(uint32_t width, uint32_t height) {

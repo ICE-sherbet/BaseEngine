@@ -1,5 +1,8 @@
 ﻿#include "VertexBuffer.h"
 
+#include "RendererApi.h"
+#include "VulkanVertexBuffer.h"
+
 namespace base_engine {
 
 namespace {
@@ -118,8 +121,18 @@ void VertexBufferLayout::CalculateOffsetsAndStride() {
   }
 }
 
-Ref<VertexBuffer> VertexBuffer::Create(void* data, uint32_t size, VertexBufferUsage usage)
-{
-  return Ref<VertexBuffer>{};
+Ref<VertexBuffer> VertexBuffer::Create(void* data, uint32_t size,
+                                       VertexBufferUsage usage) {
+  switch (RendererApi::Current()) {
+    case RendererApiType::kVulkan:
+      return Ref<VulkanVertexBuffer>::Create(data, size, usage);
+  }
+}
+
+Ref<VertexBuffer> VertexBuffer::Create(uint32_t size, VertexBufferUsage usage) {
+  switch (RendererApi::Current()) {
+    case RendererApiType::kVulkan:
+      return Ref<VulkanVertexBuffer>::Create(size, usage);
+  }
 }
 }  // namespace base_engine

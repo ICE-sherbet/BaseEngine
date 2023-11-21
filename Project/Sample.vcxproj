@@ -59,7 +59,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;BE_DEBUG;BE_ENABLE_PROFILING;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)\vendor\imgui;$(SolutionDir)\vendor;$(SolutionDir)vendor\mono\x86;$(SolutionDir)\Library\Include;$(ProjectDir)\include\utilities\observable;$(SolutionDir)\vendor\optick\src;$(SolutionDir)\vendor\yaml-cpp\include;$(SolutionDir)vendor\glfw\x86\include;$(VK_SDK_PATH)\Include;$(SolutionDir)vendor\VulkanMemoryAllocator</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\vendor\imgui;$(SolutionDir)\vendor;$(SolutionDir)vendor\mono\x86;$(SolutionDir)\Library\Include;$(ProjectDir)\include\utilities\observable;$(SolutionDir)\vendor\optick\src;$(SolutionDir)\vendor\yaml-cpp\include;$(SolutionDir)vendor\glfw\x86\include;$(VK_SDK_PATH)\Include;$(SolutionDir)vendor\VulkanMemoryAllocator;$(SolutionDir)vendor\shaderc\libshaderc_util\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -68,9 +68,9 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)vendor\mono\x86;$(SolutionDir)\Library\Library;$(SolutionDir)vendor\yaml-cpp;$(SolutionDir)vendor\glfw\x86\;$(VK_SDK_PATH)\Bin32;$(VK_SDK_PATH)\Lib32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)vendor\mono\x86;$(SolutionDir)\Library\Library;$(SolutionDir)vendor\yaml-cpp;$(SolutionDir)vendor\glfw\x86\;$(VK_SDK_PATH)\Lib32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>LIBCMTD</IgnoreSpecificDefaultLibraries>
-      <AdditionalDependencies>mono-2.0-sgen.lib;OptickCore.lib;glfw3.lib;vulkan-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>mono-2.0-sgen.lib;OptickCore.lib;glfw3.lib;spirv-cross-cored.lib;spirv-cross-glsld.lib;SPIRV-Toolsd.lib;shaderc_sharedd.lib;shaderc_utild.lib;vulkan-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -194,6 +194,7 @@
     <ClCompile Include="IntegratePosesSystem.cpp" />
     <ClCompile Include="DebugGlue.cpp" />
     <ClCompile Include="ManagedComponentStorage.cpp" />
+    <ClCompile Include="Material.cpp" />
     <ClCompile Include="Matrix44Utilities.cpp" />
     <ClCompile Include="MenuBarPanel.cpp" />
     <ClCompile Include="MethodBind.cpp" />
@@ -223,7 +224,6 @@
     <ClCompile Include="Quaternion.cpp" />
     <ClCompile Include="QuaternionUtilities.cpp" />
     <ClCompile Include="Ref.cpp" />
-    <ClCompile Include="Material.cpp" />
     <ClCompile Include="MofShader.cpp" />
     <ClCompile Include="MofShaderImpl.cpp" />
     <ClCompile Include="BaseEngineRenderer.cpp" />
@@ -245,10 +245,12 @@
     <ClCompile Include="ScriptTypes.cpp" />
     <ClCompile Include="SelectManager.cpp" />
     <ClCompile Include="SetupEditorImGui.cpp" />
+    <ClCompile Include="Shader.cpp" />
     <ClCompile Include="ShaderBase.cpp" />
     <ClCompile Include="PhysicsSolversCommon.cpp" />
     <ClCompile Include="ShapeComponents.cpp" />
     <ClCompile Include="ShapesGlue.cpp" />
+    <ClCompile Include="SpriteRenderer.cpp" />
     <ClCompile Include="SpriteRendererComponent.cpp" />
     <ClCompile Include="SpriteRendererGlue.cpp" />
     <ClCompile Include="TagComponent.cpp" />
@@ -279,12 +281,16 @@
     <ClCompile Include="VectorUtilities.cpp" />
     <ClCompile Include="VelocityComponent.cpp" />
     <ClCompile Include="VertexBuffer.cpp" />
+    <ClCompile Include="VulkanAllocator.cpp" />
     <ClCompile Include="VulkanContext.cpp" />
     <ClCompile Include="VulkanDevice.cpp" />
     <ClCompile Include="VulkanImGuiLayer.cpp" />
     <ClCompile Include="VulkanRenderer.cpp" />
     <ClCompile Include="VulkanRendererContext.cpp" />
+    <ClCompile Include="VulkanShader.cpp" />
+    <ClCompile Include="VulkanShaderCompiler.cpp" />
     <ClCompile Include="VulkanSwapChain.cpp" />
+    <ClCompile Include="VulkanTexture.cpp" />
     <ClCompile Include="VulkanUtilities.cpp" />
     <ClCompile Include="VulkanVertexBuffer.cpp" />
     <ClCompile Include="WeakRefObject.cpp" />
@@ -396,6 +402,7 @@
     <ClInclude Include="BodyTypeTag.h" />
     <ClInclude Include="BoundingBox.h" />
     <ClInclude Include="BroadPhaseSystem.h" />
+    <ClInclude Include="Buffer.h" />
     <ClInclude Include="Callable.h" />
     <ClInclude Include="CollisionGlue.h" />
     <ClInclude Include="ComponentDB.h" />
@@ -426,6 +433,7 @@
     <ClInclude Include="FileDialog.h" />
     <ClInclude Include="FileFilter.h" />
     <ClInclude Include="FileSystem.h" />
+    <ClInclude Include="GPUMemoryStats.h" />
     <ClInclude Include="IFieldStorage.h" />
     <ClInclude Include="HierarchyContextMenu.h" />
     <ClInclude Include="HierarchyPanel.h" />
@@ -438,6 +446,7 @@
     <ClInclude Include="InspectorPanel.h" />
     <ClInclude Include="InspectorUtilities.h" />
     <ClInclude Include="IWindow.h" />
+    <ClInclude Include="Material.h" />
     <ClInclude Include="MenuBarPanel.h" />
     <ClInclude Include="MethodBind.h" />
     <ClInclude Include="OnCollisionTag.h" />
@@ -457,18 +466,27 @@
     <ClInclude Include="SceneSerializer.h" />
     <ClInclude Include="SelectManager.h" />
     <ClInclude Include="SetupEditorImGui.h" />
+    <ClInclude Include="Shader.h" />
+    <ClInclude Include="ShaderPreprocessor.h" />
     <ClInclude Include="ShapesGlue.h" />
+    <ClInclude Include="SpriteRenderer.h" />
     <ClInclude Include="TestComponent.h" />
     <ClInclude Include="Thread.h" />
     <ClInclude Include="ToolbarPanel.h" />
     <ClInclude Include="Variant.h" />
     <ClInclude Include="VertexBuffer.h" />
+    <ClInclude Include="VulkanAllocator.h" />
     <ClInclude Include="VulkanContext.h" />
     <ClInclude Include="VulkanDevice.h" />
     <ClInclude Include="VulkanImGuiLayer.h" />
+    <ClInclude Include="VulkanReflectionData.h" />
     <ClInclude Include="VulkanRenderer.h" />
     <ClInclude Include="VulkanRendererContext.h" />
+    <ClInclude Include="VulkanShader.h" />
+    <ClInclude Include="VulkanShaderCompiler.h" />
+    <ClInclude Include="VulkanShaderResource.h" />
     <ClInclude Include="VulkanSwapChain.h" />
+    <ClInclude Include="VulkanTexture.h" />
     <ClInclude Include="VulkanUtilities.h" />
     <ClInclude Include="VulkanVertexBuffer.h" />
     <ClInclude Include="YAMLSerializeHelper.h" />
@@ -522,7 +540,6 @@
     <ClInclude Include="Quaternion.h" />
     <ClInclude Include="QuaternionUtilities.inl" />
     <ClInclude Include="Ref.h" />
-    <ClInclude Include="Material.h" />
     <ClInclude Include="MofShader.h" />
     <ClInclude Include="MofShaderImpl.h" />
     <ClInclude Include="PairFrozen.h" />

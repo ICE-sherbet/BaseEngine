@@ -1,4 +1,5 @@
 ﻿#include "Application.h"
+#include "VulkanShaderCompiler.h"
 
 #include <vulkan/vulkan.h>
 
@@ -30,6 +31,11 @@ void Application::Run() {
   is_running_ = true;
   VulkanImGuiLayer layer;
   layer.Init();
+  std::filesystem::current_path("../Resource");
+
+  auto shader =
+      VulkanShaderCompiler::Compile("Renderer2D.glsl", false, false);
+
   while (is_running_) {
     render_thread_.BlockUntilRenderComplete();
 

@@ -23,6 +23,8 @@ class VulkanSwapChain {
  public:
   VulkanSwapChain() = default;
 
+  static VulkanSwapChain* Get() { return instance_; }
+
   void Init(VkInstance instance, const Ref<VulkanDevice>& device);
   void InitSurface(GLFWwindow* window_handle);
   void Create(GLFWwindow* window_handle, bool vsync);
@@ -117,5 +119,7 @@ class VulkanSwapChain {
   VkSurfaceKHR m_Surface;
   VkExtent2D m_extent;
   friend class VulkanContext;
+
+  static VulkanSwapChain* instance_;
 };
 }  // namespace base_engine

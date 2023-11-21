@@ -1,37 +1,21 @@
 ﻿// @Material.h
 // @brief
 // @author ICE
-// @date 2023/01/13
+// @date 2023/11/14
 //
 // @details
 
 #pragma once
-#include <memory>
-#include <ranges>
-#include <unordered_map>
-#include <vector>
-
-#include "ShaderBase.h"
+#include "Ref.h"
+#include "Shader.h"
+#include "Texture.h"
 
 namespace base_engine {
+
 class Material {
  public:
-  void SetShader(const std::shared_ptr<ShaderBase>& shader);
-
-  [[nodiscard]] std::shared_ptr<ShaderBase> GetShader() const;
-
-  bool Begin();
-  bool End();
-
-  bool SetParameter(const Property& property);
-
-  bool CreateParameter(const ShaderPropertyInfo& property);
-
-private:
-  void BindShaderParameter();
-
-  std::shared_ptr<ShaderBase> shader_;
-  std::unordered_map<std::string, Property> parameters_;
-  bool parameter_changed_ = false;
+ private:
+  Ref<Shader> shader_;
+  Ref<Texture> texture_;
 };
 }  // namespace base_engine

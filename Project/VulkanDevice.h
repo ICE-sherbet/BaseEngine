@@ -36,6 +36,9 @@ class VulkanPhysicalDevice : public RefCounted {
   VkFormat GetDepthFormat() const { return depth_format_; }
 
   static Ref<VulkanPhysicalDevice> Select();
+  const VkPhysicalDeviceMemoryProperties& GetMemoryProperties() const {
+    return memory_properties_;
+  }
 
  private:
   QueueFamilyIndices GetQueueFamilyIndices(int queue_flags) const;
@@ -91,6 +94,11 @@ class VulkanDevice : public RefCounted {
   uint32_t GetGraphicsIndex() const;
 
   VkDevice GetVulkanDevice() const { return logical_device_; }
+
+  const Ref<VulkanPhysicalDevice>& GetPhysicalDevice() const {
+    return physical_device_;
+  }
+
   VkPhysicalDevice GetVulkanPhysicalDevice() const {
     return physical_device_->GetVulkanPhysicalDevice();
   }
@@ -103,7 +111,7 @@ class VulkanDevice : public RefCounted {
 
  private:
   Ref<VulkanCommandPool> GetThreadLocalCommandPool();
-	Ref<VulkanCommandPool> GetOrCreateThreadLocalCommandPool();
+  Ref<VulkanCommandPool> GetOrCreateThreadLocalCommandPool();
 
   VkDevice logical_device_ = nullptr;
   Ref<VulkanPhysicalDevice> physical_device_;

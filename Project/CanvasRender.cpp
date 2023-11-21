@@ -24,11 +24,7 @@ void CanvasRender::AddTexture(const ITexturePtr texture, const Vector& position,
 void CanvasRender::AddTexture(ITexturePtr texture, const Vector& position, const Vector& scale, float angle,
 	const Rect& uv, const Color& color, Mof::TextureAlignment alignment, const std::shared_ptr<Material>& material)
 {
-  const auto shader =
-      std::dynamic_pointer_cast<MofShader>(material->GetShader());
-  CGraphicsUtilities::RenderTexture(
-      position.x,position.y, color, alignment, texture,
-      shader->GetShader(), shader->GetShaderBind());
+
 }
 
 
