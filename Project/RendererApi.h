@@ -50,8 +50,9 @@ class Renderer {
   static void SwapQueues();
   static uint32_t RT_GetCurrentFrameIndex();
   static RenderCommandQueue& GetRenderResourceReleaseQueue(uint32_t index);
+  static uint32_t GetCurrentFrameIndex();
 
- private:
+private:
   static inline RendererSubmit* submit_ = nullptr;
 };
 

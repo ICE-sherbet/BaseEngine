@@ -11,6 +11,7 @@
 #include <unordered_set>
 
 #include "VulkanShader.h"
+#include "VulkanShaderUtilities.h"
 
 namespace base_engine {
 namespace PreprocessUtils {
@@ -109,7 +110,7 @@ class ShaderPreprocessor {
 
           const std::string_view stage = tokens[index];
 
-          auto shaderStage = ShaderTypeFromString(stage);
+          auto shaderStage = shader_utils::ShaderTypeFromString(stage);
 
           stagePositions.emplace_back(shaderStage, startOfStage);
         }
@@ -189,14 +190,7 @@ class ShaderPreprocessor {
     return result;
   }
 
-  inline static VkShaderStageFlagBits ShaderTypeFromString(
-      const std::string_view type) {
-    if (type == "vert") return VK_SHADER_STAGE_VERTEX_BIT;
-    if (type == "frag") return VK_SHADER_STAGE_FRAGMENT_BIT;
-    if (type == "comp") return VK_SHADER_STAGE_COMPUTE_BIT;
 
-    return VK_SHADER_STAGE_ALL;
-  }
 };
 
 }  // namespace base_engine

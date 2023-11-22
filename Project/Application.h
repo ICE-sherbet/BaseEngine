@@ -28,11 +28,15 @@ class Application {
   Application(const ApplicationSpecification& spec);
   void Run();
 
+  uint32_t GetCurrentFrameIndex() const { return current_frame_index_; }
+
  private:
   static Application* instance_;
 
   RenderThread render_thread_;
   bool is_running_ = false;
   std::unique_ptr<IWindow> window_;
+
+  uint32_t current_frame_index_ = 0;
 };
 }  // namespace base_engine

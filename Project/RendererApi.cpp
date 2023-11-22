@@ -47,7 +47,6 @@ void Renderer::WaitAndRender(RenderThread* render_thread) {
   {
     render_thread->WaitAndSet(RenderThread::State::kKick,
                               RenderThread::State::kBusy);
-    //    performanceTimers.RenderThreadWaitTime = waitTimer.ElapsedMillis();
   }
 
   submit_->Execute();
@@ -58,5 +57,9 @@ void Renderer::SwapQueues() { submit_->SwapQueues(); }
 
 uint32_t Renderer::RT_GetCurrentFrameIndex() {
   return VulkanSwapChain::Get()->GetCurrentBufferIndex();
+}
+
+uint32_t Renderer::GetCurrentFrameIndex() {
+  return Application::Get().GetCurrentFrameIndex();
 }
 }  // namespace base_engine

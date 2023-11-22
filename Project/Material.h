@@ -12,9 +12,14 @@
 
 namespace base_engine {
 
-class Material {
+class Material : public RefCounted {
  public:
- private:
+
+
+  static Ref<Material> Create(const Ref<Shader>& shader,
+                              const std::string& name);
+
+private:
   Ref<Shader> shader_;
   Ref<Texture> texture_;
 };

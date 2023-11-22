@@ -1,5 +1,3 @@
-// Basic Texture Shader
-
 #version 450 core
 #pragma stage : vert
 

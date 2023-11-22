@@ -487,6 +487,27 @@
     <Filter Include="BaseEngine\Platform\Vulkan\ShaderCompiler">
       <UniqueIdentifier>{1474b7ad-a704-4ef0-b2dd-fcfd215985cb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="BaseEngine\Platform\Vulkan\Material">
+      <UniqueIdentifier>{232531bc-579c-4553-adcd-6cb39162225b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BaseEngine\Platform\Vulkan\DescriptorSetManager">
+      <UniqueIdentifier>{21b8190b-ee8c-44f7-ac6e-b57303d345b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BaseEngine\Render\Buffer\Vertex">
+      <UniqueIdentifier>{4215103e-b7bd-4cd4-a6f6-2b055ae14476}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BaseEngine\Render\Buffer\Uniform">
+      <UniqueIdentifier>{ce7e89cf-f1ad-47ed-ad7d-d7a36570776c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BaseEngine\Platform\Vulkan\Buffer\Vertex">
+      <UniqueIdentifier>{f6fa3fa8-093e-45d5-8ebf-8a8d0cefb8f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BaseEngine\Platform\Vulkan\Buffer\Uniform">
+      <UniqueIdentifier>{3cec9347-edc6-46f8-a0bf-6f8a8c5d657e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BaseEngine\Render\Texture">
+      <UniqueIdentifier>{87687846-70f4-4a53-8c7f-463cc2ba062c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -1041,12 +1062,6 @@
     <ClCompile Include="RendererSubmit.cpp">
       <Filter>BaseEngine\Render</Filter>
     </ClCompile>
-    <ClCompile Include="VertexBuffer.cpp">
-      <Filter>BaseEngine\Render\Buffer</Filter>
-    </ClCompile>
-    <ClCompile Include="VulkanVertexBuffer.cpp">
-      <Filter>BaseEngine\Platform\Vulkan\Buffer</Filter>
-    </ClCompile>
     <ClCompile Include="RenderCommandQueue.cpp">
       <Filter>BaseEngine\Render\RenderCommand</Filter>
     </ClCompile>
@@ -1082,6 +1097,51 @@
     </ClCompile>
     <ClCompile Include="VulkanShaderCompiler.cpp">
       <Filter>BaseEngine\Platform\Vulkan\ShaderCompiler</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanShaderUtilities.cpp">
+      <Filter>BaseEngine\Platform\Vulkan\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanMaterial.cpp">
+      <Filter>BaseEngine\Platform\Vulkan\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="DescriptorSetManager.cpp">
+      <Filter>BaseEngine\Platform\Vulkan\DescriptorSetManager</Filter>
+    </ClCompile>
+    <ClCompile Include="VertexBuffer.cpp">
+      <Filter>BaseEngine\Render\Buffer\Vertex</Filter>
+    </ClCompile>
+    <ClCompile Include="UniformBuffer.cpp">
+      <Filter>BaseEngine\Render\Buffer\Uniform</Filter>
+    </ClCompile>
+    <ClCompile Include="UniformBufferSet.cpp">
+      <Filter>BaseEngine\Render\Buffer\Uniform</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanVertexBuffer.cpp">
+      <Filter>BaseEngine\Platform\Vulkan\Buffer\Vertex</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanUniformBuffer.cpp">
+      <Filter>BaseEngine\Platform\Vulkan\Buffer\Uniform</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanUniformBufferSet.cpp">
+      <Filter>BaseEngine\Platform\Vulkan\Buffer\Uniform</Filter>
+    </ClCompile>
+    <ClCompile Include="RendererTexture.cpp">
+      <Filter>BaseEngine\Render\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Image.cpp">
+      <Filter>BaseEngine\Render\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanImage.cpp">
+      <Filter>BaseEngine\Platform\Vulkan\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanAPI.cpp">
+      <Filter>BaseEngine\Platform\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="RendererStats.cpp">
+      <Filter>BaseEngine\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureImporter.cpp">
+      <Filter>BaseEngine\Asset\AssetImporter</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1979,12 +2039,6 @@
     <ClInclude Include="RendererSubmit.h">
       <Filter>BaseEngine\Render</Filter>
     </ClInclude>
-    <ClInclude Include="VertexBuffer.h">
-      <Filter>BaseEngine\Render\Buffer</Filter>
-    </ClInclude>
-    <ClInclude Include="VulkanVertexBuffer.h">
-      <Filter>BaseEngine\Platform\Vulkan\Buffer</Filter>
-    </ClInclude>
     <ClInclude Include="RenderCommandQueue.h">
       <Filter>BaseEngine\Render\RenderCommand</Filter>
     </ClInclude>
@@ -2035,6 +2089,51 @@
     </ClInclude>
     <ClInclude Include="ShaderPreprocessor.h">
       <Filter>BaseEngine\Platform\Vulkan\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanShaderUtilities.h">
+      <Filter>BaseEngine\Platform\Vulkan\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanMaterial.h">
+      <Filter>BaseEngine\Platform\Vulkan\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="DescriptorSetManager.h">
+      <Filter>BaseEngine\Platform\Vulkan\DescriptorSetManager</Filter>
+    </ClInclude>
+    <ClInclude Include="VertexBuffer.h">
+      <Filter>BaseEngine\Render\Buffer\Vertex</Filter>
+    </ClInclude>
+    <ClInclude Include="UniformBuffer.h">
+      <Filter>BaseEngine\Render\Buffer\Uniform</Filter>
+    </ClInclude>
+    <ClInclude Include="UniformBufferSet.h">
+      <Filter>BaseEngine\Render\Buffer\Uniform</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanVertexBuffer.h">
+      <Filter>BaseEngine\Platform\Vulkan\Buffer\Vertex</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanUniformBuffer.h">
+      <Filter>BaseEngine\Platform\Vulkan\Buffer\Uniform</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanUniformBufferSet.h">
+      <Filter>BaseEngine\Platform\Vulkan\Buffer\Uniform</Filter>
+    </ClInclude>
+    <ClInclude Include="RendererTexture.h">
+      <Filter>BaseEngine\Render\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Image.h">
+      <Filter>BaseEngine\Render\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanImage.h">
+      <Filter>BaseEngine\Platform\Vulkan\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanAPI.h">
+      <Filter>BaseEngine\Platform\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="RendererStats.h">
+      <Filter>BaseEngine\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureImporter.h">
+      <Filter>BaseEngine\Asset\AssetImporter</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

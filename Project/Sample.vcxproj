@@ -59,7 +59,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;BE_DEBUG;BE_ENABLE_PROFILING;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)\vendor\imgui;$(SolutionDir)\vendor;$(SolutionDir)vendor\mono\x86;$(SolutionDir)\Library\Include;$(ProjectDir)\include\utilities\observable;$(SolutionDir)\vendor\optick\src;$(SolutionDir)\vendor\yaml-cpp\include;$(SolutionDir)vendor\glfw\x86\include;$(VK_SDK_PATH)\Include;$(SolutionDir)vendor\VulkanMemoryAllocator;$(SolutionDir)vendor\shaderc\libshaderc_util\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\vendor\imgui;$(SolutionDir)\vendor;$(SolutionDir)vendor\mono\x86;$(SolutionDir)\Library\Include;$(ProjectDir)\include\utilities\observable;$(SolutionDir)\vendor\optick\src;$(SolutionDir)\vendor\yaml-cpp\include;$(SolutionDir)vendor\glfw\x86\include;$(VK_SDK_PATH)\Include;$(SolutionDir)vendor\VulkanMemoryAllocator;$(SolutionDir)vendor\shaderc\libshaderc_util\include;$(SolutionDir)vendor\stb\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -158,6 +158,7 @@
     <ClCompile Include="ContactTesterCircleCircle.cpp" />
     <ClCompile Include="ContactTesterReferenceService.cpp" />
     <ClCompile Include="CSharpInstance.cpp" />
+    <ClCompile Include="DescriptorSetManager.cpp" />
     <ClCompile Include="DynamicContactSolver.cpp" />
     <ClCompile Include="EditorAssetPicker.cpp" />
     <ClCompile Include="EditorButton.cpp" />
@@ -183,6 +184,7 @@
     <ClCompile Include="HierarchyContextMenu.cpp" />
     <ClCompile Include="HierarchyPanel.cpp" />
     <ClCompile Include="IBaseEngineAudioEngine.cpp" />
+    <ClCompile Include="Image.cpp" />
     <ClCompile Include="ImGuiArchive.cpp" />
     <ClCompile Include="ImGuiAssetHelper.cpp" />
     <ClCompile Include="ImGuiUtilities.cpp" />
@@ -230,7 +232,9 @@
     <ClCompile Include="RenderCommandQueue.cpp" />
     <ClCompile Include="RendererApi.cpp" />
     <ClCompile Include="RendererContext.cpp" />
+    <ClCompile Include="RendererStats.cpp" />
     <ClCompile Include="RendererSubmit.cpp" />
+    <ClCompile Include="RendererTexture.cpp" />
     <ClCompile Include="RenderThread.cpp" />
     <ClCompile Include="RigidBodyComponent.cpp" />
     <ClCompile Include="RigidBodyGlue.cpp" />
@@ -256,11 +260,14 @@
     <ClCompile Include="TagComponent.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TextureGlue.cpp" />
+    <ClCompile Include="TextureImporter.cpp" />
     <ClCompile Include="Thread.cpp" />
     <ClCompile Include="ToolbarPanel.cpp" />
     <ClCompile Include="TransformComponent.cpp" />
     <ClCompile Include="TransformGlue.cpp" />
     <ClCompile Include="CanvasRender.cpp" />
+    <ClCompile Include="UniformBuffer.cpp" />
+    <ClCompile Include="UniformBufferSet.cpp" />
     <ClCompile Include="UpdateCirclesBV.cpp" />
     <ClCompile Include="UUID.cpp" />
     <ClCompile Include="Variant.cpp" />
@@ -282,15 +289,21 @@
     <ClCompile Include="VelocityComponent.cpp" />
     <ClCompile Include="VertexBuffer.cpp" />
     <ClCompile Include="VulkanAllocator.cpp" />
+    <ClCompile Include="VulkanAPI.cpp" />
     <ClCompile Include="VulkanContext.cpp" />
     <ClCompile Include="VulkanDevice.cpp" />
+    <ClCompile Include="VulkanImage.cpp" />
     <ClCompile Include="VulkanImGuiLayer.cpp" />
+    <ClCompile Include="VulkanMaterial.cpp" />
     <ClCompile Include="VulkanRenderer.cpp" />
     <ClCompile Include="VulkanRendererContext.cpp" />
     <ClCompile Include="VulkanShader.cpp" />
     <ClCompile Include="VulkanShaderCompiler.cpp" />
+    <ClCompile Include="VulkanShaderUtilities.cpp" />
     <ClCompile Include="VulkanSwapChain.cpp" />
     <ClCompile Include="VulkanTexture.cpp" />
+    <ClCompile Include="VulkanUniformBuffer.cpp" />
+    <ClCompile Include="VulkanUniformBufferSet.cpp" />
     <ClCompile Include="VulkanUtilities.cpp" />
     <ClCompile Include="VulkanVertexBuffer.cpp" />
     <ClCompile Include="WeakRefObject.cpp" />
@@ -412,6 +425,7 @@
     <ClInclude Include="ConsoleMessage.h" />
     <ClInclude Include="ConsolePanel.h" />
     <ClInclude Include="ContactSolverSystem.h" />
+    <ClInclude Include="DescriptorSetManager.h" />
     <ClInclude Include="DynamicContactSolver.h" />
     <ClInclude Include="DebugGlue.h" />
     <ClInclude Include="EditorAssetPicker.h" />
@@ -438,6 +452,7 @@
     <ClInclude Include="HierarchyContextMenu.h" />
     <ClInclude Include="HierarchyPanel.h" />
     <ClInclude Include="ILayer.h" />
+    <ClInclude Include="Image.h" />
     <ClInclude Include="ImGuiArchive.h" />
     <ClInclude Include="ImGuiAssetHelper.h" />
     <ClInclude Include="ImGuiUtilities.h" />
@@ -459,7 +474,9 @@
     <ClInclude Include="RenderCommandQueue.h" />
     <ClInclude Include="RendererApi.h" />
     <ClInclude Include="RendererContext.h" />
+    <ClInclude Include="RendererStats.h" />
     <ClInclude Include="RendererSubmit.h" />
+    <ClInclude Include="RendererTexture.h" />
     <ClInclude Include="RenderThread.h" />
     <ClInclude Include="RigidBodyGlue.h" />
     <ClInclude Include="SceneAssetSerializer.h" />
@@ -471,22 +488,31 @@
     <ClInclude Include="ShapesGlue.h" />
     <ClInclude Include="SpriteRenderer.h" />
     <ClInclude Include="TestComponent.h" />
+    <ClInclude Include="TextureImporter.h" />
     <ClInclude Include="Thread.h" />
     <ClInclude Include="ToolbarPanel.h" />
+    <ClInclude Include="UniformBuffer.h" />
+    <ClInclude Include="UniformBufferSet.h" />
     <ClInclude Include="Variant.h" />
     <ClInclude Include="VertexBuffer.h" />
     <ClInclude Include="VulkanAllocator.h" />
+    <ClInclude Include="VulkanAPI.h" />
     <ClInclude Include="VulkanContext.h" />
     <ClInclude Include="VulkanDevice.h" />
+    <ClInclude Include="VulkanImage.h" />
     <ClInclude Include="VulkanImGuiLayer.h" />
+    <ClInclude Include="VulkanMaterial.h" />
     <ClInclude Include="VulkanReflectionData.h" />
     <ClInclude Include="VulkanRenderer.h" />
     <ClInclude Include="VulkanRendererContext.h" />
     <ClInclude Include="VulkanShader.h" />
     <ClInclude Include="VulkanShaderCompiler.h" />
     <ClInclude Include="VulkanShaderResource.h" />
+    <ClInclude Include="VulkanShaderUtilities.h" />
     <ClInclude Include="VulkanSwapChain.h" />
     <ClInclude Include="VulkanTexture.h" />
+    <ClInclude Include="VulkanUniformBuffer.h" />
+    <ClInclude Include="VulkanUniformBufferSet.h" />
     <ClInclude Include="VulkanUtilities.h" />
     <ClInclude Include="VulkanVertexBuffer.h" />
     <ClInclude Include="YAMLSerializeHelper.h" />

@@ -15,7 +15,9 @@
 #include "VulkanShader.h"
 
 namespace base_engine {
-
+struct StageData {
+  uint32_t HashValue = 0;
+};
 class VulkanShaderCompiler : public RefCounted {
  public:
   VulkanShaderCompiler(const std::filesystem::path& shaderSourcePath,
@@ -34,6 +36,13 @@ class VulkanShaderCompiler : public RefCounted {
   const ShaderDate& GetSPIRVData() const { return m_SPIRVData; }
 
  private:
+  bool Compile(std::vector<uint32_t>& outputBinary,
+               const VkShaderStageFlagBits stage) const;
+
+  bool CompileOrGetVulkanBinaries(ShaderDate& outputBinary);
+  bool CompileOrGetVulkanBinary(VkShaderStageFlagBits stage,
+                                std::vector<uint32_t>& outputBinary);
+
   std::map<VkShaderStageFlagBits, std::string> PreProcess(
       const std::string& source);
 
@@ -41,7 +50,7 @@ class VulkanShaderCompiler : public RefCounted {
 
   friend class VulkanShader;
 
-  ReflectionData m_ReflectionData;
+  ReflectionData reflection_data_;
 
   std::filesystem::path m_ShaderSourcePath;
   bool m_DisableOptimization = false;

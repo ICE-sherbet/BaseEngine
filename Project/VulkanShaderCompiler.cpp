@@ -1,9 +1,12 @@
 ﻿#include "VulkanShaderCompiler.h"
 
-#include <fstream>
-#include <spirv_cross/spirv_glsl.hpp>
 #include <spirv-tools/libspirv.h>
+
+#include <fstream>
+#include <ranges>
 #include <shaderc/shaderc.hpp>
+#include <spirv_cross/spirv_glsl.hpp>
+
 #include "Assert.h"
 #include "RendererApi.h"
 #include "ShaderPreprocessor.h"
@@ -36,24 +39,6 @@ static ShaderUniformType SPIRTypeToShaderUniformType(
       break;
   }
   return ShaderUniformType::None;
-}
-
-std::string_view VKStageToShaderMacro(const VkShaderStageFlagBits stage) {
-  if (stage == VK_SHADER_STAGE_VERTEX_BIT) return "__VERTEX_STAGE__";
-  if (stage == VK_SHADER_STAGE_FRAGMENT_BIT) return "__FRAGMENT_STAGE__";
-  if (stage == VK_SHADER_STAGE_COMPUTE_BIT) return "__COMPUTE_STAGE__";
-  return "";
-}
-shaderc_shader_kind ShaderStageToShaderC(const VkShaderStageFlagBits stage) {
-  switch (stage) {
-    case VK_SHADER_STAGE_VERTEX_BIT:
-      return shaderc_vertex_shader;
-    case VK_SHADER_STAGE_FRAGMENT_BIT:
-      return shaderc_fragment_shader;
-    case VK_SHADER_STAGE_COMPUTE_BIT:
-      return shaderc_compute_shader;
-  }
-  return {};
 }
 }  // namespace
 
@@ -107,6 +92,9 @@ bool VulkanShaderCompiler::Reload(bool forceCompile) {
   m_SPIRVData.clear();
   const std::string source = ReadFileAndSkipBOM(m_ShaderSourcePath);
   m_ShaderSource = PreProcess(source);
+
+  CompileOrGetVulkanBinaries(m_SPIRVData);
+  ReflectAllShaderStages(m_SPIRVData);
   return true;
 }
 
@@ -121,27 +109,23 @@ Ref<VulkanShader> VulkanShaderCompiler::Compile(
   name = found != std::string::npos ? name.substr(0, found) : name;
 
   Ref<VulkanShader> shader = Ref<VulkanShader>::Create();
-  shader->m_AssetPath = shaderSourcePath;
-  shader->m_Name = name;
-  shader->m_DisableOptimization = disableOptimization;
+  shader->asset_path_ = shaderSourcePath;
+  shader->name_ = name;
+  shader->disable_optimization_ = disableOptimization;
 
   Ref<VulkanShaderCompiler> compiler =
       Ref<VulkanShaderCompiler>::Create(shaderSourcePath, disableOptimization);
   compiler->Reload(forceCompile);
 
   shader->LoadAndCreateShaders(compiler->GetSPIRVData());
+  shader->SetReflectionData(compiler->reflection_data_);
   shader->CreateDescriptors();
-  /*
-  Renderer::AcknowledgeParsedGlobalMacros(compiler->GetAcknowledgedMacros(),
-                                          shader);
-  Renderer::OnShaderReloaded(shader->GetHash());
-  */
   return shader;
 }
 
 bool VulkanShaderCompiler::TryRecompile(Ref<VulkanShader> shader) {
   Ref<VulkanShaderCompiler> compiler = Ref<VulkanShaderCompiler>::Create(
-      shader->m_AssetPath, shader->m_DisableOptimization);
+      shader->asset_path_, shader->disable_optimization_);
   bool compileSucceeded = compiler->Reload(true);
   if (!compileSucceeded) return false;
 
@@ -177,11 +161,11 @@ void VulkanShaderCompiler::Reflect(VkShaderStageFlagBits shaderStage,
           compiler.get_decoration(resource.id, spv::DecorationDescriptorSet);
       uint32_t size = (uint32_t)compiler.get_declared_struct_size(bufferType);
 
-      if (descriptorSet >= m_ReflectionData.ShaderDescriptorSets.size())
-        m_ReflectionData.ShaderDescriptorSets.resize(descriptorSet + 1);
+      if (descriptorSet >= reflection_data_.ShaderDescriptorSets.size())
+        reflection_data_.ShaderDescriptorSets.resize(descriptorSet + 1);
 
       shader::ShaderDescriptorSet& shaderDescriptorSet =
-          m_ReflectionData.ShaderDescriptorSets[descriptorSet];
+          reflection_data_.ShaderDescriptorSets[descriptorSet];
       if (s_UniformBuffers[descriptorSet].find(binding) ==
           s_UniformBuffers[descriptorSet].end()) {
         shader::UniformBuffer uniformBuffer;
@@ -213,11 +197,11 @@ void VulkanShaderCompiler::Reflect(VkShaderStageFlagBits shaderStage,
           compiler.get_decoration(resource.id, spv::DecorationDescriptorSet);
       uint32_t size = (uint32_t)compiler.get_declared_struct_size(bufferType);
 
-      if (descriptorSet >= m_ReflectionData.ShaderDescriptorSets.size())
-        m_ReflectionData.ShaderDescriptorSets.resize(descriptorSet + 1);
+      if (descriptorSet >= reflection_data_.ShaderDescriptorSets.size())
+        reflection_data_.ShaderDescriptorSets.resize(descriptorSet + 1);
 
       shader::ShaderDescriptorSet& shaderDescriptorSet =
-          m_ReflectionData.ShaderDescriptorSets[descriptorSet];
+          reflection_data_.ShaderDescriptorSets[descriptorSet];
       if (s_StorageBuffers[descriptorSet].find(binding) ==
           s_StorageBuffers[descriptorSet].end()) {
         shader::StorageBuffer storageBuffer;
@@ -243,12 +227,12 @@ void VulkanShaderCompiler::Reflect(VkShaderStageFlagBits shaderStage,
     auto bufferSize = (uint32_t)compiler.get_declared_struct_size(bufferType);
     uint32_t memberCount = uint32_t(bufferType.member_types.size());
     uint32_t bufferOffset = 0;
-    if (m_ReflectionData.PushConstantRanges.size())
-      bufferOffset = m_ReflectionData.PushConstantRanges.back().Offset +
-                     m_ReflectionData.PushConstantRanges.back().Size;
+    if (reflection_data_.PushConstantRanges.size())
+      bufferOffset = reflection_data_.PushConstantRanges.back().Offset +
+                     reflection_data_.PushConstantRanges.back().Size;
 
     auto& pushConstantRange =
-        m_ReflectionData.PushConstantRanges.emplace_back();
+        reflection_data_.PushConstantRanges.emplace_back();
     pushConstantRange.ShaderStage = shaderStage;
     pushConstantRange.Size = bufferSize - bufferOffset;
     pushConstantRange.Offset = bufferOffset;
@@ -256,7 +240,7 @@ void VulkanShaderCompiler::Reflect(VkShaderStageFlagBits shaderStage,
     // Skip empty push constant buffers - these are for the renderer only
     if (bufferName.empty() || bufferName == "u_Renderer") continue;
 
-    ShaderBuffer& buffer = m_ReflectionData.ConstantBuffers[bufferName];
+    ShaderBuffer& buffer = reflection_data_.ConstantBuffers[bufferName];
     buffer.Name = bufferName;
     buffer.Size = bufferSize - bufferOffset;
 
@@ -284,11 +268,11 @@ void VulkanShaderCompiler::Reflect(VkShaderStageFlagBits shaderStage,
     uint32_t dimension = baseType.image.dim;
     uint32_t arraySize = type.array[0];
     if (arraySize == 0) arraySize = 1;
-    if (descriptorSet >= m_ReflectionData.ShaderDescriptorSets.size())
-      m_ReflectionData.ShaderDescriptorSets.resize(descriptorSet + 1);
+    if (descriptorSet >= reflection_data_.ShaderDescriptorSets.size())
+      reflection_data_.ShaderDescriptorSets.resize(descriptorSet + 1);
 
     shader::ShaderDescriptorSet& shaderDescriptorSet =
-        m_ReflectionData.ShaderDescriptorSets[descriptorSet];
+        reflection_data_.ShaderDescriptorSets[descriptorSet];
     auto& imageSampler = shaderDescriptorSet.ImageSamplers[binding];
     imageSampler.BindingPoint = binding;
     imageSampler.DescriptorSet = descriptorSet;
@@ -309,11 +293,11 @@ void VulkanShaderCompiler::Reflect(VkShaderStageFlagBits shaderStage,
     uint32_t dimension = baseType.image.dim;
     uint32_t arraySize = type.array[0];
     if (arraySize == 0) arraySize = 1;
-    if (descriptorSet >= m_ReflectionData.ShaderDescriptorSets.size())
-      m_ReflectionData.ShaderDescriptorSets.resize(descriptorSet + 1);
+    if (descriptorSet >= reflection_data_.ShaderDescriptorSets.size())
+      reflection_data_.ShaderDescriptorSets.resize(descriptorSet + 1);
 
     shader::ShaderDescriptorSet& shaderDescriptorSet =
-        m_ReflectionData.ShaderDescriptorSets[descriptorSet];
+        reflection_data_.ShaderDescriptorSets[descriptorSet];
     auto& imageSampler = shaderDescriptorSet.SeparateTextures[binding];
     imageSampler.BindingPoint = binding;
     imageSampler.DescriptorSet = descriptorSet;
@@ -334,11 +318,11 @@ void VulkanShaderCompiler::Reflect(VkShaderStageFlagBits shaderStage,
     uint32_t dimension = baseType.image.dim;
     uint32_t arraySize = type.array[0];
     if (arraySize == 0) arraySize = 1;
-    if (descriptorSet >= m_ReflectionData.ShaderDescriptorSets.size())
-      m_ReflectionData.ShaderDescriptorSets.resize(descriptorSet + 1);
+    if (descriptorSet >= reflection_data_.ShaderDescriptorSets.size())
+      reflection_data_.ShaderDescriptorSets.resize(descriptorSet + 1);
 
     shader::ShaderDescriptorSet& shaderDescriptorSet =
-        m_ReflectionData.ShaderDescriptorSets[descriptorSet];
+        reflection_data_.ShaderDescriptorSets[descriptorSet];
     auto& imageSampler = shaderDescriptorSet.SeparateSamplers[binding];
     imageSampler.BindingPoint = binding;
     imageSampler.DescriptorSet = descriptorSet;
@@ -358,11 +342,11 @@ void VulkanShaderCompiler::Reflect(VkShaderStageFlagBits shaderStage,
     uint32_t dimension = type.image.dim;
     uint32_t arraySize = type.array[0];
     if (arraySize == 0) arraySize = 1;
-    if (descriptorSet >= m_ReflectionData.ShaderDescriptorSets.size())
-      m_ReflectionData.ShaderDescriptorSets.resize(descriptorSet + 1);
+    if (descriptorSet >= reflection_data_.ShaderDescriptorSets.size())
+      reflection_data_.ShaderDescriptorSets.resize(descriptorSet + 1);
 
     shader::ShaderDescriptorSet& shaderDescriptorSet =
-        m_ReflectionData.ShaderDescriptorSets[descriptorSet];
+        reflection_data_.ShaderDescriptorSets[descriptorSet];
     auto& imageSampler = shaderDescriptorSet.StorageImages[binding];
     imageSampler.BindingPoint = binding;
     imageSampler.DescriptorSet = descriptorSet;
@@ -371,6 +355,47 @@ void VulkanShaderCompiler::Reflect(VkShaderStageFlagBits shaderStage,
     imageSampler.ArraySize = arraySize;
     imageSampler.ShaderStage = shaderStage;
   }
+}
+
+bool VulkanShaderCompiler::Compile(std::vector<uint32_t>& outputBinary,
+                                   const VkShaderStageFlagBits stage) const {
+  const std::string& stageSource = m_ShaderSource.at(stage);
+
+  static shaderc::Compiler compiler;
+  shaderc::CompileOptions shaderCOptions;
+  shaderCOptions.SetTargetEnvironment(shaderc_target_env_vulkan,
+                                      shaderc_env_version_vulkan_1_2);
+  shaderCOptions.SetWarningsAsErrors();
+
+  const shaderc::SpvCompilationResult module = compiler.CompileGlslToSpv(
+      stageSource, shader_utils::ShaderStageToShaderC(stage),
+      m_ShaderSourcePath.string().c_str(), shaderCOptions);
+
+  if (module.GetCompilationStatus() != shaderc_compilation_status_success) {
+    BE_CORE_ASSERT(
+        false,
+        fmt::format("{}While compiling shader file: {} \nAt stage: {}",
+                    module.GetErrorMessage(), m_ShaderSourcePath.string(),
+                    shader_utils::ShaderStageToString(stage)));
+
+    return false;
+  }
+
+  outputBinary = std::vector(module.begin(), module.end());
+  return true;
+}
+
+bool VulkanShaderCompiler::CompileOrGetVulkanBinaries(ShaderDate& outputBinary) {
+  bool compileSucceeded = true;
+  for (const auto stage : m_ShaderSource | std::views::keys) {
+    compileSucceeded &= CompileOrGetVulkanBinary(stage, outputBinary[stage]);
+  }
+  return compileSucceeded;
+}
+
+bool VulkanShaderCompiler::CompileOrGetVulkanBinary(
+    VkShaderStageFlagBits stage, std::vector<uint32_t>& outputBinary) {
+  return Compile(outputBinary, stage);
 }
 
 std::map<VkShaderStageFlagBits, std::string> VulkanShaderCompiler::PreProcess(
@@ -384,10 +409,11 @@ std::map<VkShaderStageFlagBits, std::string> VulkanShaderCompiler::PreProcess(
   for (auto& [stage, shaderSource] : shaderSources) {
     shaderc::CompileOptions options;
     options.AddMacroDefinition("__GLSL__");
-    options.AddMacroDefinition(std::string(VKStageToShaderMacro(stage)));
-    const auto preProcessingResult =
-        compiler.PreprocessGlsl(shaderSource, ShaderStageToShaderC(stage),
-                                m_ShaderSourcePath.string().c_str(), options);
+    options.AddMacroDefinition(
+        std::string(shader_utils::VKStageToShaderMacro(stage)));
+    const auto preProcessingResult = compiler.PreprocessGlsl(
+        shaderSource, shader_utils::ShaderStageToShaderC(stage),
+        m_ShaderSourcePath.string().c_str(), options);
     shaderSource =
         std::string(preProcessingResult.begin(), preProcessingResult.end());
   }
@@ -395,8 +421,8 @@ std::map<VkShaderStageFlagBits, std::string> VulkanShaderCompiler::PreProcess(
 }
 
 void VulkanShaderCompiler::ClearReflectionData() {
-  m_ReflectionData.ConstantBuffers.clear();
-  m_ReflectionData.PushConstantRanges.clear();
-  m_ReflectionData.ShaderDescriptorSets.clear();
+  reflection_data_.ConstantBuffers.clear();
+  reflection_data_.PushConstantRanges.clear();
+  reflection_data_.ShaderDescriptorSets.clear();
 }
 }  // namespace base_engine
