@@ -59,6 +59,8 @@ class Shader : public RefCounted {
   virtual void Reload(bool forceCompile = false) = 0;
   virtual void RT_Reload(bool forceCompile) = 0;
 
+  virtual const std::string& GetName() const = 0;
+
   static Ref<Shader> Create(const std::string& filepath,
                             bool forceCompile = false,
                             bool disableOptimization = false);

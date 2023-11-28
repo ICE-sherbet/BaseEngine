@@ -154,7 +154,7 @@ inline bool IsIntegerBased(const ImageFormat format) {
 }
 
 inline uint32_t CalculateMipCount(const uint32_t width, const uint32_t height) {
-  return static_cast<uint32_t>(std::floor(std::log2(std::min(width, height)))) + 1;
+  return static_cast<uint32_t>(std::floor(std::log2((std::min)(width, height)))) + 1;
 }
 
 inline uint32_t GetImageMemorySize(ImageFormat format, uint32_t width,

@@ -9,6 +9,7 @@
 #include <vulkan/vulkan.h>
 
 #include "Log.h"
+#include "VulkanContext.h"
 
 namespace base_engine::vulkan {
 inline void VulkanCheckResult(VkResult result) {
@@ -17,6 +18,8 @@ inline void VulkanCheckResult(VkResult result) {
     BE_CORE_ERROR("Vulkan error.");
   }
 }
+
+static PFN_vkSetDebugUtilsObjectNameEXT SetDebugUtilsObjectNameEXT = nullptr;
 
 static void SetDebugUtilsObjectName(const VkDevice device,
                                     const VkObjectType objectType,
@@ -28,18 +31,23 @@ static void SetDebugUtilsObjectName(const VkDevice device,
   nameInfo.pObjectName = name.c_str();
   nameInfo.objectHandle = handle;
   nameInfo.pNext = nullptr;
-
-  vkSetDebugUtilsObjectNameEXT(device, &nameInfo);
+  if (SetDebugUtilsObjectNameEXT == nullptr) {
+    SetDebugUtilsObjectNameEXT =
+        reinterpret_cast<PFN_vkSetDebugUtilsObjectNameEXT>(
+            vkGetInstanceProcAddr(VulkanContext::GetVkInstance(),
+                                  "vkSetDebugUtilsObjectNameEXT"));
+  }
+  SetDebugUtilsObjectNameEXT(device, &nameInfo);
 }
 
-void InsertImageMemoryBarrier(VkCommandBuffer cmdbuffer, VkImage image,
-                              VkAccessFlags srcAccessMask,
-                              VkAccessFlags dstAccessMask,
-                              VkImageLayout oldImageLayout,
-                              VkImageLayout newImageLayout,
-                              VkPipelineStageFlags srcStageMask,
-                              VkPipelineStageFlags dstStageMask,
-                              VkImageSubresourceRange subresourceRange) {
+static void InsertImageMemoryBarrier(VkCommandBuffer cmdbuffer, VkImage image,
+                                     VkAccessFlags srcAccessMask,
+                                     VkAccessFlags dstAccessMask,
+                                     VkImageLayout oldImageLayout,
+                                     VkImageLayout newImageLayout,
+                                     VkPipelineStageFlags srcStageMask,
+                                     VkPipelineStageFlags dstStageMask,
+                                     VkImageSubresourceRange subresourceRange) {
   VkImageMemoryBarrier imageMemoryBarrier{};
   imageMemoryBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
   imageMemoryBarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;

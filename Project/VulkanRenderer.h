@@ -17,6 +17,12 @@ class VulkanRenderer : public RendererApi {
 
   void BeginFrame() override;
   void EndFrame() override;
+  void BeginRenderPass(Ref<RenderCommandBuffer> renderCommandBuffer, Ref<RenderPass> renderPass,
+	  bool explicitClear) override;
+  void EndRenderPass(Ref<RenderCommandBuffer> renderCommandBuffer) override;
+  void RenderGeometry(Ref<RenderCommandBuffer> renderCommandBuffer, Ref<Pipeline> pipeline, Ref<Material> material,
+	  Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer, const glm::mat4& transform,
+	  uint32_t indexCount) override;
 
 private:
 };

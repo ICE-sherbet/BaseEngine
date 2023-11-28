@@ -508,6 +508,36 @@
     <Filter Include="BaseEngine\Render\Texture">
       <UniqueIdentifier>{87687846-70f4-4a53-8c7f-463cc2ba062c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="BaseEngine\Platform\Vulkan\RenderCommandBuffer">
+      <UniqueIdentifier>{5a02fb64-f7f7-4012-a591-09cad62bd95b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BaseEngine\Render\Pipeline">
+      <UniqueIdentifier>{587b1bd5-645f-4948-ad1e-cae1b4d41cd0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BaseEngine\Platform\Vulkan\Pipeline">
+      <UniqueIdentifier>{a23958ab-e2c7-4e37-b02c-f54f075bf2ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BaseEngine\Render\Buffer\Frame">
+      <UniqueIdentifier>{490965ba-cf36-4dd7-8a90-ebd2e69b1555}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BaseEngine\Platform\Vulkan\Buffer\Frame">
+      <UniqueIdentifier>{6b046783-35d6-4c93-8bc5-86887814a11c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BaseEngine\Render\Buffer\Storage">
+      <UniqueIdentifier>{a32edcc4-1807-474e-96ce-6c97643748a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BaseEngine\Render\Buffer\Index">
+      <UniqueIdentifier>{ab225559-6eab-47f0-81ea-2c87d93fb8f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BaseEngine\Platform\Vulkan\Buffer\Index">
+      <UniqueIdentifier>{d3c69e1d-da8e-4f5e-8be5-88d9ffd5b92b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BaseEngine\Render\Camera">
+      <UniqueIdentifier>{b61b89ce-02f2-4f23-b816-7f3e0279a0f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BaseEngine\Editor\Camera">
+      <UniqueIdentifier>{e5d2a117-f9ac-49e2-96e8-03d9fa95f1f6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -1142,6 +1172,48 @@
     </ClCompile>
     <ClCompile Include="TextureImporter.cpp">
       <Filter>BaseEngine\Asset\AssetImporter</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderCommandBuffer.cpp">
+      <Filter>BaseEngine\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanRenderCommandBuffer.cpp">
+      <Filter>BaseEngine\Platform\Vulkan\RenderCommandBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer2D.cpp">
+      <Filter>BaseEngine\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Pipeline.cpp">
+      <Filter>BaseEngine\Render\Pipeline</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderPass.cpp">
+      <Filter>BaseEngine\Render\Pipeline</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanRenderPass.cpp">
+      <Filter>BaseEngine\Platform\Vulkan\Pipeline</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanRenderPipeline.cpp">
+      <Filter>BaseEngine\Platform\Vulkan\Pipeline</Filter>
+    </ClCompile>
+    <ClCompile Include="FrameBuffer.cpp">
+      <Filter>BaseEngine\Render\Buffer\Frame</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanFrameBuffer.cpp">
+      <Filter>BaseEngine\Platform\Vulkan\Buffer\Frame</Filter>
+    </ClCompile>
+    <ClCompile Include="StorageBuffer.cpp">
+      <Filter>BaseEngine\Render\Buffer\Storage</Filter>
+    </ClCompile>
+    <ClCompile Include="IndexBuffer.cpp">
+      <Filter>BaseEngine\Render\Buffer\Index</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanIndexBuffer.cpp">
+      <Filter>BaseEngine\Platform\Vulkan\Buffer\Index</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>BaseEngine\Render\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorCamera.cpp">
+      <Filter>BaseEngine\Editor\Camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -2134,6 +2206,48 @@
     </ClInclude>
     <ClInclude Include="TextureImporter.h">
       <Filter>BaseEngine\Asset\AssetImporter</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderCommandBuffer.h">
+      <Filter>BaseEngine\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanRenderCommandBuffer.h">
+      <Filter>BaseEngine\Platform\Vulkan\RenderCommandBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer2D.h">
+      <Filter>BaseEngine\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Pipeline.h">
+      <Filter>BaseEngine\Render\Pipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPass.h">
+      <Filter>BaseEngine\Render\Pipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanRenderPass.h">
+      <Filter>BaseEngine\Platform\Vulkan\Pipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanRenderPipeline.h">
+      <Filter>BaseEngine\Platform\Vulkan\Pipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="FrameBuffer.h">
+      <Filter>BaseEngine\Render\Buffer\Frame</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanFrameBuffer.h">
+      <Filter>BaseEngine\Platform\Vulkan\Buffer\Frame</Filter>
+    </ClInclude>
+    <ClInclude Include="StorageBuffer.h">
+      <Filter>BaseEngine\Render\Buffer\Storage</Filter>
+    </ClInclude>
+    <ClInclude Include="IndexBuffer.h">
+      <Filter>BaseEngine\Render\Buffer\Index</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanIndexBuffer.h">
+      <Filter>BaseEngine\Platform\Vulkan\Buffer\Index</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>BaseEngine\Render\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorCamera.h">
+      <Filter>BaseEngine\Editor\Camera</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

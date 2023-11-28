@@ -12,8 +12,8 @@ namespace base_engine
 static std::map<VkImage, WeakRef<VulkanImage2D>> s_ImageReferences;
 
 VulkanImage2D::VulkanImage2D(const ImageSpecification& specification)
-    : m_Specification(specification) {
-  BE_CORE_VERIFY(m_Specification.Width > 0 && m_Specification.Height > 0);
+    : specification_(specification) {
+  BE_CORE_VERIFY(specification_.Width > 0 && specification_.Height > 0);
 }
 
 VulkanImage2D::~VulkanImage2D() { Release(); }
@@ -24,11 +24,11 @@ void VulkanImage2D::Invalidate() {
 }
 
 void VulkanImage2D::Release() {
-  if (m_Info.Image == VK_NULL_HANDLE) return;
+  if (info_.Image == VK_NULL_HANDLE) return;
 
-  const VulkanImageInfo& info = m_Info;
-  Renderer::SubmitResourceFree([info, mipViews = m_PerMipImageViews,
-                                layerViews = m_PerLayerImageViews]() mutable {
+  const VulkanImageInfo& info = info_;
+  Renderer::SubmitResourceFree([info, mipViews = per_mip_image_views_,
+                                layerViews = per_layer_image_views_]() mutable {
     const auto vulkanDevice =
         VulkanContext::GetCurrentDevice()->GetVulkanDevice();
     vkDestroyImageView(vulkanDevice, info.ImageView, nullptr);
@@ -44,15 +44,15 @@ void VulkanImage2D::Release() {
     allocator.DestroyImage(info.Image, info.MemoryAlloc);
     s_ImageReferences.erase(info.Image);
   });
-  m_Info.Image = VK_NULL_HANDLE;
-  m_Info.ImageView = VK_NULL_HANDLE;
-  if (m_Specification.CreateSampler) m_Info.Sampler = VK_NULL_HANDLE;
-  m_PerLayerImageViews.clear();
-  m_PerMipImageViews.clear();
+  info_.Image = VK_NULL_HANDLE;
+  info_.ImageView = VK_NULL_HANDLE;
+  if (specification_.CreateSampler) info_.Sampler = VK_NULL_HANDLE;
+  per_layer_image_views_.clear();
+  per_mip_image_views_.clear();
 }
 
 void VulkanImage2D::RT_Invalidate() {
-  BE_CORE_VERIFY(m_Specification.Width > 0 && m_Specification.Height > 0);
+  BE_CORE_VERIFY(specification_.Width > 0 && specification_.Height > 0);
 
   // Try release first if necessary
   Release();
@@ -62,29 +62,29 @@ void VulkanImage2D::RT_Invalidate() {
 
   VkImageUsageFlags usage =
       VK_IMAGE_USAGE_SAMPLED_BIT;  // TODO: this (probably) shouldn't be implied
-  if (m_Specification.Usage == ImageUsage::Attachment) {
-    if (Utils::IsDepthFormat(m_Specification.Format))
+  if (specification_.Usage == ImageUsage::Attachment) {
+    if (Utils::IsDepthFormat(specification_.Format))
       usage |= VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
     else
       usage |= VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
   }
-  if (m_Specification.Transfer ||
-      m_Specification.Usage == ImageUsage::Texture) {
+  if (specification_.Transfer ||
+      specification_.Usage == ImageUsage::Texture) {
     usage |= VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT;
   }
-  if (m_Specification.Usage == ImageUsage::Storage) {
+  if (specification_.Usage == ImageUsage::Storage) {
     usage |= VK_IMAGE_USAGE_STORAGE_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT;
   }
 
-  VkImageAspectFlags aspectMask = Utils::IsDepthFormat(m_Specification.Format)
+  VkImageAspectFlags aspectMask = Utils::IsDepthFormat(specification_.Format)
                                       ? VK_IMAGE_ASPECT_DEPTH_BIT
                                       : VK_IMAGE_ASPECT_COLOR_BIT;
-  if (m_Specification.Format == ImageFormat::DEPTH24STENCIL8)
+  if (specification_.Format == ImageFormat::DEPTH24STENCIL8)
     aspectMask |= VK_IMAGE_ASPECT_STENCIL_BIT;
 
-  VkFormat vulkanFormat = Utils::VulkanImageFormat(m_Specification.Format);
+  VkFormat vulkanFormat = Utils::VulkanImageFormat(specification_.Format);
 
-  VmaMemoryUsage memoryUsage = m_Specification.Usage == ImageUsage::HostRead
+  VmaMemoryUsage memoryUsage = specification_.Usage == ImageUsage::HostRead
                                    ? VMA_MEMORY_USAGE_GPU_TO_CPU
                                    : VMA_MEMORY_USAGE_GPU_ONLY;
 
@@ -92,26 +92,26 @@ void VulkanImage2D::RT_Invalidate() {
   imageCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
   imageCreateInfo.imageType = VK_IMAGE_TYPE_2D;
   imageCreateInfo.format = vulkanFormat;
-  imageCreateInfo.extent.width = m_Specification.Width;
-  imageCreateInfo.extent.height = m_Specification.Height;
+  imageCreateInfo.extent.width = specification_.Width;
+  imageCreateInfo.extent.height = specification_.Height;
   imageCreateInfo.extent.depth = 1;
-  imageCreateInfo.mipLevels = m_Specification.Mips;
-  imageCreateInfo.arrayLayers = m_Specification.Layers;
+  imageCreateInfo.mipLevels = specification_.Mips;
+  imageCreateInfo.arrayLayers = specification_.Layers;
   imageCreateInfo.samples = VK_SAMPLE_COUNT_1_BIT;
-  imageCreateInfo.tiling = m_Specification.Usage == ImageUsage::HostRead
+  imageCreateInfo.tiling = specification_.Usage == ImageUsage::HostRead
                                ? VK_IMAGE_TILING_LINEAR
                                : VK_IMAGE_TILING_OPTIMAL;
   imageCreateInfo.usage = usage;
-  m_Info.MemoryAlloc = allocator.AllocateImage(
-      imageCreateInfo, memoryUsage, m_Info.Image, &m_GPUAllocationSize);
-  s_ImageReferences[m_Info.Image] = this;
+  info_.MemoryAlloc = allocator.AllocateImage(
+      imageCreateInfo, memoryUsage, info_.Image, &gpu_allocation_size_);
+  s_ImageReferences[info_.Image] = this;
   vulkan::SetDebugUtilsObjectName(device, VK_OBJECT_TYPE_IMAGE,
-                                   m_Specification.DebugName, m_Info.Image);
+                                   specification_.DebugName, info_.Image);
 
   // Create a default image view
   VkImageViewCreateInfo imageViewCreateInfo = {};
   imageViewCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
-  imageViewCreateInfo.viewType = m_Specification.Layers > 1
+  imageViewCreateInfo.viewType = specification_.Layers > 1
                                      ? VK_IMAGE_VIEW_TYPE_2D_ARRAY
                                      : VK_IMAGE_VIEW_TYPE_2D;
   imageViewCreateInfo.format = vulkanFormat;
@@ -119,23 +119,23 @@ void VulkanImage2D::RT_Invalidate() {
   imageViewCreateInfo.subresourceRange = {};
   imageViewCreateInfo.subresourceRange.aspectMask = aspectMask;
   imageViewCreateInfo.subresourceRange.baseMipLevel = 0;
-  imageViewCreateInfo.subresourceRange.levelCount = m_Specification.Mips;
+  imageViewCreateInfo.subresourceRange.levelCount = specification_.Mips;
   imageViewCreateInfo.subresourceRange.baseArrayLayer = 0;
-  imageViewCreateInfo.subresourceRange.layerCount = m_Specification.Layers;
-  imageViewCreateInfo.image = m_Info.Image;
+  imageViewCreateInfo.subresourceRange.layerCount = specification_.Layers;
+  imageViewCreateInfo.image = info_.Image;
   vkCreateImageView(device, &imageViewCreateInfo, nullptr,
-                                    &m_Info.ImageView);
+                                    &info_.ImageView);
   vulkan::SetDebugUtilsObjectName(
       device, VK_OBJECT_TYPE_IMAGE_VIEW,
-      fmt::format("{} default image view", m_Specification.DebugName),
-      m_Info.ImageView);
+      fmt::format("{} default image view", specification_.DebugName),
+      info_.ImageView);
 
   // TODO: Renderer should contain some kind of sampler cache
-  if (m_Specification.CreateSampler) {
+  if (specification_.CreateSampler) {
     VkSamplerCreateInfo samplerCreateInfo = {};
     samplerCreateInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
     samplerCreateInfo.maxAnisotropy = 1.0f;
-    if (Utils::IsIntegerBased(m_Specification.Format)) {
+    if (Utils::IsIntegerBased(specification_.Format)) {
       samplerCreateInfo.magFilter = VK_FILTER_NEAREST;
       samplerCreateInfo.minFilter = VK_FILTER_NEAREST;
       samplerCreateInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_NEAREST;
@@ -152,14 +152,14 @@ void VulkanImage2D::RT_Invalidate() {
     samplerCreateInfo.minLod = 0.0f;
     samplerCreateInfo.maxLod = 100.0f;
     samplerCreateInfo.borderColor = VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE;
-    m_Info.Sampler = vulkan::CreateSampler(samplerCreateInfo);
+    info_.Sampler = vulkan::CreateSampler(samplerCreateInfo);
     vulkan::SetDebugUtilsObjectName(
         device, VK_OBJECT_TYPE_SAMPLER,
-        fmt::format("{} default sampler", m_Specification.DebugName),
-        m_Info.Sampler);
+        fmt::format("{} default sampler", specification_.DebugName),
+        info_.Sampler);
   }
 
-  if (m_Specification.Usage == ImageUsage::Storage) {
+  if (specification_.Usage == ImageUsage::Storage) {
     // Transition image to GENERAL layout
     VkCommandBuffer commandBuffer =
         VulkanContext::GetCurrentDevice()->GetCommandBuffer(true);
@@ -167,16 +167,16 @@ void VulkanImage2D::RT_Invalidate() {
     VkImageSubresourceRange subresourceRange = {};
     subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
     subresourceRange.baseMipLevel = 0;
-    subresourceRange.levelCount = m_Specification.Mips;
-    subresourceRange.layerCount = m_Specification.Layers;
+    subresourceRange.levelCount = specification_.Mips;
+    subresourceRange.layerCount = specification_.Layers;
 
     vulkan::InsertImageMemoryBarrier(
-        commandBuffer, m_Info.Image, 0, 0, VK_IMAGE_LAYOUT_UNDEFINED,
+        commandBuffer, info_.Image, 0, 0, VK_IMAGE_LAYOUT_UNDEFINED,
         VK_IMAGE_LAYOUT_GENERAL, VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
         VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, subresourceRange);
 
     VulkanContext::GetCurrentDevice()->FlushCommandBuffer(commandBuffer);
-  } else if (m_Specification.Usage == ImageUsage::HostRead) {
+  } else if (specification_.Usage == ImageUsage::HostRead) {
     // Transition image to TRANSFER_DST layout
     VkCommandBuffer commandBuffer =
         VulkanContext::GetCurrentDevice()->GetCommandBuffer(true);
@@ -184,11 +184,11 @@ void VulkanImage2D::RT_Invalidate() {
     VkImageSubresourceRange subresourceRange = {};
     subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
     subresourceRange.baseMipLevel = 0;
-    subresourceRange.levelCount = m_Specification.Mips;
-    subresourceRange.layerCount = m_Specification.Layers;
+    subresourceRange.levelCount = specification_.Mips;
+    subresourceRange.layerCount = specification_.Layers;
 
     vulkan::InsertImageMemoryBarrier(
-        commandBuffer, m_Info.Image, 0, 0, VK_IMAGE_LAYOUT_UNDEFINED,
+        commandBuffer, info_.Image, 0, 0, VK_IMAGE_LAYOUT_UNDEFINED,
         VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
         VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
         subresourceRange);
@@ -206,21 +206,21 @@ void VulkanImage2D::CreatePerLayerImageViews() {
 }
 
 void VulkanImage2D::RT_CreatePerLayerImageViews() {
-  BE_CORE_ASSERT(m_Specification.Layers > 1);
+  BE_CORE_ASSERT(specification_.Layers > 1);
 
   VkDevice device = VulkanContext::GetCurrentDevice()->GetVulkanDevice();
 
-  VkImageAspectFlags aspectMask = Utils::IsDepthFormat(m_Specification.Format)
+  VkImageAspectFlags aspectMask = Utils::IsDepthFormat(specification_.Format)
                                       ? VK_IMAGE_ASPECT_DEPTH_BIT
                                       : VK_IMAGE_ASPECT_COLOR_BIT;
-  if (m_Specification.Format == ImageFormat::DEPTH24STENCIL8)
+  if (specification_.Format == ImageFormat::DEPTH24STENCIL8)
     aspectMask |= VK_IMAGE_ASPECT_STENCIL_BIT;
 
   const VkFormat vulkanFormat =
-      Utils::VulkanImageFormat(m_Specification.Format);
+      Utils::VulkanImageFormat(specification_.Format);
 
-  m_PerLayerImageViews.resize(m_Specification.Layers);
-  for (uint32_t layer = 0; layer < m_Specification.Layers; layer++) {
+  per_layer_image_views_.resize(specification_.Layers);
+  for (uint32_t layer = 0; layer < specification_.Layers; layer++) {
     VkImageViewCreateInfo imageViewCreateInfo = {};
     imageViewCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
     imageViewCreateInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
@@ -229,44 +229,44 @@ void VulkanImage2D::RT_CreatePerLayerImageViews() {
     imageViewCreateInfo.subresourceRange = {};
     imageViewCreateInfo.subresourceRange.aspectMask = aspectMask;
     imageViewCreateInfo.subresourceRange.baseMipLevel = 0;
-    imageViewCreateInfo.subresourceRange.levelCount = m_Specification.Mips;
+    imageViewCreateInfo.subresourceRange.levelCount = specification_.Mips;
     imageViewCreateInfo.subresourceRange.baseArrayLayer = layer;
     imageViewCreateInfo.subresourceRange.layerCount = 1;
-    imageViewCreateInfo.image = m_Info.Image;
+    imageViewCreateInfo.image = info_.Image;
     vkCreateImageView(device, &imageViewCreateInfo, nullptr,
-                                      &m_PerLayerImageViews[layer]);
+                                      &per_layer_image_views_[layer]);
     vulkan::SetDebugUtilsObjectName(
         device, VK_OBJECT_TYPE_IMAGE_VIEW,
-        fmt::format("{} image view layer: {}", m_Specification.DebugName,
+        fmt::format("{} image view layer: {}", specification_.DebugName,
                     layer),
-        m_PerLayerImageViews[layer]);
+        per_layer_image_views_[layer]);
   }
 }
 
 VkImageView VulkanImage2D::GetMipImageView(uint32_t mip) {
-  if (m_PerMipImageViews.find(mip) == m_PerMipImageViews.end()) {
+  if (per_mip_image_views_.find(mip) == per_mip_image_views_.end()) {
     Ref<VulkanImage2D> instance = this;
     Renderer::Submit(
         [instance, mip]() mutable { instance->RT_GetMipImageView(mip); });
     return VK_NULL_HANDLE;
   }
 
-  return m_PerMipImageViews.at(mip);
+  return per_mip_image_views_.at(mip);
 }
 
 VkImageView VulkanImage2D::RT_GetMipImageView(const uint32_t mip) {
-  auto it = m_PerMipImageViews.find(mip);
-  if (it != m_PerMipImageViews.end()) return it->second;
+  auto it = per_mip_image_views_.find(mip);
+  if (it != per_mip_image_views_.end()) return it->second;
 
   VkDevice device = VulkanContext::GetCurrentDevice()->GetVulkanDevice();
 
-  VkImageAspectFlags aspectMask = Utils::IsDepthFormat(m_Specification.Format)
+  VkImageAspectFlags aspectMask = Utils::IsDepthFormat(specification_.Format)
                                       ? VK_IMAGE_ASPECT_DEPTH_BIT
                                       : VK_IMAGE_ASPECT_COLOR_BIT;
-  if (m_Specification.Format == ImageFormat::DEPTH24STENCIL8)
+  if (specification_.Format == ImageFormat::DEPTH24STENCIL8)
     aspectMask |= VK_IMAGE_ASPECT_STENCIL_BIT;
 
-  VkFormat vulkanFormat = Utils::VulkanImageFormat(m_Specification.Format);
+  VkFormat vulkanFormat = Utils::VulkanImageFormat(specification_.Format);
 
   VkImageViewCreateInfo imageViewCreateInfo = {};
   imageViewCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
@@ -279,35 +279,35 @@ VkImageView VulkanImage2D::RT_GetMipImageView(const uint32_t mip) {
   imageViewCreateInfo.subresourceRange.levelCount = 1;
   imageViewCreateInfo.subresourceRange.baseArrayLayer = 0;
   imageViewCreateInfo.subresourceRange.layerCount = 1;
-  imageViewCreateInfo.image = m_Info.Image;
+  imageViewCreateInfo.image = info_.Image;
 
   vkCreateImageView(device, &imageViewCreateInfo, nullptr,
-                                    &m_PerMipImageViews[mip]);
+                                    &per_mip_image_views_[mip]);
   vulkan::SetDebugUtilsObjectName(
       device, VK_OBJECT_TYPE_IMAGE_VIEW,
-      fmt::format("{} image view mip: {}", m_Specification.DebugName, mip),
-      m_PerMipImageViews[mip]);
-  return m_PerMipImageViews.at(mip);
+      fmt::format("{} image view mip: {}", specification_.DebugName, mip),
+      per_mip_image_views_[mip]);
+  return per_mip_image_views_.at(mip);
 }
 
 void VulkanImage2D::RT_CreatePerSpecificLayerImageViews(
     const std::vector<uint32_t>& layerIndices) {
-  BE_CORE_ASSERT(m_Specification.Layers > 1);
+  BE_CORE_ASSERT(specification_.Layers > 1);
 
   VkDevice device = VulkanContext::GetCurrentDevice()->GetVulkanDevice();
 
-  VkImageAspectFlags aspectMask = Utils::IsDepthFormat(m_Specification.Format)
+  VkImageAspectFlags aspectMask = Utils::IsDepthFormat(specification_.Format)
                                       ? VK_IMAGE_ASPECT_DEPTH_BIT
                                       : VK_IMAGE_ASPECT_COLOR_BIT;
-  if (m_Specification.Format == ImageFormat::DEPTH24STENCIL8)
+  if (specification_.Format == ImageFormat::DEPTH24STENCIL8)
     aspectMask |= VK_IMAGE_ASPECT_STENCIL_BIT;
 
   const VkFormat vulkanFormat =
-      Utils::VulkanImageFormat(m_Specification.Format);
+      Utils::VulkanImageFormat(specification_.Format);
 
-  // BE_CORE_ASSERT(m_PerLayerImageViews.size() == m_Specification.Layers);
-  if (m_PerLayerImageViews.empty())
-    m_PerLayerImageViews.resize(m_Specification.Layers);
+  // BE_CORE_ASSERT(per_layer_image_views_.size() == specification_.Layers);
+  if (per_layer_image_views_.empty())
+    per_layer_image_views_.resize(specification_.Layers);
 
   for (uint32_t layer : layerIndices) {
     VkImageViewCreateInfo imageViewCreateInfo = {};
@@ -318,42 +318,42 @@ void VulkanImage2D::RT_CreatePerSpecificLayerImageViews(
     imageViewCreateInfo.subresourceRange = {};
     imageViewCreateInfo.subresourceRange.aspectMask = aspectMask;
     imageViewCreateInfo.subresourceRange.baseMipLevel = 0;
-    imageViewCreateInfo.subresourceRange.levelCount = m_Specification.Mips;
+    imageViewCreateInfo.subresourceRange.levelCount = specification_.Mips;
     imageViewCreateInfo.subresourceRange.baseArrayLayer = layer;
     imageViewCreateInfo.subresourceRange.layerCount = 1;
-    imageViewCreateInfo.image = m_Info.Image;
+    imageViewCreateInfo.image = info_.Image;
     vkCreateImageView(device, &imageViewCreateInfo, nullptr,
-                                      &m_PerLayerImageViews[layer]);
+                                      &per_layer_image_views_[layer]);
     vulkan::SetDebugUtilsObjectName(
         device, VK_OBJECT_TYPE_IMAGE_VIEW,
-        fmt::format("{} image view layer: {}", m_Specification.DebugName,
+        fmt::format("{} image view layer: {}", specification_.DebugName,
                     layer),
-        m_PerLayerImageViews[layer]);
+        per_layer_image_views_[layer]);
   }
 }
 
 void VulkanImage2D::UpdateDescriptor() {
-  if (m_Specification.Format == ImageFormat::DEPTH24STENCIL8 ||
-      m_Specification.Format == ImageFormat::DEPTH32F ||
-      m_Specification.Format == ImageFormat::DEPTH32FSTENCIL8UINT)
-    m_DescriptorImageInfo.imageLayout =
+  if (specification_.Format == ImageFormat::DEPTH24STENCIL8 ||
+      specification_.Format == ImageFormat::DEPTH32F ||
+      specification_.Format == ImageFormat::DEPTH32FSTENCIL8UINT)
+    descriptor_image_info_.imageLayout =
         VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL;
-  else if (m_Specification.Usage == ImageUsage::Storage)
-    m_DescriptorImageInfo.imageLayout = VK_IMAGE_LAYOUT_GENERAL;
+  else if (specification_.Usage == ImageUsage::Storage)
+    descriptor_image_info_.imageLayout = VK_IMAGE_LAYOUT_GENERAL;
   else
-    m_DescriptorImageInfo.imageLayout =
+    descriptor_image_info_.imageLayout =
         VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 
-  if (m_Specification.Usage == ImageUsage::Storage)
-    m_DescriptorImageInfo.imageLayout = VK_IMAGE_LAYOUT_GENERAL;
-  else if (m_Specification.Usage == ImageUsage::HostRead)
-    m_DescriptorImageInfo.imageLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
+  if (specification_.Usage == ImageUsage::Storage)
+    descriptor_image_info_.imageLayout = VK_IMAGE_LAYOUT_GENERAL;
+  else if (specification_.Usage == ImageUsage::HostRead)
+    descriptor_image_info_.imageLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
 
-  m_DescriptorImageInfo.imageView = m_Info.ImageView;
-  m_DescriptorImageInfo.sampler = m_Info.Sampler;
+  descriptor_image_info_.imageView = info_.ImageView;
+  descriptor_image_info_.sampler = info_.Sampler;
 
   // BE_CORE_WARN_TAG("Renderer", "VulkanImage2D::UpdateDescriptor to ImageView
-  // = {0}", (const void*)m_Info.ImageView);
+  // = {0}", (const void*)info_.ImageView);
 }
 
 const std::map<VkImage, WeakRef<VulkanImage2D>>& VulkanImage2D::GetImageRefs() {
@@ -365,8 +365,8 @@ void VulkanImage2D::CopyToHostBuffer(Buffer& buffer) {
   auto vulkanDevice = device->GetVulkanDevice();
   VulkanAllocator allocator("Image2D");
 
-  uint64_t bufferSize = m_Specification.Width * m_Specification.Height *
-                        Utils::GetImageFormatBPP(m_Specification.Format);
+  uint64_t bufferSize = specification_.Width * specification_.Height *
+                        Utils::GetImageFormatBPP(specification_.Format);
 
   // Create staging buffer
   VkBufferCreateInfo bufferCreateInfo{};
@@ -380,7 +380,7 @@ void VulkanImage2D::CopyToHostBuffer(Buffer& buffer) {
       bufferCreateInfo, VMA_MEMORY_USAGE_GPU_TO_CPU, stagingBuffer);
 
   uint32_t mipCount = 1;
-  uint32_t mipWidth = m_Specification.Width, mipHeight = m_Specification.Height;
+  uint32_t mipWidth = specification_.Width, mipHeight = specification_.Height;
 
   VkCommandBuffer copyCmd = device->GetCommandBuffer(true);
 
@@ -391,8 +391,8 @@ void VulkanImage2D::CopyToHostBuffer(Buffer& buffer) {
   subresourceRange.layerCount = 1;
 
   vulkan::InsertImageMemoryBarrier(
-      copyCmd, m_Info.Image, VK_ACCESS_TRANSFER_READ_BIT, 0,
-      m_DescriptorImageInfo.imageLayout, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+      copyCmd, info_.Image, VK_ACCESS_TRANSFER_READ_BIT, 0,
+      descriptor_image_info_.imageLayout, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
       VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT,
       subresourceRange);
 
@@ -408,7 +408,7 @@ void VulkanImage2D::CopyToHostBuffer(Buffer& buffer) {
     bufferCopyRegion.imageExtent.depth = 1;
     bufferCopyRegion.bufferOffset = mipDataOffset;
 
-    vkCmdCopyImageToBuffer(copyCmd, m_Info.Image,
+    vkCmdCopyImageToBuffer(copyCmd, info_.Image,
                            VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, stagingBuffer,
                            1, &bufferCopyRegion);
 
@@ -419,8 +419,8 @@ void VulkanImage2D::CopyToHostBuffer(Buffer& buffer) {
   }
 
   vulkan::InsertImageMemoryBarrier(
-      copyCmd, m_Info.Image, VK_ACCESS_TRANSFER_READ_BIT, 0,
-      VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, m_DescriptorImageInfo.imageLayout,
+      copyCmd, info_.Image, VK_ACCESS_TRANSFER_READ_BIT, 0,
+      VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, descriptor_image_info_.imageLayout,
       VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
       subresourceRange);
 
@@ -436,19 +436,19 @@ void VulkanImage2D::CopyToHostBuffer(Buffer& buffer) {
 }
 
 VulkanImageView::VulkanImageView(const ImageViewSpecification& specification)
-    : m_Specification(specification) {
+    : specification_(specification) {
   Invalidate();
 }
 
 VulkanImageView::~VulkanImageView() {
-  Renderer::SubmitResourceFree([imageView = m_ImageView]() mutable {
+  Renderer::SubmitResourceFree([imageView = image_view_]() mutable {
     auto device = VulkanContext::GetCurrentDevice();
     VkDevice vulkanDevice = device->GetVulkanDevice();
 
     vkDestroyImageView(vulkanDevice, imageView, nullptr);
   });
 
-  m_ImageView = VK_NULL_HANDLE;
+  image_view_ = VK_NULL_HANDLE;
 }
 
 void VulkanImageView::Invalidate() {
@@ -460,7 +460,7 @@ void VulkanImageView::RT_Invalidate() {
   auto device = VulkanContext::GetCurrentDevice();
   VkDevice vulkanDevice = device->GetVulkanDevice();
 
-  Ref<VulkanImage2D> vulkanImage = m_Specification.Image.As<VulkanImage2D>();
+  Ref<VulkanImage2D> vulkanImage = specification_.Image.As<VulkanImage2D>();
   const auto& imageSpec = vulkanImage->GetSpecification();
 
   VkImageAspectFlags aspectMask = Utils::IsDepthFormat(imageSpec.Format)
@@ -480,19 +480,19 @@ void VulkanImageView::RT_Invalidate() {
   imageViewCreateInfo.flags = 0;
   imageViewCreateInfo.subresourceRange = {};
   imageViewCreateInfo.subresourceRange.aspectMask = aspectMask;
-  imageViewCreateInfo.subresourceRange.baseMipLevel = m_Specification.Mip;
+  imageViewCreateInfo.subresourceRange.baseMipLevel = specification_.Mip;
   imageViewCreateInfo.subresourceRange.levelCount = 1;
   imageViewCreateInfo.subresourceRange.baseArrayLayer = 0;
   imageViewCreateInfo.subresourceRange.layerCount = imageSpec.Layers;
   imageViewCreateInfo.image = vulkanImage->GetImageInfo().Image;
   vkCreateImageView(vulkanDevice, &imageViewCreateInfo, nullptr,
-                                    &m_ImageView);
+                                    &image_view_);
   vulkan::SetDebugUtilsObjectName(
       vulkanDevice, VK_OBJECT_TYPE_IMAGE_VIEW,
-      fmt::format("{} default image view", m_Specification.DebugName),
-      m_ImageView);
+      fmt::format("{} default image view", specification_.DebugName),
+      image_view_);
 
-  m_DescriptorImageInfo = vulkanImage->GetDescriptorInfoVulkan();
-  m_DescriptorImageInfo.imageView = m_ImageView;
+  descriptor_image_info_ = vulkanImage->GetDescriptorInfoVulkan();
+  descriptor_image_info_.imageView = image_view_;
 }
 }

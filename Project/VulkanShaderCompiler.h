@@ -33,7 +33,7 @@ class VulkanShaderCompiler : public RefCounted {
   void Reflect(VkShaderStageFlagBits shaderStage,
                const std::vector<uint32_t>& shaderData);
 
-  const ShaderDate& GetSPIRVData() const { return m_SPIRVData; }
+  const ShaderDate& GetSPIRVData() const { return spirv_data_; }
 
  private:
   bool Compile(std::vector<uint32_t>& outputBinary,
@@ -52,9 +52,9 @@ class VulkanShaderCompiler : public RefCounted {
 
   ReflectionData reflection_data_;
 
-  std::filesystem::path m_ShaderSourcePath;
-  bool m_DisableOptimization = false;
-  std::map<VkShaderStageFlagBits, std::string> m_ShaderSource;
-  ShaderDate m_SPIRVDebugData, m_SPIRVData;
+  std::filesystem::path shader_source_path_;
+  bool disable_optimization_ = false;
+  std::map<VkShaderStageFlagBits, std::string> shader_source_;
+  ShaderDate spirv_debug_data_, spirv_data_;
 };
 }  // namespace base_engine

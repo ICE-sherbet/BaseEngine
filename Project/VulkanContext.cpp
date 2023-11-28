@@ -4,6 +4,7 @@
 #include <vulkan/vulkan.h>
 
 #include "Assert.h"
+#include "VulkanAllocator.h"
 
 namespace base_engine {
 void VulkanContext::Init() {
@@ -19,6 +20,8 @@ void VulkanContext::Init() {
   enabled_features.independentBlend = true;
   enabled_features.pipelineStatisticsQuery = true;
   device_ = Ref<VulkanDevice>::Create(physics_device_, enabled_features);
+
+  VulkanAllocator::Init(device_);
 
   VkPipelineCacheCreateInfo pipeline_cache_create_info = {};
   pipeline_cache_create_info.sType =

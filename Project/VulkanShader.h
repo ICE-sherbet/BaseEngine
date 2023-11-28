@@ -40,12 +40,28 @@ class VulkanShader : public Shader {
     return reflection_data_.ShaderDescriptorSets;
   }
 
+  std::vector<VkDescriptorSetLayout> GetAllDescriptorSetLayouts();
+  const std::vector<shader::PushConstantRange>& GetPushConstantRanges() const {
+    return reflection_data_.PushConstantRanges;
+  }
+
+  const std::vector<VkPipelineShaderStageCreateInfo>&
+  GetPipelineShaderStageCreateInfos() const {
+    return pipeline_shader_stage_create_infos_;
+  }
+
+  VkDescriptorSetLayout GetDescriptorSetLayout(const uint32_t set) const {
+    return descriptor_set_layouts_.at(set);
+  }
+  const std::string& GetName() const override { return name_; }
+
  private:
   std::filesystem::path asset_path_;
   std::string name_;
   bool disable_optimization_ = false;
 
-  std::vector<VkPipelineShaderStageCreateInfo> pipeline_shader_stage_create_infos_;
+  std::vector<VkPipelineShaderStageCreateInfo>
+      pipeline_shader_stage_create_infos_;
   std::map<VkShaderStageFlagBits, std::vector<uint32_t>> shader_data_;
 
   std::vector<VkDescriptorSetLayout> descriptor_set_layouts_;

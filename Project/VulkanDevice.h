@@ -39,6 +39,7 @@ class VulkanPhysicalDevice : public RefCounted {
   const VkPhysicalDeviceMemoryProperties& GetMemoryProperties() const {
     return memory_properties_;
   }
+  const VkPhysicalDeviceLimits& GetLimits() const { return properties_.limits; }
 
  private:
   QueueFamilyIndices GetQueueFamilyIndices(int queue_flags) const;

@@ -21,21 +21,21 @@ class VulkanTexture2D : public RendererTexture2D {
 
   virtual void Resize(uint32_t width, uint32_t height) override;
   std::pair<uint32_t, uint32_t> GetSize() const override {
-    return {m_Specification.Width, m_Specification.Height};
+    return {specification_.Width, specification_.Height};
   }
   void Invalidate();
 
   virtual ImageFormat GetFormat() const override {
-    return m_Specification.Format;
+    return specification_.Format;
   }
-  virtual uint32_t GetWidth() const override { return m_Specification.Width; }
-  virtual uint32_t GetHeight() const override { return m_Specification.Height; }
+  virtual uint32_t GetWidth() const override { return specification_.Width; }
+  virtual uint32_t GetHeight() const override { return specification_.Height; }
 
   virtual void Bind(uint32_t slot = 0) const override;
 
-  virtual Ref<Image2D> GetImage() const override { return m_Image; }
+  virtual Ref<Image2D> GetImage() const override { return image_; }
   virtual ResourceDescriptorInfo GetDescriptorInfo() const override {
-    return m_Image.As<VulkanImage2D>()->GetDescriptorInfo();
+    return image_.As<VulkanImage2D>()->GetDescriptorInfo();
   }
   const VkDescriptorImageInfo& GetDescriptorInfoVulkan() const {
     return *(VkDescriptorImageInfo*)GetDescriptorInfo();
@@ -45,7 +45,7 @@ class VulkanTexture2D : public RendererTexture2D {
   void Unlock() override;
 
   Buffer GetWriteableBuffer() override;
-  bool Loaded() const override { return static_cast<bool>(m_ImageData); }
+  bool Loaded() const override { return static_cast<bool>(image_data_); }
   const std::filesystem::path& GetPath() const override;
   uint32_t GetMipLevelCount() const override;
   virtual std::pair<uint32_t, uint32_t> GetMipSize(uint32_t mip) const override;
@@ -54,17 +54,17 @@ class VulkanTexture2D : public RendererTexture2D {
 
   uint64_t GetHash() const override
   {
-    return m_Image.As<VulkanImage2D>()->GetDescriptorInfoVulkan().imageView;
+    return image_.As<VulkanImage2D>()->GetDescriptorInfoVulkan().imageView;
   }
 
   void CopyToHostBuffer(Buffer& buffer);
 
  private:
-  std::filesystem::path m_Path;
-  TextureSpecification m_Specification;
+  std::filesystem::path path_;
+  TextureSpecification specification_;
 
-  Buffer m_ImageData;
+  Buffer image_data_;
 
-  Ref<Image2D> m_Image;
+  Ref<Image2D> image_;
 };
 }  // namespace base_engine

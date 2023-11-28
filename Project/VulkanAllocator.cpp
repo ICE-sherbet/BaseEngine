@@ -121,7 +121,6 @@ VmaAllocation VulkanAllocator::AllocateImage(
                       Utils::BytesToString(stats.TotalAvailable));
   }
 
-  // TODO: Tracking
   VmaAllocationInfo allocInfo;
   vmaGetAllocationInfo(s_Data->allocator, allocation, &allocInfo);
   if (allocated_size) *allocated_size = allocInfo.size;

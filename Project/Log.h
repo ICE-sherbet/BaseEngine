@@ -14,6 +14,7 @@
 #define BE_ASSERT_MESSAGE_BOX !DEBUG
 
 #if BE_ASSERT_MESSAGE_BOX
+#define NOMINMAX
 #include <Windows.h>
 #endif
 

@@ -1,5 +1,5 @@
 ﻿#include "Thread.h"
-
+#define NOMINMAX
 #include <Windows.h>
 
 #include "Assert.h"

@@ -59,7 +59,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;BE_DEBUG;BE_ENABLE_PROFILING;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)\vendor\imgui;$(SolutionDir)\vendor;$(SolutionDir)vendor\mono\x86;$(SolutionDir)\Library\Include;$(ProjectDir)\include\utilities\observable;$(SolutionDir)\vendor\optick\src;$(SolutionDir)\vendor\yaml-cpp\include;$(SolutionDir)vendor\glfw\x86\include;$(VK_SDK_PATH)\Include;$(SolutionDir)vendor\VulkanMemoryAllocator;$(SolutionDir)vendor\shaderc\libshaderc_util\include;$(SolutionDir)vendor\stb\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\vendor\imgui;$(SolutionDir)\vendor;$(SolutionDir)vendor\mono\x86;$(SolutionDir)\Library\Include;$(ProjectDir)\include\utilities\observable;$(SolutionDir)\vendor\optick\src;$(SolutionDir)\vendor\yaml-cpp\include;$(SolutionDir)vendor\glfw\x86\include;$(VK_SDK_PATH)\Include;$(SolutionDir)vendor\VulkanMemoryAllocator;$(SolutionDir)vendor\shaderc\libshaderc_util\include;$(SolutionDir)vendor\stb\include;$(SolutionDir)vendor\glm</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -147,6 +147,7 @@
     <ClCompile Include="BodyTypeTag.cpp" />
     <ClCompile Include="BroadPhaseSystem.cpp" />
     <ClCompile Include="Callable.cpp" />
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CollisionGlue.cpp" />
     <ClCompile Include="ComponentDB.cpp" />
     <ClCompile Include="Connection.cpp" />
@@ -162,6 +163,7 @@
     <ClCompile Include="DynamicContactSolver.cpp" />
     <ClCompile Include="EditorAssetPicker.cpp" />
     <ClCompile Include="EditorButton.cpp" />
+    <ClCompile Include="EditorCamera.cpp" />
     <ClCompile Include="EditorCheckBox.cpp" />
     <ClCompile Include="EditorConsoleSink.cpp" />
     <ClCompile Include="EditorContextMenu.cpp" />
@@ -180,6 +182,7 @@
     <ClCompile Include="FileDialog.cpp" />
     <ClCompile Include="FileFilter.cpp" />
     <ClCompile Include="FileSystem.cpp" />
+    <ClCompile Include="FrameBuffer.cpp" />
     <ClCompile Include="IFieldStorage.cpp" />
     <ClCompile Include="HierarchyContextMenu.cpp" />
     <ClCompile Include="HierarchyPanel.cpp" />
@@ -189,6 +192,7 @@
     <ClCompile Include="ImGuiAssetHelper.cpp" />
     <ClCompile Include="ImGuiUtilities.cpp" />
     <ClCompile Include="ImGuiVariantHelper.cpp" />
+    <ClCompile Include="IndexBuffer.cpp" />
     <ClCompile Include="InputGlue.cpp" />
     <ClCompile Include="InspectorContextMenu.cpp" />
     <ClCompile Include="InspectorPanel.cpp" />
@@ -220,6 +224,7 @@
     <ClCompile Include="PhysicsContactListenerSystem.cpp" />
     <ClCompile Include="PhysicsObjectFactory.cpp" />
     <ClCompile Include="PhysicsTesterCommon.cpp" />
+    <ClCompile Include="Pipeline.cpp" />
     <ClCompile Include="Platform\Windows\Window.cpp" />
     <ClCompile Include="Platform\Windows\WindowFactory.cpp" />
     <ClCompile Include="Prefab.cpp" />
@@ -230,11 +235,14 @@
     <ClCompile Include="MofShaderImpl.cpp" />
     <ClCompile Include="BaseEngineRenderer.cpp" />
     <ClCompile Include="RenderCommandQueue.cpp" />
+    <ClCompile Include="Renderer2D.cpp" />
     <ClCompile Include="RendererApi.cpp" />
+    <ClCompile Include="RenderCommandBuffer.cpp" />
     <ClCompile Include="RendererContext.cpp" />
     <ClCompile Include="RendererStats.cpp" />
     <ClCompile Include="RendererSubmit.cpp" />
     <ClCompile Include="RendererTexture.cpp" />
+    <ClCompile Include="RenderPass.cpp" />
     <ClCompile Include="RenderThread.cpp" />
     <ClCompile Include="RigidBodyComponent.cpp" />
     <ClCompile Include="RigidBodyGlue.cpp" />
@@ -257,6 +265,7 @@
     <ClCompile Include="SpriteRenderer.cpp" />
     <ClCompile Include="SpriteRendererComponent.cpp" />
     <ClCompile Include="SpriteRendererGlue.cpp" />
+    <ClCompile Include="StorageBuffer.cpp" />
     <ClCompile Include="TagComponent.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TextureGlue.cpp" />
@@ -292,11 +301,16 @@
     <ClCompile Include="VulkanAPI.cpp" />
     <ClCompile Include="VulkanContext.cpp" />
     <ClCompile Include="VulkanDevice.cpp" />
+    <ClCompile Include="VulkanFrameBuffer.cpp" />
     <ClCompile Include="VulkanImage.cpp" />
     <ClCompile Include="VulkanImGuiLayer.cpp" />
+    <ClCompile Include="VulkanIndexBuffer.cpp" />
     <ClCompile Include="VulkanMaterial.cpp" />
+    <ClCompile Include="VulkanRenderCommandBuffer.cpp" />
     <ClCompile Include="VulkanRenderer.cpp" />
     <ClCompile Include="VulkanRendererContext.cpp" />
+    <ClCompile Include="VulkanRenderPass.cpp" />
+    <ClCompile Include="VulkanRenderPipeline.cpp" />
     <ClCompile Include="VulkanShader.cpp" />
     <ClCompile Include="VulkanShaderCompiler.cpp" />
     <ClCompile Include="VulkanShaderUtilities.cpp" />
@@ -417,6 +431,7 @@
     <ClInclude Include="BroadPhaseSystem.h" />
     <ClInclude Include="Buffer.h" />
     <ClInclude Include="Callable.h" />
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="CollisionGlue.h" />
     <ClInclude Include="ComponentDB.h" />
     <ClInclude Include="ComponentProperty.h" />
@@ -430,6 +445,7 @@
     <ClInclude Include="DebugGlue.h" />
     <ClInclude Include="EditorAssetPicker.h" />
     <ClInclude Include="EditorButton.h" />
+    <ClInclude Include="EditorCamera.h" />
     <ClInclude Include="EditorCheckBox.h" />
     <ClInclude Include="EditorConsoleSink.h" />
     <ClInclude Include="EditorContextMenu.h" />
@@ -447,6 +463,7 @@
     <ClInclude Include="FileDialog.h" />
     <ClInclude Include="FileFilter.h" />
     <ClInclude Include="FileSystem.h" />
+    <ClInclude Include="FrameBuffer.h" />
     <ClInclude Include="GPUMemoryStats.h" />
     <ClInclude Include="IFieldStorage.h" />
     <ClInclude Include="HierarchyContextMenu.h" />
@@ -457,6 +474,7 @@
     <ClInclude Include="ImGuiAssetHelper.h" />
     <ClInclude Include="ImGuiUtilities.h" />
     <ClInclude Include="ImGuiVariantHelper.h" />
+    <ClInclude Include="IndexBuffer.h" />
     <ClInclude Include="InspectorContextMenu.h" />
     <ClInclude Include="InspectorPanel.h" />
     <ClInclude Include="InspectorUtilities.h" />
@@ -467,16 +485,20 @@
     <ClInclude Include="OnCollisionTag.h" />
     <ClInclude Include="PhysicsContactListenerSystem.h" />
     <ClInclude Include="PhysicsTesterCommon.h" />
+    <ClInclude Include="Pipeline.h" />
     <ClInclude Include="Platform\Windows\Window.h" />
     <ClInclude Include="Prefab.h" />
     <ClInclude Include="PrefabComponent.h" />
     <ClInclude Include="BaseEngineRenderer.h" />
     <ClInclude Include="RenderCommandQueue.h" />
+    <ClInclude Include="Renderer2D.h" />
     <ClInclude Include="RendererApi.h" />
+    <ClInclude Include="RenderCommandBuffer.h" />
     <ClInclude Include="RendererContext.h" />
     <ClInclude Include="RendererStats.h" />
     <ClInclude Include="RendererSubmit.h" />
     <ClInclude Include="RendererTexture.h" />
+    <ClInclude Include="RenderPass.h" />
     <ClInclude Include="RenderThread.h" />
     <ClInclude Include="RigidBodyGlue.h" />
     <ClInclude Include="SceneAssetSerializer.h" />
@@ -487,6 +509,7 @@
     <ClInclude Include="ShaderPreprocessor.h" />
     <ClInclude Include="ShapesGlue.h" />
     <ClInclude Include="SpriteRenderer.h" />
+    <ClInclude Include="StorageBuffer.h" />
     <ClInclude Include="TestComponent.h" />
     <ClInclude Include="TextureImporter.h" />
     <ClInclude Include="Thread.h" />
@@ -499,12 +522,17 @@
     <ClInclude Include="VulkanAPI.h" />
     <ClInclude Include="VulkanContext.h" />
     <ClInclude Include="VulkanDevice.h" />
+    <ClInclude Include="VulkanFrameBuffer.h" />
     <ClInclude Include="VulkanImage.h" />
     <ClInclude Include="VulkanImGuiLayer.h" />
+    <ClInclude Include="VulkanIndexBuffer.h" />
     <ClInclude Include="VulkanMaterial.h" />
     <ClInclude Include="VulkanReflectionData.h" />
+    <ClInclude Include="VulkanRenderCommandBuffer.h" />
     <ClInclude Include="VulkanRenderer.h" />
     <ClInclude Include="VulkanRendererContext.h" />
+    <ClInclude Include="VulkanRenderPass.h" />
+    <ClInclude Include="VulkanRenderPipeline.h" />
     <ClInclude Include="VulkanShader.h" />
     <ClInclude Include="VulkanShaderCompiler.h" />
     <ClInclude Include="VulkanShaderResource.h" />

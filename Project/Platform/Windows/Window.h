@@ -37,8 +37,10 @@ class Window : public IWindow {
   void* GetNativeWindow() override { return window_; }
 
   VulkanSwapChain& GetSwapChain() { return swap_chain_; }
+  uint32_t GetWidth() const override { return data_.Width; }
+  uint32_t GetHeight() const override { return data_.Height; }
 
- private:
+private:
   struct GLFWwindow* window_ = nullptr;
   struct GLFWcursor* ImGuiMouseCursors_[9] = {0};
   WindowSpecification specification_;

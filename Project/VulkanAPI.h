@@ -12,8 +12,8 @@
 
 namespace base_engine::vulkan {
 static VkDescriptorSetAllocateInfo DescriptorSetAllocInfo(
-    const VkDescriptorSetLayout* layouts, const uint32_t count,
-    const VkDescriptorPool pool) {
+    const VkDescriptorSetLayout* layouts, const uint32_t count = 1,
+    const VkDescriptorPool pool = VK_NULL_HANDLE) {
   VkDescriptorSetAllocateInfo info{};
   info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
   info.pSetLayouts = layouts;

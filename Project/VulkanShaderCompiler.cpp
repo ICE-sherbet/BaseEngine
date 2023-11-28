@@ -82,19 +82,19 @@ std::string ReadFileAndSkipBOM(const std::filesystem::path& filepath) {
 
 VulkanShaderCompiler::VulkanShaderCompiler(
     const std::filesystem::path& shaderSourcePath, bool disableOptimization) {
-  m_ShaderSourcePath = shaderSourcePath;
-  m_DisableOptimization = disableOptimization;
+  shader_source_path_ = shaderSourcePath;
+  disable_optimization_ = disableOptimization;
 }
 
 bool VulkanShaderCompiler::Reload(bool forceCompile) {
-  m_ShaderSource.clear();
-  m_SPIRVDebugData.clear();
-  m_SPIRVData.clear();
-  const std::string source = ReadFileAndSkipBOM(m_ShaderSourcePath);
-  m_ShaderSource = PreProcess(source);
+  shader_source_.clear();
+  spirv_debug_data_.clear();
+  spirv_data_.clear();
+  const std::string source = ReadFileAndSkipBOM(shader_source_path_);
+  shader_source_ = PreProcess(source);
 
-  CompileOrGetVulkanBinaries(m_SPIRVData);
-  ReflectAllShaderStages(m_SPIRVData);
+  CompileOrGetVulkanBinaries(spirv_data_);
+  ReflectAllShaderStages(spirv_data_);
   return true;
 }
 
@@ -237,8 +237,7 @@ void VulkanShaderCompiler::Reflect(VkShaderStageFlagBits shaderStage,
     pushConstantRange.Size = bufferSize - bufferOffset;
     pushConstantRange.Offset = bufferOffset;
 
-    // Skip empty push constant buffers - these are for the renderer only
-    if (bufferName.empty() || bufferName == "u_Renderer") continue;
+    if (bufferName.empty()) continue;
 
     ShaderBuffer& buffer = reflection_data_.ConstantBuffers[bufferName];
     buffer.Name = bufferName;
@@ -359,7 +358,7 @@ void VulkanShaderCompiler::Reflect(VkShaderStageFlagBits shaderStage,
 
 bool VulkanShaderCompiler::Compile(std::vector<uint32_t>& outputBinary,
                                    const VkShaderStageFlagBits stage) const {
-  const std::string& stageSource = m_ShaderSource.at(stage);
+  const std::string& stageSource = shader_source_.at(stage);
 
   static shaderc::Compiler compiler;
   shaderc::CompileOptions shaderCOptions;
@@ -369,13 +368,13 @@ bool VulkanShaderCompiler::Compile(std::vector<uint32_t>& outputBinary,
 
   const shaderc::SpvCompilationResult module = compiler.CompileGlslToSpv(
       stageSource, shader_utils::ShaderStageToShaderC(stage),
-      m_ShaderSourcePath.string().c_str(), shaderCOptions);
+      shader_source_path_.string().c_str(), shaderCOptions);
 
   if (module.GetCompilationStatus() != shaderc_compilation_status_success) {
     BE_CORE_ASSERT(
         false,
         fmt::format("{}While compiling shader file: {} \nAt stage: {}",
-                    module.GetErrorMessage(), m_ShaderSourcePath.string(),
+                    module.GetErrorMessage(), shader_source_path_.string(),
                     shader_utils::ShaderStageToString(stage)));
 
     return false;
@@ -387,7 +386,7 @@ bool VulkanShaderCompiler::Compile(std::vector<uint32_t>& outputBinary,
 
 bool VulkanShaderCompiler::CompileOrGetVulkanBinaries(ShaderDate& outputBinary) {
   bool compileSucceeded = true;
-  for (const auto stage : m_ShaderSource | std::views::keys) {
+  for (const auto stage : shader_source_ | std::views::keys) {
     compileSucceeded &= CompileOrGetVulkanBinary(stage, outputBinary[stage]);
   }
   return compileSucceeded;
@@ -413,7 +412,7 @@ std::map<VkShaderStageFlagBits, std::string> VulkanShaderCompiler::PreProcess(
         std::string(shader_utils::VKStageToShaderMacro(stage)));
     const auto preProcessingResult = compiler.PreprocessGlsl(
         shaderSource, shader_utils::ShaderStageToShaderC(stage),
-        m_ShaderSourcePath.string().c_str(), options);
+        shader_source_path_.string().c_str(), options);
     shaderSource =
         std::string(preProcessingResult.begin(), preProcessingResult.end());
   }

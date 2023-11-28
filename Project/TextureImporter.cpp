@@ -1,5 +1,6 @@
 ﻿#include "TextureImporter.h"
 
+#define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
 namespace base_engine {
@@ -41,8 +42,8 @@ Buffer TextureImporter::ToBufferFromMemory(const Buffer& buffer,
   if (stbi_is_hdr_from_memory(static_cast<const stbi_uc*>(buffer.Data),
                               static_cast<int>(buffer.Size))) {
     image_buffer.Data = reinterpret_cast<uint8_t*>(stbi_loadf_from_memory(
-	    static_cast<const stbi_uc*>(buffer.Data), static_cast<int>(buffer.Size),
-	    &width, &height, &channels, STBI_rgb_alpha));
+        static_cast<const stbi_uc*>(buffer.Data), static_cast<int>(buffer.Size),
+        &width, &height, &channels, STBI_rgb_alpha));
     image_buffer.Size = width * height * 4 * sizeof(float);
     out_format = ImageFormat::RGBA32F;
   } else {

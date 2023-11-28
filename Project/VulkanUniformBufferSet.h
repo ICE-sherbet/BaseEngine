@@ -31,7 +31,7 @@ class VulkanUniformBufferSet : public UniformBufferSet {
                    uint32_t frame = 0) override;
 
 private:
-  uint32_t m_FramesInFlight = 0;
-  std::map<uint32_t, Ref<UniformBuffer>> m_UniformBuffers;
+  uint32_t frames_in_flight_ = 0;
+  std::map<uint32_t, Ref<UniformBuffer>> uniform_buffers_;
 };
 }  // namespace base_engine

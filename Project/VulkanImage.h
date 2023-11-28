@@ -30,25 +30,25 @@ class VulkanImage2D : public Image2D {
   virtual ~VulkanImage2D() override;
 
   virtual void Resize(const uint32_t width, const uint32_t height) override {
-    m_Specification.Width = width;
-    m_Specification.Height = height;
+    specification_.Width = width;
+    specification_.Height = height;
     Invalidate();
   }
   virtual void Invalidate() override;
   virtual void Release() override;
 
-  virtual uint32_t GetWidth() const override { return m_Specification.Width; }
-  virtual uint32_t GetHeight() const override { return m_Specification.Height; }
+  virtual uint32_t GetWidth() const override { return specification_.Width; }
+  virtual uint32_t GetHeight() const override { return specification_.Height; }
 
   virtual float GetAspectRatio() const override {
-    return (float)m_Specification.Width / (float)m_Specification.Height;
+    return (float)specification_.Width / (float)specification_.Height;
   }
 
   virtual ImageSpecification& GetSpecification() override {
-    return m_Specification;
+    return specification_;
   }
   virtual const ImageSpecification& GetSpecification() const override {
-    return m_Specification;
+    return specification_;
   }
 
   void RT_Invalidate();
@@ -59,27 +59,27 @@ class VulkanImage2D : public Image2D {
       const std::vector<uint32_t>& layerIndices);
 
   virtual VkImageView GetLayerImageView(uint32_t layer) {
-    BE_CORE_ASSERT(layer < m_PerLayerImageViews.size());
-    return m_PerLayerImageViews[layer];
+    BE_CORE_ASSERT(layer < per_layer_image_views_.size());
+    return per_layer_image_views_[layer];
   }
 
   VkImageView GetMipImageView(uint32_t mip);
   VkImageView RT_GetMipImageView(uint32_t mip);
 
-  VulkanImageInfo& GetImageInfo() { return m_Info; }
-  const VulkanImageInfo& GetImageInfo() const { return m_Info; }
+  VulkanImageInfo& GetImageInfo() { return info_; }
+  const VulkanImageInfo& GetImageInfo() const { return info_; }
 
   virtual ResourceDescriptorInfo GetDescriptorInfo() const override {
-    return (ResourceDescriptorInfo)&m_DescriptorImageInfo;
+    return (ResourceDescriptorInfo)&descriptor_image_info_;
   }
   const VkDescriptorImageInfo& GetDescriptorInfoVulkan() const {
     return *(VkDescriptorImageInfo*)GetDescriptorInfo();
   }
 
-  virtual Buffer GetBuffer() const override { return m_ImageData; }
-  virtual Buffer& GetBuffer() override { return m_ImageData; }
+  virtual Buffer GetBuffer() const override { return image_data_; }
+  virtual Buffer& GetBuffer() override { return image_data_; }
 
-  virtual uint64_t GetHash() const override { return (uint64_t)m_Info.Image; }
+  virtual uint64_t GetHash() const override { return (uint64_t)info_.Image; }
 
   void UpdateDescriptor();
 
@@ -88,16 +88,16 @@ class VulkanImage2D : public Image2D {
   void CopyToHostBuffer(Buffer& buffer);
 
  private:
-  ImageSpecification m_Specification;
+  ImageSpecification specification_;
 
-  Buffer m_ImageData;
+  Buffer image_data_;
 
-  VulkanImageInfo m_Info;
-  VkDeviceSize m_GPUAllocationSize;
+  VulkanImageInfo info_;
+  VkDeviceSize gpu_allocation_size_;
 
-  std::vector<VkImageView> m_PerLayerImageViews;
-  std::map<uint32_t, VkImageView> m_PerMipImageViews;
-  VkDescriptorImageInfo m_DescriptorImageInfo = {};
+  std::vector<VkImageView> per_layer_image_views_;
+  std::map<uint32_t, VkImageView> per_mip_image_views_;
+  VkDescriptorImageInfo descriptor_image_info_ = {};
 };
 
 class VulkanImageView : public ImageView {
@@ -108,20 +108,20 @@ class VulkanImageView : public ImageView {
   void Invalidate();
   void RT_Invalidate();
 
-  VkImageView GetImageView() const { return m_ImageView; }
+  VkImageView GetImageView() const { return image_view_; }
 
   virtual ResourceDescriptorInfo GetDescriptorInfo() const override {
-    return (ResourceDescriptorInfo)&m_DescriptorImageInfo;
+    return (ResourceDescriptorInfo)&descriptor_image_info_;
   }
   const VkDescriptorImageInfo& GetDescriptorInfoVulkan() const {
     return *(VkDescriptorImageInfo*)GetDescriptorInfo();
   }
 
  private:
-  ImageViewSpecification m_Specification;
-  VkImageView m_ImageView = VK_NULL_HANDLE;
+  ImageViewSpecification specification_;
+  VkImageView image_view_ = VK_NULL_HANDLE;
 
-  VkDescriptorImageInfo m_DescriptorImageInfo = {};
+  VkDescriptorImageInfo descriptor_image_info_ = {};
 };
 namespace Utils {
 

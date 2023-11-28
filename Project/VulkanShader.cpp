@@ -284,6 +284,15 @@ void VulkanShader::CreateDescriptors() {
   }
 }
 
+std::vector<VkDescriptorSetLayout> VulkanShader::GetAllDescriptorSetLayouts()
+{
+	std::vector<VkDescriptorSetLayout> result;
+	result.reserve(descriptor_set_layouts_.size());
+	for (auto& layout : descriptor_set_layouts_) result.emplace_back(layout);
+
+	return result;
+}
+
 void VulkanShader::SetReflectionData(const ReflectionData& reflection_data) {
   reflection_data_ = reflection_data;
 }

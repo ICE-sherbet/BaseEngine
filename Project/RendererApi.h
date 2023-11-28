@@ -6,8 +6,16 @@
 // @details
 
 #pragma once
+#include <glm/glm.hpp>
+
+#include "IndexBuffer.h"
+#include "Material.h"
+#include "RenderCommandBuffer.h"
+#include "RenderPass.h"
 #include "RenderThread.h"
+#include "Renderer2D.h"
 #include "RendererSubmit.h"
+#include "RendererTexture.h"
 
 namespace base_engine {
 
@@ -20,6 +28,17 @@ class RendererApi {
 
   virtual void BeginFrame() = 0;
   virtual void EndFrame() = 0;
+
+  virtual void BeginRenderPass(Ref<RenderCommandBuffer> renderCommandBuffer,
+                               Ref<RenderPass> renderPass,
+                               bool explicitClear = false) = 0;
+  virtual void EndRenderPass(Ref<RenderCommandBuffer> renderCommandBuffer) = 0;
+  virtual void RenderGeometry(Ref<RenderCommandBuffer> renderCommandBuffer,
+                              Ref<Pipeline> pipeline, Ref<Material> material,
+                              Ref<VertexBuffer> vertexBuffer,
+                              Ref<IndexBuffer> indexBuffer,
+                              const glm::mat4& transform,
+                              uint32_t indexCount = 0) = 0;
 
   static constexpr RendererApiType Current() { return current_renderer_api_; }
 
@@ -48,11 +67,26 @@ class Renderer {
   static void RenderThreadFunc(RenderThread* render_thread);
   static void WaitAndRender(RenderThread* render_thread);
   static void SwapQueues();
+
+  static void BeginRenderPass(Ref<RenderCommandBuffer> renderCommandBuffer,
+                              Ref<RenderPass> renderPass,
+                              bool explicitClear = false);
+  static void EndRenderPass(Ref<RenderCommandBuffer> renderCommandBuffer);
+
   static uint32_t RT_GetCurrentFrameIndex();
   static RenderCommandQueue& GetRenderResourceReleaseQueue(uint32_t index);
   static uint32_t GetCurrentFrameIndex();
 
-private:
+  Ref<RendererTexture2D> static GetWhiteTexture();
+
+  static void RenderGeometry(Ref<RenderCommandBuffer> renderCommandBuffer,
+                             Ref<Pipeline> pipeline, Ref<Material> material,
+                             Ref<VertexBuffer> vertexBuffer,
+                             Ref<IndexBuffer> indexBuffer,
+                             const glm::mat4& transform,
+                             uint32_t indexCount = 0);
+
+ private:
   static inline RendererSubmit* submit_ = nullptr;
 };
 

@@ -6,7 +6,8 @@
 #include "VulkanSwapChain.h"
 
 namespace base_engine {
-
+static Ref<RendererTexture2D> sWhiteTexture;
+;
 static RendererApi* InitRendererAPI() {
   switch (RendererApi::Current()) {
     case RendererApiType::kVulkan:
@@ -24,6 +25,8 @@ void Renderer::Init() {
   renderer_api_ = InitRendererAPI();
 
   renderer_api_->Init();
+  sWhiteTexture =
+      RendererTexture2D::Create(TextureSpecification(), "no-texture.png");
 }
 
 void Renderer::Shutdown() {
@@ -55,11 +58,39 @@ void Renderer::WaitAndRender(RenderThread* render_thread) {
 
 void Renderer::SwapQueues() { submit_->SwapQueues(); }
 
+void Renderer::BeginRenderPass(Ref<RenderCommandBuffer> renderCommandBuffer,
+                               Ref<RenderPass> renderPass, bool explicitClear) {
+  renderer_api_->BeginRenderPass(renderCommandBuffer, renderPass,
+                                 explicitClear);
+}
+
+void Renderer::EndRenderPass(Ref<RenderCommandBuffer> renderCommandBuffer)
+{
+	renderer_api_->EndRenderPass(renderCommandBuffer);
+}
+
 uint32_t Renderer::RT_GetCurrentFrameIndex() {
   return VulkanSwapChain::Get()->GetCurrentBufferIndex();
 }
 
+RenderCommandQueue& Renderer::GetRenderResourceReleaseQueue(uint32_t index)
+{
+  return submit_->GetRenderResourceReleaseQueue(index);
+}
+
 uint32_t Renderer::GetCurrentFrameIndex() {
   return Application::Get().GetCurrentFrameIndex();
+}
+
+Ref<RendererTexture2D> Renderer::GetWhiteTexture() { return sWhiteTexture; }
+
+void Renderer::RenderGeometry(Ref<RenderCommandBuffer> renderCommandBuffer,
+                              Ref<Pipeline> pipeline, Ref<Material> material,
+                              Ref<VertexBuffer> vertexBuffer,
+                              Ref<IndexBuffer> indexBuffer,
+                              const glm::mat4& transform, uint32_t indexCount) {
+  renderer_api_->RenderGeometry(renderCommandBuffer, pipeline, material,
+                                vertexBuffer, indexBuffer, transform,
+                                indexCount);
 }
 }  // namespace base_engine

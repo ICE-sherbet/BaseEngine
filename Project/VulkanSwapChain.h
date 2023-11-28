@@ -7,6 +7,7 @@
 
 #pragma once
 #define WIN32_LEAN_AND_MEAN
+#define NOMINMAX
 #include <windows.h>
 
 #define VK_USE_PLATFORM_WIN32_KHR
@@ -21,7 +22,8 @@
 namespace base_engine {
 class VulkanSwapChain {
  public:
-  VulkanSwapChain() = default;
+  VulkanSwapChain();
+  ;
 
   static VulkanSwapChain* Get() { return instance_; }
 
@@ -36,39 +38,39 @@ class VulkanSwapChain {
   void BeginFrame();
   void Present();
 
-  uint32_t GetImageCount() const { return m_ImageCount; }
+  uint32_t GetImageCount() const { return image_count_; }
 
-  uint32_t GetWidth() const { return m_Width; }
-  uint32_t GetHeight() const { return m_Height; }
+  uint32_t GetWidth() const { return width_; }
+  uint32_t GetHeight() const { return height_; }
 
-  VkRenderPass GetRenderPass() { return m_RenderPass; }
+  VkRenderPass GetRenderPass() { return render_pass_; }
 
   VkFramebuffer GetCurrentFramebuffer() {
-    return GetFramebuffer(m_CurrentImageIndex);
+    return GetFramebuffer(current_image_index_);
   }
   VkCommandBuffer GetCurrentDrawCommandBuffer() {
-    return GetDrawCommandBuffer(m_CurrentBufferIndex);
+    return GetDrawCommandBuffer(current_buffer_index_);
   }
 
-  VkFormat GetColorFormat() { return m_ColorFormat; }
+  VkFormat GetColorFormat() { return color_format_; }
 
-  uint32_t GetCurrentBufferIndex() const { return m_CurrentBufferIndex; }
+  uint32_t GetCurrentBufferIndex() const { return current_buffer_index_; }
 
   VkFramebuffer GetFramebuffer(uint32_t index) {
-    BE_CORE_ASSERT(index < m_Framebuffers.size());
-    return m_Framebuffers[index];
+    BE_CORE_ASSERT(index < framebuffers_.size());
+    return framebuffers_[index];
   }
 
   VkCommandBuffer GetDrawCommandBuffer(uint32_t index) {
-    BE_CORE_ASSERT(index < m_CommandBuffers.size());
-    return m_CommandBuffers[index].CommandBuffer;
+    BE_CORE_ASSERT(index < command_buffers_.size());
+    return command_buffers_[index].CommandBuffer;
   }
 
   VkSemaphore GetRenderCompleteSemaphore() {
-    return m_Semaphores.RenderComplete;
+    return semaphores_.RenderComplete;
   }
 
-  void SetVSync(const bool enabled) { m_VSync = enabled; }
+  void SetVSync(const bool enabled) { v_sync_ = enabled; }
 
  private:
   uint32_t AcquireNextImage();
@@ -76,48 +78,48 @@ class VulkanSwapChain {
   void SelectSurfaceFormat(VkFormat select_format);
 
  private:
-  VkInstance m_Instance = nullptr;
-  Ref<VulkanDevice> m_Device;
-  bool m_VSync = false;
+  VkInstance vk_instance_ = nullptr;
+  Ref<VulkanDevice> device_;
+  bool v_sync_ = false;
 
-  VkFormat m_ColorFormat;
-  VkColorSpaceKHR m_ColorSpace;
+  VkFormat color_format_;
+  VkColorSpaceKHR color_space_;
 
-  VkSwapchainKHR m_SwapChain = VK_NULL_HANDLE;
-  uint32_t m_ImageCount = 0;
-  std::vector<VkImage> m_VulkanImages;
+  VkSwapchainKHR swap_chain_ = VK_NULL_HANDLE;
+  uint32_t image_count_ = 0;
+  std::vector<VkImage> vulkan_images_;
 
   struct SwapchainImage {
     VkImage Image = VK_NULL_HANDLE;
     VkImageView ImageView = VK_NULL_HANDLE;
   };
-  std::vector<SwapchainImage> m_Images;
+  std::vector<SwapchainImage> images_;
 
-  std::vector<VkFramebuffer> m_Framebuffers;
+  std::vector<VkFramebuffer> framebuffers_;
 
   struct SwapchainCommandBuffer {
     VkCommandPool CommandPool = VK_NULL_HANDLE;
     VkCommandBuffer CommandBuffer = nullptr;
   };
-  std::vector<SwapchainCommandBuffer> m_CommandBuffers;
+  std::vector<SwapchainCommandBuffer> command_buffers_;
 
   struct {
     VkSemaphore PresentComplete = VK_NULL_HANDLE;
     VkSemaphore RenderComplete = VK_NULL_HANDLE;
-  } m_Semaphores;
-  VkSubmitInfo m_SubmitInfo;
+  } semaphores_;
+  VkSubmitInfo submit_info_;
 
-  std::vector<VkFence> m_WaitFences;
+  std::vector<VkFence> wait_fences_;
 
-  VkRenderPass m_RenderPass = VK_NULL_HANDLE;
-  uint32_t m_CurrentBufferIndex = 0;
-  uint32_t m_CurrentImageIndex = 0;
+  VkRenderPass render_pass_ = VK_NULL_HANDLE;
+  uint32_t current_buffer_index_ = 0;
+  uint32_t current_image_index_ = 0;
 
-  uint32_t m_QueueNodeIndex = UINT32_MAX;
-  uint32_t m_Width = 0, m_Height = 0;
+  uint32_t queue_node_index_ = UINT32_MAX;
+  uint32_t width_ = 0, height_ = 0;
 
-  VkSurfaceKHR m_Surface;
-  VkExtent2D m_extent;
+  VkSurfaceKHR surface_;
+  VkExtent2D extent_;
   friend class VulkanContext;
 
   static VulkanSwapChain* instance_;

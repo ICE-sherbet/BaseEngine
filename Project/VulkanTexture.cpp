@@ -155,28 +155,26 @@ static bool ValidateSpecification(const TextureSpecification& specification) {
 
 VulkanTexture2D::VulkanTexture2D(const TextureSpecification& specification,
                                  const std::filesystem::path& filepath)
-    : m_Path(filepath), m_Specification(specification) {
+    : path_(filepath), specification_(specification) {
   Utils::ValidateSpecification(specification);
 
-  m_ImageData = TextureImporter::ToBufferFromFile(
-      filepath, m_Specification.Format, m_Specification.Width,
-      m_Specification.Height);
-  if (!m_ImageData) {
-    m_ImageData = TextureImporter::ToBufferFromFile(
-        "Resources/Textures/ErrorTexture.png", m_Specification.Format,
-        m_Specification.Width, m_Specification.Height);
+  image_data_ = TextureImporter::ToBufferFromFile(
+      filepath, specification_.Format, specification_.Width,
+      specification_.Height);
+  if (!image_data_) {
+    __debugbreak();
   }
 
   ImageSpecification imageSpec;
-  imageSpec.Format = m_Specification.Format;
-  imageSpec.Width = m_Specification.Width;
-  imageSpec.Height = m_Specification.Height;
+  imageSpec.Format = specification_.Format;
+  imageSpec.Width = specification_.Width;
+  imageSpec.Height = specification_.Height;
   imageSpec.Mips = specification.GenerateMips ? GetMipLevelCount() : 1;
   imageSpec.DebugName = specification.DebugName;
   imageSpec.CreateSampler = false;
-  m_Image = Image2D::Create(imageSpec);
+  image_ = Image2D::Create(imageSpec);
 
-  BE_CORE_ASSERT(m_Specification.Format != ImageFormat::None);
+  BE_CORE_ASSERT(specification_.Format != ImageFormat::None);
 
   Ref instance = this;
   Renderer::Submit([instance]() mutable { instance->Invalidate(); });
@@ -184,56 +182,56 @@ VulkanTexture2D::VulkanTexture2D(const TextureSpecification& specification,
 
 VulkanTexture2D::VulkanTexture2D(const TextureSpecification& specification,
                                  Buffer data)
-    : m_Specification(specification) {
-  if (m_Specification.Height == 0) {
-    m_ImageData = TextureImporter::ToBufferFromMemory(
-        Buffer(data.Data, m_Specification.Width), m_Specification.Format,
-        m_Specification.Width, m_Specification.Height);
-    if (!m_ImageData) {
+    : specification_(specification) {
+  if (specification_.Height == 0) {
+    image_data_ = TextureImporter::ToBufferFromMemory(
+        Buffer(data.Data, specification_.Width), specification_.Format,
+        specification_.Width, specification_.Height);
+    if (!image_data_) {
       // TODO(Yan): move this to asset manager
-      m_ImageData = TextureImporter::ToBufferFromFile(
-          "Resources/Textures/ErrorTexture.png", m_Specification.Format,
-          m_Specification.Width, m_Specification.Height);
+      image_data_ = TextureImporter::ToBufferFromFile(
+          "Resources/Textures/ErrorTexture.png", specification_.Format,
+          specification_.Width, specification_.Height);
     }
 
-    Utils::ValidateSpecification(m_Specification);
+    Utils::ValidateSpecification(specification_);
   } else if (data) {
-    Utils::ValidateSpecification(m_Specification);
+    Utils::ValidateSpecification(specification_);
     auto size = Utils::GetMemorySize(
-        m_Specification.Format, m_Specification.Width, m_Specification.Height);
-    m_ImageData = Buffer::Copy(data.Data, size);
+        specification_.Format, specification_.Width, specification_.Height);
+    image_data_ = Buffer::Copy(data.Data, size);
   } else {
-    Utils::ValidateSpecification(m_Specification);
+    Utils::ValidateSpecification(specification_);
     auto size = Utils::GetMemorySize(
-        m_Specification.Format, m_Specification.Width, m_Specification.Height);
-    m_ImageData.Allocate(size);
-    m_ImageData.ZeroInitialize();
+        specification_.Format, specification_.Width, specification_.Height);
+    image_data_.Allocate(size);
+    image_data_.ZeroInitialize();
   }
 
   ImageSpecification imageSpec;
-  imageSpec.Format = m_Specification.Format;
-  imageSpec.Width = m_Specification.Width;
-  imageSpec.Height = m_Specification.Height;
+  imageSpec.Format = specification_.Format;
+  imageSpec.Width = specification_.Width;
+  imageSpec.Height = specification_.Height;
   imageSpec.Mips =
       specification.GenerateMips ? VulkanTexture2D::GetMipLevelCount() : 1;
   imageSpec.DebugName = specification.DebugName;
   imageSpec.CreateSampler = false;
   if (specification.Storage) imageSpec.Usage = ImageUsage::Storage;
-  m_Image = Image2D::Create(imageSpec);
+  image_ = Image2D::Create(imageSpec);
 
   Ref instance = this;
   Renderer::Submit([instance]() mutable { instance->Invalidate(); });
 }
 
 VulkanTexture2D::~VulkanTexture2D() {
-  if (m_Image) m_Image->Release();
+  if (image_) image_->Release();
 
-  m_ImageData.Release();
+  image_data_.Release();
 }
 
 void VulkanTexture2D::Resize(const uint32_t width, const uint32_t height) {
-  m_Specification.Width = width;
-  m_Specification.Height = height;
+  specification_.Width = width;
+  specification_.Height = height;
 
   // Invalidate();
 
@@ -245,25 +243,25 @@ void VulkanTexture2D::Invalidate() {
   auto device = VulkanContext::GetCurrentDevice();
   auto vulkanDevice = device->GetVulkanDevice();
 
-  m_Image->Release();
+  image_->Release();
 
-  uint32_t mipCount = m_Specification.GenerateMips ? GetMipLevelCount() : 1;
+  uint32_t mipCount = specification_.GenerateMips ? GetMipLevelCount() : 1;
 
-  ImageSpecification& imageSpec = m_Image->GetSpecification();
-  imageSpec.Format = m_Specification.Format;
-  imageSpec.Width = m_Specification.Width;
-  imageSpec.Height = m_Specification.Height;
+  ImageSpecification& imageSpec = image_->GetSpecification();
+  imageSpec.Format = specification_.Format;
+  imageSpec.Width = specification_.Width;
+  imageSpec.Height = specification_.Height;
   imageSpec.Mips = mipCount;
   imageSpec.CreateSampler = false;
-  if (!m_ImageData) imageSpec.Usage = ImageUsage::Storage;
+  if (!image_data_) imageSpec.Usage = ImageUsage::Storage;
 
-  Ref<VulkanImage2D> image = m_Image.As<VulkanImage2D>();
+  Ref<VulkanImage2D> image = image_.As<VulkanImage2D>();
   image->RT_Invalidate();
 
   auto& info = image->GetImageInfo();
 
-  if (m_ImageData) {
-    VkDeviceSize size = m_ImageData.Size;
+  if (image_data_) {
+    VkDeviceSize size = image_data_.Size;
 
     VkMemoryAllocateInfo memAllocInfo{};
     memAllocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
@@ -280,8 +278,8 @@ void VulkanTexture2D::Invalidate() {
         bufferCreateInfo, VMA_MEMORY_USAGE_CPU_TO_GPU, stagingBuffer);
 
     uint8_t* destData = allocator.MapMemory<uint8_t>(stagingBufferAllocation);
-    BE_CORE_ASSERT(m_ImageData.Data);
-    memcpy(destData, m_ImageData.Data, size);
+    BE_CORE_ASSERT(image_data_.Data);
+    memcpy(destData, image_data_.Data, size);
     allocator.UnmapMemory(stagingBufferAllocation);
 
     VkCommandBuffer copyCmd = device->GetCommandBuffer(true);
@@ -312,8 +310,8 @@ void VulkanTexture2D::Invalidate() {
     bufferCopyRegion.imageSubresource.mipLevel = 0;
     bufferCopyRegion.imageSubresource.baseArrayLayer = 0;
     bufferCopyRegion.imageSubresource.layerCount = 1;
-    bufferCopyRegion.imageExtent.width = m_Specification.Width;
-    bufferCopyRegion.imageExtent.height = m_Specification.Height;
+    bufferCopyRegion.imageExtent.width = specification_.Width;
+    bufferCopyRegion.imageExtent.height = specification_.Height;
     bufferCopyRegion.imageExtent.depth = 1;
     bufferCopyRegion.bufferOffset = 0;
 
@@ -355,16 +353,16 @@ void VulkanTexture2D::Invalidate() {
   samplerInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
   samplerInfo.maxAnisotropy = 1.0f;
   samplerInfo.magFilter =
-      Utils::VulkanSamplerFilter(m_Specification.SamplerFilter);
+      Utils::VulkanSamplerFilter(specification_.SamplerFilter);
   samplerInfo.minFilter =
-      Utils::VulkanSamplerFilter(m_Specification.SamplerFilter);
+      Utils::VulkanSamplerFilter(specification_.SamplerFilter);
   samplerInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
   samplerInfo.addressModeU =
-      Utils::VulkanSamplerWrap(m_Specification.SamplerWrap);
+      Utils::VulkanSamplerWrap(specification_.SamplerWrap);
   samplerInfo.addressModeV =
-      Utils::VulkanSamplerWrap(m_Specification.SamplerWrap);
+      Utils::VulkanSamplerWrap(specification_.SamplerWrap);
   samplerInfo.addressModeW =
-      Utils::VulkanSamplerWrap(m_Specification.SamplerWrap);
+      Utils::VulkanSamplerWrap(specification_.SamplerWrap);
   samplerInfo.mipLodBias = 0.0f;
   samplerInfo.compareOp = VK_COMPARE_OP_NEVER;
   samplerInfo.minLod = 0.0f;
@@ -377,11 +375,11 @@ void VulkanTexture2D::Invalidate() {
   info.Sampler = vulkan::CreateSampler(samplerInfo);
   image->UpdateDescriptor();
 
-  if (!m_Specification.Storage) {
+  if (!specification_.Storage) {
     VkImageViewCreateInfo view{};
     view.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
     view.viewType = VK_IMAGE_VIEW_TYPE_2D;
-    view.format = Utils::VulkanImageFormat(m_Specification.Format);
+    view.format = Utils::VulkanImageFormat(specification_.Format);
     view.components = {VK_COMPONENT_SWIZZLE_R, VK_COMPONENT_SWIZZLE_G,
                        VK_COMPONENT_SWIZZLE_B, VK_COMPONENT_SWIZZLE_A};
 
@@ -396,17 +394,17 @@ void VulkanTexture2D::Invalidate() {
 
     vulkan::SetDebugUtilsObjectName(
         vulkanDevice, VK_OBJECT_TYPE_IMAGE_VIEW,
-        fmt::format("Texture view: {}", m_Specification.DebugName),
+        fmt::format("Texture view: {}", specification_.DebugName),
         info.ImageView);
 
     image->UpdateDescriptor();
   }
 
-  if (m_ImageData && m_Specification.GenerateMips && mipCount > 1)
+  if (image_data_ && specification_.GenerateMips && mipCount > 1)
     GenerateMips();
 
-  m_ImageData.Release();
-  m_ImageData = Buffer();
+  image_data_.Release();
+  image_data_ = Buffer();
 }
 
 void VulkanTexture2D::Bind(uint32_t slot) const {}
@@ -415,18 +413,18 @@ void VulkanTexture2D::Lock() {}
 
 void VulkanTexture2D::Unlock() {}
 
-Buffer VulkanTexture2D::GetWriteableBuffer() { return m_ImageData; }
+Buffer VulkanTexture2D::GetWriteableBuffer() { return image_data_; }
 
-const std::filesystem::path& VulkanTexture2D::GetPath() const { return m_Path; }
+const std::filesystem::path& VulkanTexture2D::GetPath() const { return path_; }
 
 uint32_t VulkanTexture2D::GetMipLevelCount() const {
-  return Utils::CalculateMipCount(m_Specification.Width,
-                                  m_Specification.Height);
+  return Utils::CalculateMipCount(specification_.Width,
+                                  specification_.Height);
 }
 
 std::pair<uint32_t, uint32_t> VulkanTexture2D::GetMipSize(uint32_t mip) const {
-  uint32_t width = m_Specification.Width;
-  uint32_t height = m_Specification.Height;
+  uint32_t width = specification_.Width;
+  uint32_t height = specification_.Height;
   while (mip != 0) {
     width /= 2;
     height /= 2;
@@ -439,7 +437,7 @@ std::pair<uint32_t, uint32_t> VulkanTexture2D::GetMipSize(uint32_t mip) const {
 void VulkanTexture2D::GenerateMips() {
   auto device = VulkanContext::GetCurrentDevice();
 
-  Ref<VulkanImage2D> image = m_Image.As<VulkanImage2D>();
+  Ref<VulkanImage2D> image = image_.As<VulkanImage2D>();
   const auto& info = image->GetImageInfo();
 
   const VkCommandBuffer blitCmd =
@@ -452,15 +450,15 @@ void VulkanTexture2D::GenerateMips() {
     imageBlit.srcSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
     imageBlit.srcSubresource.layerCount = 1;
     imageBlit.srcSubresource.mipLevel = i - 1;
-    imageBlit.srcOffsets[1].x = int32_t(m_Specification.Width >> (i - 1));
-    imageBlit.srcOffsets[1].y = int32_t(m_Specification.Height >> (i - 1));
+    imageBlit.srcOffsets[1].x = int32_t(specification_.Width >> (i - 1));
+    imageBlit.srcOffsets[1].y = int32_t(specification_.Height >> (i - 1));
     imageBlit.srcOffsets[1].z = 1;
 
     imageBlit.dstSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
     imageBlit.dstSubresource.layerCount = 1;
     imageBlit.dstSubresource.mipLevel = i;
-    imageBlit.dstOffsets[1].x = int32_t(m_Specification.Width >> i);
-    imageBlit.dstOffsets[1].y = int32_t(m_Specification.Height >> i);
+    imageBlit.dstOffsets[1].x = int32_t(specification_.Width >> i);
+    imageBlit.dstOffsets[1].y = int32_t(specification_.Height >> i);
     imageBlit.dstOffsets[1].z = 1;
 
     VkImageSubresourceRange mipSubRange = {};
@@ -478,7 +476,7 @@ void VulkanTexture2D::GenerateMips() {
     vkCmdBlitImage(blitCmd, info.Image, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
                    info.Image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1,
                    &imageBlit,
-                   Utils::VulkanSamplerFilter(m_Specification.SamplerFilter));
+                   Utils::VulkanSamplerFilter(specification_.SamplerFilter));
 
     vulkan::InsertImageMemoryBarrier(
         blitCmd, info.Image, VK_ACCESS_TRANSFER_WRITE_BIT,
@@ -502,6 +500,6 @@ void VulkanTexture2D::GenerateMips() {
 }
 
 void VulkanTexture2D::CopyToHostBuffer(Buffer& buffer) {
-  if (m_Image) m_Image.As<VulkanImage2D>()->CopyToHostBuffer(buffer);
+  if (image_) image_.As<VulkanImage2D>()->CopyToHostBuffer(buffer);
 }
 }  // namespace base_engine

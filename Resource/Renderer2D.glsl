@@ -33,7 +33,7 @@ void main()
 	Output.TexCoord = a_TexCoord;
 	TexIndex = a_TexIndex;
 	Output.TilingFactor = a_TilingFactor;
-	gl_Position = u_ViewProjection * u_Renderer.Transform * vec4(a_Position, 1.0);
+	gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
 }
 
 #version 450 core

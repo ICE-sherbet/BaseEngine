@@ -17,6 +17,9 @@ class IWindow : RefCounted {
   virtual void Update() = 0;
   virtual bool IsShow() = 0;
 
+  virtual uint32_t GetWidth() const = 0;
+  virtual uint32_t GetHeight() const = 0;
+
   virtual void* GetNativeWindow() = 0;
 };
 }  // namespace base_engine

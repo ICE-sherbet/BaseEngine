@@ -1,6 +1,7 @@
 ﻿#include "FileSystem.h"
 
 #include <Shlobj.h>
+#define NOMINMAX
 #include <Windows.h>
 #include <strsafe.h>
 

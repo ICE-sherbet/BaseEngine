@@ -22,19 +22,17 @@ class VulkanVertexBuffer : public VertexBuffer {
 
   ~VulkanVertexBuffer() override;
 
-  void SetData(void* buffer, uint64_t size,
-               uint64_t offset = 0) override;
-  void RT_SetData(void* buffer, uint64_t size,
-                  uint64_t offset = 0) override;
-  unsigned int GetSize() const override { return m_Size; }
+  void SetData(void* buffer, uint64_t size, uint64_t offset = 0) override;
+  void RT_SetData(void* buffer, uint64_t size, uint64_t offset = 0) override;
+  unsigned int GetSize() const override { return size_; }
 
-  VkBuffer GetVulkanBuffer() const { return m_VulkanBuffer; }
+  VkBuffer GetVulkanBuffer() const { return vulkan_buffer_; }
 
  private:
-  uint32_t m_Size = 0;
-  Buffer m_LocalData;
+  uint32_t size_ = 0;
+  Buffer local_data_;
 
-  VkBuffer m_VulkanBuffer = VK_NULL_HANDLE;
-  VmaAllocation m_MemoryAllocation;
+  VkBuffer vulkan_buffer_ = VK_NULL_HANDLE;
+  VmaAllocation memory_allocation_;
 };
 }  // namespace base_engine

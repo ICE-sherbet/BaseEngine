@@ -3,11 +3,11 @@
 namespace base_engine {
 VulkanUniformBufferSet::VulkanUniformBufferSet(uint32_t size,
                                                uint32_t framesInFlight)
-    : m_FramesInFlight(framesInFlight) {
-  if (framesInFlight == 0) m_FramesInFlight = 3;
+    : frames_in_flight_(framesInFlight) {
+  if (framesInFlight == 0) frames_in_flight_ = 3;
 
-  for (uint32_t frame = 0; frame < m_FramesInFlight; frame++)
-    m_UniformBuffers[frame] = UniformBuffer::Create(size);
+  for (uint32_t frame = 0; frame < frames_in_flight_; frame++)
+    uniform_buffers_[frame] = UniformBuffer::Create(size);
 }
 
 VulkanUniformBufferSet::~VulkanUniformBufferSet() {}
@@ -23,12 +23,12 @@ Ref<UniformBuffer> VulkanUniformBufferSet::RT_Get() {
 }
 
 Ref<UniformBuffer> VulkanUniformBufferSet::Get(uint32_t frame) {
-  BE_CORE_ASSERT(!m_UniformBuffers.contains(frame));
-  return m_UniformBuffers.at(frame);
+  BE_CORE_ASSERT(uniform_buffers_.contains(frame));
+  return uniform_buffers_.at(frame);
 }
 
 void VulkanUniformBufferSet::Set(Ref<UniformBuffer> uniformBuffer,
                                  uint32_t frame) {
-  m_UniformBuffers[frame] = uniformBuffer;
+  uniform_buffers_[frame] = uniformBuffer;
 }
 }  // namespace base_engine
