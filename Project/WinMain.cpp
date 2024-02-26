@@ -37,9 +37,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
   auto icon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON1));
   Info.WindowCreateInfo.hIcon = icon;
   ;
-  // Info.GraphicsCreateInfo.bWindowed = true;
-//  pFrame->Initialize(&Info);
-//  pFrame->Run();
+   Info.GraphicsCreateInfo.bWindowed = true;
+  pFrame->Initialize(&Info);
+  pFrame->Run();
   MOF_SAFE_DELETE(pFrame);
   return 0;
 }

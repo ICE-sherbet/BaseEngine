@@ -1,0 +1,16 @@
+C:\Users\LIces\source\ICE-sherbet\BaseEngine\vendor\tracy\tracy\public\client\TracyAlloc.cpp;C:\Users\LIces\source\ICE-sherbet\BaseEngine\vendor\tracy\bin-int\Debug-windows-x86_64\Tracy\TracyAlloc.obj
+C:\Users\LIces\source\ICE-sherbet\BaseEngine\vendor\tracy\tracy\public\client\TracyCallstack.cpp;C:\Users\LIces\source\ICE-sherbet\BaseEngine\vendor\tracy\bin-int\Debug-windows-x86_64\Tracy\TracyCallstack.obj
+C:\Users\LIces\source\ICE-sherbet\BaseEngine\vendor\tracy\tracy\public\client\TracyDxt1.cpp;C:\Users\LIces\source\ICE-sherbet\BaseEngine\vendor\tracy\bin-int\Debug-windows-x86_64\Tracy\TracyDxt1.obj
+C:\Users\LIces\source\ICE-sherbet\BaseEngine\vendor\tracy\tracy\public\client\TracyOverride.cpp;C:\Users\LIces\source\ICE-sherbet\BaseEngine\vendor\tracy\bin-int\Debug-windows-x86_64\Tracy\TracyOverride.obj
+C:\Users\LIces\source\ICE-sherbet\BaseEngine\vendor\tracy\tracy\public\client\TracyProfiler.cpp;C:\Users\LIces\source\ICE-sherbet\BaseEngine\vendor\tracy\bin-int\Debug-windows-x86_64\Tracy\TracyProfiler.obj
+C:\Users\LIces\source\ICE-sherbet\BaseEngine\vendor\tracy\tracy\public\client\TracySysTime.cpp;C:\Users\LIces\source\ICE-sherbet\BaseEngine\vendor\tracy\bin-int\Debug-windows-x86_64\Tracy\TracySysTime.obj
+C:\Users\LIces\source\ICE-sherbet\BaseEngine\vendor\tracy\tracy\public\client\TracySysTrace.cpp;C:\Users\LIces\source\ICE-sherbet\BaseEngine\vendor\tracy\bin-int\Debug-windows-x86_64\Tracy\TracySysTrace.obj
+C:\Users\LIces\source\ICE-sherbet\BaseEngine\vendor\tracy\tracy\public\client\tracy_rpmalloc.cpp;C:\Users\LIces\source\ICE-sherbet\BaseEngine\vendor\tracy\bin-int\Debug-windows-x86_64\Tracy\tracy_rpmalloc.obj
+C:\Users\LIces\source\ICE-sherbet\BaseEngine\vendor\tracy\tracy\public\common\TracySocket.cpp;C:\Users\LIces\source\ICE-sherbet\BaseEngine\vendor\tracy\bin-int\Debug-windows-x86_64\Tracy\TracySocket.obj
+C:\Users\LIces\source\ICE-sherbet\BaseEngine\vendor\tracy\tracy\public\common\TracyStackFrames.cpp;C:\Users\LIces\source\ICE-sherbet\BaseEngine\vendor\tracy\bin-int\Debug-windows-x86_64\Tracy\TracyStackFrames.obj
+C:\Users\LIces\source\ICE-sherbet\BaseEngine\vendor\tracy\tracy\public\common\TracySystem.cpp;C:\Users\LIces\source\ICE-sherbet\BaseEngine\vendor\tracy\bin-int\Debug-windows-x86_64\Tracy\TracySystem.obj
+C:\Users\LIces\source\ICE-sherbet\BaseEngine\vendor\tracy\tracy\public\common\tracy_lz4.cpp;C:\Users\LIces\source\ICE-sherbet\BaseEngine\vendor\tracy\bin-int\Debug-windows-x86_64\Tracy\tracy_lz4.obj
+C:\Users\LIces\source\ICE-sherbet\BaseEngine\vendor\tracy\tracy\public\common\tracy_lz4hc.cpp;C:\Users\LIces\source\ICE-sherbet\BaseEngine\vendor\tracy\bin-int\Debug-windows-x86_64\Tracy\tracy_lz4hc.obj
+C:\Users\LIces\source\ICE-sherbet\BaseEngine\vendor\tracy\tracy\public\libbacktrace\alloc.cpp;C:\Users\LIces\source\ICE-sherbet\BaseEngine\vendor\tracy\bin-int\Debug-windows-x86_64\Tracy\alloc.obj
+C:\Users\LIces\source\ICE-sherbet\BaseEngine\vendor\tracy\tracy\public\libbacktrace\sort.cpp;C:\Users\LIces\source\ICE-sherbet\BaseEngine\vendor\tracy\bin-int\Debug-windows-x86_64\Tracy\sort.obj
+C:\Users\LIces\source\ICE-sherbet\BaseEngine\vendor\tracy\tracy\public\libbacktrace\state.cpp;C:\Users\LIces\source\ICE-sherbet\BaseEngine\vendor\tracy\bin-int\Debug-windows-x86_64\Tracy\state.obj

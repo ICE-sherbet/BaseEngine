@@ -5,9 +5,17 @@
       <Configuration>Debug</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Release|Win32">
       <Configuration>Release</Configuration>
       <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -23,7 +31,20 @@
     <CharacterSet>MultiByte</CharacterSet>
     <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -36,7 +57,13 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
@@ -46,11 +73,21 @@
     <LibraryPath>../../MofLibrary/Library;$(LibraryPath);C:\MofLibrary\Include;../vendor\imgui\bin\Debug-windows-x86_64\ImGui</LibraryPath>
     <OutDir>$(SolutionDir)\</OutDir>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>../../MofLibrary/Include;C:\MofLibrary\Include;../vendor\imgui;$(IncludePath)</IncludePath>
+    <LibraryPath>../../MofLibrary/Library;$(LibraryPath);C:\MofLibrary\Include;../vendor\imgui\bin\Debug-windows-x86_64\ImGui</LibraryPath>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>../../MofLibrary/Include;$(IncludePath);</IncludePath>
     <LibraryPath>../../MofLibrary/Library;$(LibraryPath);</LibraryPath>
     <OutDir>$(SolutionDir)\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>../../MofLibrary/Include;$(IncludePath);</IncludePath>
+    <LibraryPath>../../MofLibrary/Library;$(LibraryPath);</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -58,22 +95,72 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;BE_DEBUG;BE_ENABLE_PROFILING;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)\vendor\imgui;$(SolutionDir)\vendor;$(SolutionDir)vendor\mono\x86;$(SolutionDir)\Library\Include;$(ProjectDir)\include\utilities\observable;$(SolutionDir)\vendor\optick\src;$(SolutionDir)\vendor\yaml-cpp\include;$(SolutionDir)vendor\glfw\x86\include;$(VK_SDK_PATH)\Include;$(SolutionDir)vendor\VulkanMemoryAllocator;$(SolutionDir)vendor\shaderc\libshaderc_util\include;$(SolutionDir)vendor\stb\include;$(SolutionDir)vendor\glm</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;BE_DEBUG;BE_ENABLE_PROFILING;TRACY_ENABLE;TRACY_ON_DEMAND;TRACY_CALLSTACK=10;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)\vendor\imgui;$(SolutionDir)\vendor;$(SolutionDir)vendor\mono\x86;$(SolutionDir)\Library\Include;$(ProjectDir)\include\utilities\observable;$(SolutionDir)\vendor\tracy\tracy\public;$(SolutionDir)\vendor\yaml-cpp\include;$(SolutionDir)vendor\glfw\x86\include;$(VK_SDK_PATH)\Include;$(SolutionDir)vendor\VulkanMemoryAllocator;$(SolutionDir)vendor\shaderc\libshaderc_util\include;$(SolutionDir)vendor\stb\include;$(SolutionDir)vendor\glm;$(SolutionDir)vendor\soloud\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalOptions>
+      </AdditionalOptions>
+      <UseStandardPreprocessor>true</UseStandardPreprocessor>
+      <CompileAs />
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(SolutionDir)vendor\mono\x86;$(SolutionDir)\Library\Library;$(SolutionDir)vendor\yaml-cpp;$(SolutionDir)vendor\glfw\x86\;$(VK_SDK_PATH)\Lib32;$(SolutionDir)vendor\soloud\lib32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>LIBCMTD</IgnoreSpecificDefaultLibraries>
+      <AdditionalDependencies>mono-2.0-sgen.lib;glfw3.lib;spirv-cross-cored.lib;spirv-cross-glsld.lib;SPIRV-Toolsd.lib;shaderc_sharedd.lib;shaderc_utild.lib;vulkan-1.lib;Dbghelp.lib;soloud_static.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;BE_DEBUG;BE_ENABLE_PROFILING;TRACY_ENABLE;TRACY_ON_DEMAND;TRACY_CALLSTACK=10;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)\vendor\imgui;$(SolutionDir)\vendor;$(SolutionDir)vendor\mono\x64;$(SolutionDir)\Library\Include;$(ProjectDir)\include\utilities\observable;$(SolutionDir)\vendor\tracy\tracy\public;$(SolutionDir)\vendor\yaml-cpp\include;$(SolutionDir)vendor\glfw\x64\include;$(VK_SDK_PATH)\Include;$(SolutionDir)vendor\VulkanMemoryAllocator;$(SolutionDir)vendor\shaderc\libshaderc_util\include;$(SolutionDir)vendor\stb\include;$(SolutionDir)vendor\glm;$(SolutionDir)vendor\soloud\include</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <UseStandardPreprocessor>true</UseStandardPreprocessor>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(SolutionDir)vendor\mono\x64;$(SolutionDir)\Library\Library;$(SolutionDir)vendor\yaml-cpp;$(SolutionDir)vendor\glfw\x64\;$(VK_SDK_PATH)\Lib;$(SolutionDir)vendor\soloud\lib64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>LIBCMTD</IgnoreSpecificDefaultLibraries>
+      <AdditionalDependencies>mono-2.0-sgen.lib;glfw3.lib;spirv-cross-cored.lib;spirv-cross-glsld.lib;SPIRV-Toolsd.lib;shaderc_sharedd.lib;shaderc_utild.lib;vulkan-1.lib;soloud_static.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)\Library\Include;$(ProjectDir)\include\utilities\observable</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)vendor\mono\x86;$(SolutionDir)\Library\Library;$(SolutionDir)vendor\yaml-cpp;$(SolutionDir)vendor\glfw\x86\;$(VK_SDK_PATH)\Lib32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <IgnoreSpecificDefaultLibraries>LIBCMTD</IgnoreSpecificDefaultLibraries>
-      <AdditionalDependencies>mono-2.0-sgen.lib;OptickCore.lib;glfw3.lib;spirv-cross-cored.lib;spirv-cross-glsld.lib;SPIRV-Toolsd.lib;shaderc_sharedd.lib;shaderc_utild.lib;vulkan-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>$(SolutionDir)\Library\Library;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>LIBCMT</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <PrecompiledHeader>
@@ -143,6 +230,9 @@
     <ClCompile Include="AudioGlue.cpp" />
     <ClCompile Include="BaseEngineCore.cpp" />
     <ClCompile Include="BaseEngineInput.cpp" />
+    <ClCompile Include="BEAudio.cpp" />
+    <ClCompile Include="BEAudioEngine.cpp" />
+    <ClCompile Include="BESoundBuffer.cpp" />
     <ClCompile Include="BodyMask.cpp" />
     <ClCompile Include="BodyTypeTag.cpp" />
     <ClCompile Include="BroadPhaseSystem.cpp" />
@@ -404,6 +494,8 @@
     <ClInclude Include="BaseEngineCore.h" />
     <ClInclude Include="BaseEngineEmpty.h" />
     <ClInclude Include="BaseEngineInput.h" />
+    <ClInclude Include="BEAudio.h" />
+    <ClInclude Include="BEAudioEngine.h" />
     <ClInclude Include="Becs\Algorithm.h" />
     <ClInclude Include="Becs\becs.hpp" />
     <ClInclude Include="Becs\BecsComponent.h" />
@@ -423,6 +515,7 @@
     <ClInclude Include="Becs\TypeInfo.h" />
     <ClInclude Include="Becs\TypeTraits.h" />
     <ClInclude Include="Becs\View.h" />
+    <ClInclude Include="BESoundBuffer.h" />
     <ClInclude Include="BinaryArchive.h" />
     <ClInclude Include="BinderCommon.h" />
     <ClInclude Include="BodyMask.h" />
@@ -683,6 +776,9 @@
   <ItemGroup>
     <ProjectReference Include="..\vendor\imgui\ImGui.vcxproj">
       <Project>{c0ff640d-2c14-8dbe-f595-301e616989ef}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\vendor\tracy\Tracy.vcxproj">
+      <Project>{88372f0e-f44b-57bf-bdcd-fa1e29a153f0}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

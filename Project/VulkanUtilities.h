@@ -21,15 +21,17 @@ inline void VulkanCheckResult(VkResult result) {
 
 static PFN_vkSetDebugUtilsObjectNameEXT SetDebugUtilsObjectNameEXT = nullptr;
 
+
+
 static void SetDebugUtilsObjectName(const VkDevice device,
                                     const VkObjectType objectType,
                                     const std::string& name,
-                                    const uint64_t handle) {
+                                    const void* handle) {
   VkDebugUtilsObjectNameInfoEXT nameInfo;
   nameInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT;
   nameInfo.objectType = objectType;
   nameInfo.pObjectName = name.c_str();
-  nameInfo.objectHandle = handle;
+  nameInfo.objectHandle = reinterpret_cast<uint64_t>(handle);
   nameInfo.pNext = nullptr;
   if (SetDebugUtilsObjectNameEXT == nullptr) {
     SetDebugUtilsObjectNameEXT =
@@ -38,6 +40,13 @@ static void SetDebugUtilsObjectName(const VkDevice device,
                                   "vkSetDebugUtilsObjectNameEXT"));
   }
   SetDebugUtilsObjectNameEXT(device, &nameInfo);
+}
+
+static void SetDebugUtilsObjectName(const VkDevice device,
+                                    const VkObjectType objectType,
+                                    const std::string& name,
+                                    const uint64_t handle) {
+  SetDebugUtilsObjectName(device, objectType, name, reinterpret_cast<void*>(handle));
 }
 
 static void InsertImageMemoryBarrier(VkCommandBuffer cmdbuffer, VkImage image,

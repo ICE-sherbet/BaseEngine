@@ -1,6 +1,8 @@
 ﻿#include "MofAudio.h"
 
 #include "MofSoundBuffer.h"
+#include "Mof.h"
+#if defined(__MOF__)
 namespace base_engine {
 
 struct MofAudio::Deleter {
@@ -17,3 +19,4 @@ MofAudio::MofAudio(const std::string& file_path, size_t buffer_count) {
 
 std::shared_ptr<ISoundBuffer> MofAudio::GetBuffer() const { return sound_; }
 }  // namespace base_engine
+#endif

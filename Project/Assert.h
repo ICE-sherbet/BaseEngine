@@ -12,7 +12,7 @@
 #ifdef BE_PLATFORM_WINDOWS
 #define BE_DEBUG_BREAK __debugbreak()
 #else
-#define BE_DEBUG_BREAK
+#define BE_DEBUG_BREAK __debugbreak()
 #endif
 
 #ifdef BE_DEBUG
@@ -22,12 +22,14 @@
 #define BE_ENABLE_VERIFY
 
 #ifdef BE_ENABLE_ASSERTS
-#define BE_CORE_ASSERT_MESSAGE_INTERNAL(...)                              \
-  ::base_engine::Log::PrintAssertMessage(::base_engine::Log::Type::kCore, \
-                                         "Assertion Failed", __VA_ARGS__)
+#define BE_CORE_ASSERT_MESSAGE_INTERNAL(...)                               \
+  ::base_engine::Log::PrintAssertMessage(::base_engine::Log::Type::kCore,  \
+                                         "Assertion Failed" __VA_OPT__(, ) \
+                                             __VA_ARGS__)
 #define BE_ASSERT_MESSAGE_INTERNAL(...)                                     \
   ::base_engine::Log::PrintAssertMessage(::base_engine::Log::Type::kClient, \
-                                         "Assertion Failed", __VA_ARGS__)
+                                         "Assertion Failed" __VA_OPT__(, )  \
+                                             __VA_ARGS__)
 
 #define BE_CORE_ASSERT(condition, ...)              \
   {                                                 \
@@ -51,10 +53,12 @@
 #ifdef BE_ENABLE_VERIFY
 #define BE_CORE_VERIFY_MESSAGE_INTERNAL(...)                              \
   ::base_engine::Log::PrintAssertMessage(::base_engine::Log::Type::kCore, \
-                                         "Verify Failed", __VA_ARGS__)
+                                         "Verify Failed" __VA_OPT__(, )   \
+                                             __VA_ARGS__)
 #define BE_VERIFY_MESSAGE_INTERNAL(...)                                     \
   ::base_engine::Log::PrintAssertMessage(::base_engine::Log::Type::kClient, \
-                                         "Verify Failed", __VA_ARGS__)
+                                         "Verify Failed" __VA_OPT__(, )     \
+                                             __VA_ARGS__)
 
 #define BE_CORE_VERIFY(condition, ...)              \
   {                                                 \

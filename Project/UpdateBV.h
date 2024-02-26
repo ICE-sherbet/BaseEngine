@@ -20,7 +20,7 @@ class UpdateBV : public AbstractPhysicsSystem<UpdateBV<Shape>> {
 
   void OnInit() override {}
   void OnUpdate() override {
-    BE_PROFILE_FUNC("UpdateBV");
+    BE_PROFILE_SCOPE("UpdateBV");
 
     for (const auto shapes =
              this->GetScene()

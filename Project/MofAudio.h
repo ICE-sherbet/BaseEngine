@@ -4,10 +4,9 @@
 // @date 2023/04/18
 //
 // @details
-
 #pragma once
+#if defined(__MOF__)
 #include "Audio.h"
-#include "MofSoundBuffer.h"
 
 namespace base_engine {
 class MofAudio final : public Audio {
@@ -20,3 +19,5 @@ private:
   std::shared_ptr<ISoundBuffer> sound_;
 };
 }  // namespace base_engine
+
+#endif

@@ -8,6 +8,7 @@ void BroadPhaseSystem::OnInit() {}
 
 void BroadPhaseSystem::OnUpdate() {
   BE_PROFILE_FUNC("BroadPhase");
+  // BE_PROFILE_FUNC("BroadPhase");
   SortBoundingBoxes();
   auto& reg = GetScene()->GetRegistry();
   const auto view = reg.view<BoundingBox, BodyMask>();

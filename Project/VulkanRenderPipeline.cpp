@@ -98,7 +98,7 @@ void VulkanRenderPipeline::Invalidate() {
   Ref instance = this;
   Renderer::Submit([instance]() mutable {
     VkDevice device = VulkanContext::GetCurrentDevice()->GetVulkanDevice();
-    BE_CORE_ASSERT(instance->specification_.Shader);
+    BE_CORE_ASSERT(instance->specification_.Shader)
     Ref<VulkanShader> vulkan_shader =
         Ref<VulkanShader>(instance->specification_.Shader);
     Ref<VulkanFrameBuffer> framebuffer =

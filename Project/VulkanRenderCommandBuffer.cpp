@@ -41,7 +41,7 @@ VulkanRenderCommandBuffer::VulkanRenderCommandBuffer(uint32_t count,
     vulkan::SetDebugUtilsObjectName(
         device->GetVulkanDevice(), VK_OBJECT_TYPE_COMMAND_BUFFER,
         fmt::format("{} (frame in flight: {})", debug_name_, i),
-        reinterpret_cast<uint64_t>(command_buffers_[i]));
+        command_buffers_[i]);
 
   VkFenceCreateInfo fenceCreateInfo{};
   fenceCreateInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;

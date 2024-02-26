@@ -54,7 +54,10 @@ class VulkanTexture2D : public RendererTexture2D {
 
   uint64_t GetHash() const override
   {
-    return image_.As<VulkanImage2D>()->GetDescriptorInfoVulkan().imageView;
+    return (uint64_t)
+        image_.As<VulkanImage2D>()
+                 ->GetDescriptorInfoVulkan()
+                 .imageView;
   }
 
   void CopyToHostBuffer(Buffer& buffer);

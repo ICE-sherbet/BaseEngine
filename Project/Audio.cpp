@@ -1,11 +1,12 @@
 ﻿#include "Audio.h"
-
-#include "MofAudio.h"
+#include "BaseEngineCore.h"
+#include "IBaseEngineAudioEngine.h"
 
 namespace base_engine {
 Ref<Audio> AudioUtilities::Create(const std::filesystem::path& path) {
   // TODO バッファ数を変更できるようにする
-  const auto result = new MofAudio(path.string(), 3);
+
+  Ref<Audio> result = BASE_ENGINE(AudioEngine)->CreateAudio(path, 3);
   return result;
 }
 

@@ -256,7 +256,6 @@ Matrix44 Scene::InternalGetWorldSpaceTransformMatrix(
 }
 
 Matrix44 Scene::GetWorldSpaceTransformMatrix(const ObjectEntity entity) const {
-  BE_PROFILE_FUNC();
   return InternalGetWorldSpaceTransformMatrix(entity);
 }
 
@@ -332,14 +331,14 @@ void Scene::AudioOnPlaying() {
 }
 
 void Scene::PhysicsUpdate() {
-  BE_PROFILE_FUNC("PhysicsUpdate");
+  HZ_PROFILE_FUNC();
   for (const auto& system : systems_) {
     system->OnUpdate();
   }
 }
 
 void Scene::OnUpdate(const float time) {
-  BE_PROFILE_FUNC();
+  HZ_PROFILE_FUNC();
   if (is_playing_) {
     OnUpdateRuntime(time);
   } else {

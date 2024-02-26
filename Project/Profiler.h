@@ -8,19 +8,20 @@
 #pragma once
 
 #if BE_ENABLE_PROFILING
-#include <optick.h>
+#include <tracy/Tracy.hpp>
 #endif
 
 #if BE_ENABLE_PROFILING
-#define BE_PROFILE_FRAME(...) OPTICK_FRAME(__VA_ARGS__)
-#define BE_PROFILE_FUNC(...) OPTICK_EVENT(__VA_ARGS__)
-#define BE_PROFILE_TAG(NAME, ...) OPTICK_TAG(NAME, __VA_ARGS__)
-#define BE_PROFILE_SCOPE_DYNAMIC(NAME) OPTICK_EVENT_DYNAMIC(NAME)
-#define BE_PROFILE_THREAD(...) OPTICK_THREAD(__VA_ARGS__)
+#define BE_PROFILE_MARK_FRAME FrameMark;
+#define HZ_PROFILE_FUNC(...) ZoneScoped
+#define BE_PROFILE_FUNC(...) ZoneScoped##__VA_OPT__(N(__VA_ARGS__))
+#define BE_PROFILE_SCOPE(...) BE_PROFILE_FUNC(__VA_ARGS__)
+#define BE_PROFILE_SCOPE_DYNAMIC(NAME) ZoneScoped; ZoneName(NAME, strlen(NAME))
+#define BE_PROFILE_THREAD(...) tracy::SetThreadName(__VA_ARGS__)
 #else
-#define BE_PROFILE_FRAME(...)
+#define BE_PROFILE_MARK_FRAME
 #define BE_PROFILE_FUNC(...)
-#define BE_PROFILE_TAG(NAME, ...)
+#define BE_PROFILE_SCOPE(...)
 #define BE_PROFILE_SCOPE_DYNAMIC(NAME)
 #define BE_PROFILE_THREAD(...)
 #endif

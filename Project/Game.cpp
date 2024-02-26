@@ -105,8 +105,7 @@ bool Game::Initialize() {
 }
 
 void Game::Update() {
-  BE_PROFILE_FRAME("Main Thread");
-  BE_PROFILE_FUNC("GameUpdate");
+  BE_PROFILE_FUNC();
 
   editor_layer_->OnUpdate();
 
@@ -128,7 +127,7 @@ void Game::Shutdown()
 }
 
 void Game::Render() {
-  BE_PROFILE_FUNC("GameRender");
+  BE_PROFILE_SCOPE("GameRender");
   BASE_ENGINE(Render)->Begin();
   scene_->OnRender(0);
   BASE_ENGINE(Render)->Next();

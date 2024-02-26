@@ -538,6 +538,9 @@
     <Filter Include="BaseEngine\Editor\Camera">
       <UniqueIdentifier>{e5d2a117-f9ac-49e2-96e8-03d9fa95f1f6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="BaseEngine\Audio\BEAudio">
+      <UniqueIdentifier>{22ee18e4-98ba-4551-a6d5-f60abe2400f2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -1214,6 +1217,15 @@
     </ClCompile>
     <ClCompile Include="EditorCamera.cpp">
       <Filter>BaseEngine\Editor\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="BEAudio.cpp">
+      <Filter>BaseEngine\Audio\BEAudio</Filter>
+    </ClCompile>
+    <ClCompile Include="BEAudioEngine.cpp">
+      <Filter>BaseEngine\Audio\BEAudio</Filter>
+    </ClCompile>
+    <ClCompile Include="BESoundBuffer.cpp">
+      <Filter>BaseEngine\Audio\BEAudio</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -2248,6 +2260,15 @@
     </ClInclude>
     <ClInclude Include="EditorCamera.h">
       <Filter>BaseEngine\Editor\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="BEAudio.h">
+      <Filter>BaseEngine\Audio\BEAudio</Filter>
+    </ClInclude>
+    <ClInclude Include="BEAudioEngine.h">
+      <Filter>BaseEngine\Audio\BEAudio</Filter>
+    </ClInclude>
+    <ClInclude Include="BESoundBuffer.h">
+      <Filter>BaseEngine\Audio\BEAudio</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
