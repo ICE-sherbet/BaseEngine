@@ -6,6 +6,8 @@
 // @details
 
 #pragma once
+#if defined(__MOF__)
+
 #include <Sound/XAudio/XAudioSoundBuffer.h>
 
 #include "SoundBuffer.h"
@@ -27,3 +29,4 @@ private:
   Mof::CSoundBuffer sound_buffer_;
 };
 }  // namespace base_engine
+#endif

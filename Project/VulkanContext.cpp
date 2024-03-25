@@ -5,7 +5,7 @@
 
 #include "Assert.h"
 #include "VulkanAllocator.h"
-
+#include "VkExtensions.h"
 namespace base_engine {
 void VulkanContext::Init() {
   BE_CORE_ASSERT(glfwVulkanSupported(), "GLFW not support Vulkan");
@@ -19,10 +19,12 @@ void VulkanContext::Init() {
   enabled_features.fillModeNonSolid = true;
   enabled_features.independentBlend = true;
   enabled_features.pipelineStatisticsQuery = true;
+  enabled_features.robustBufferAccess = true;
   device_ = Ref<VulkanDevice>::Create(physics_device_, enabled_features);
 
   VulkanAllocator::Init(device_);
-
+  load_VK_EXTENSIONS(instance_, vkGetInstanceProcAddr,
+    										 device_->GetVulkanDevice(), vkGetDeviceProcAddr);
   VkPipelineCacheCreateInfo pipeline_cache_create_info = {};
   pipeline_cache_create_info.sType =
       VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO;
@@ -46,7 +48,7 @@ void VulkanContext::InitInstance() {
 
 #define VK_KHR_WIN32_SURFACE_EXTENSION_NAME "VK_KHR_win32_surface"
   std::vector instance_extensions = {VK_KHR_SURFACE_EXTENSION_NAME,
-                                     VK_KHR_WIN32_SURFACE_EXTENSION_NAME};
+                                     VK_KHR_WIN32_SURFACE_EXTENSION_NAME,};
   instance_extensions.push_back(
       VK_EXT_DEBUG_UTILS_EXTENSION_NAME);  // Very little performance hit, can
                                            // be used in Release.

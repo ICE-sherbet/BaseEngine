@@ -187,7 +187,7 @@ void AssetsBrowserPanel::RenderTopBar() {
     const auto normal_color = ThemeDB::GetInstance()->GetColor("TextDarker");
 
     ui::DrawButtonImage(
-        icon->GetTexture(), normal_color,
+	    ui::GetTextureID(icon), normal_color,
         ui::ColorWithMultipliedValue(normal_color, 1.2f),
         ui::ColorWithMultipliedValue(normal_color, 0.8f),
         ui::RectExpanded(ui::GetItemRect(), -icon_padding, -icon_padding));

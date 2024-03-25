@@ -1,7 +1,6 @@
 ﻿#include "MenuBarPanel.h"
 #include "ImGuiUtilities.h"
 #include <imgui.h>
-#include <Framework/Window/Windows/DefWindowProc.h>
 
 #include "CSharpScriptEngine.h"
 #include "SceneSerializer.h"

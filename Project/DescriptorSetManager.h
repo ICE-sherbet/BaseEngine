@@ -25,7 +25,8 @@ enum class RenderPassResourceType : uint16_t {
   StorageBufferSet,
   Texture2D,
   TextureCube,
-  Image2D
+  Image2D,
+  AccelerationStructure
 };
 
 enum class RenderPassInputType : uint16_t {
@@ -37,7 +38,8 @@ enum class RenderPassInputType : uint16_t {
   ImageSampler3D,
   StorageImage1D,
   StorageImage2D,
-  StorageImage3D
+  StorageImage3D,
+  AccelerationStructure
 };
 
 struct RenderPassInput {
@@ -141,6 +143,19 @@ struct DescriptorSetManager {
 
   std::set<uint32_t> HasBufferSets() const;
   void InvalidateAndUpdate();
+
+  template <typename T>
+  Ref<T> GetInput(const std::string_view name) {
+    if (const RenderPassInputDeclaration* decl = GetInputDeclaration(name)) {
+      if (const auto set_it = InputResources.find(decl->Set);
+          set_it != InputResources.end()) {
+        if (const auto resource_it = set_it->second.find(decl->Binding);
+            resource_it != set_it->second.end())
+          return resource_it->second.Input[0].As<T>();
+      }
+    }
+    return nullptr;
+  }
 
  private:
   template <typename T, typename... Args>

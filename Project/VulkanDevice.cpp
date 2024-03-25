@@ -214,9 +214,16 @@ void VulkanCommandPool::FlushCommandBuffer(const VkCommandBuffer command_buffer,
 VulkanDevice::VulkanDevice(const Ref<VulkanPhysicalDevice>& physical_device,
                            VkPhysicalDeviceFeatures enabled_features)
     : physical_device_(physical_device), enabled_features_(enabled_features) {
-  std::vector<const char*> device_extensions;
-
-  device_extensions.push_back(VK_KHR_SWAPCHAIN_EXTENSION_NAME);
+  std::vector<const char*> device_extensions{
+      // For swapchainn
+      VK_KHR_SWAPCHAIN_EXTENSION_NAME,
+      // For ray tracing
+      VK_KHR_PIPELINE_LIBRARY_EXTENSION_NAME,
+      VK_KHR_RAY_TRACING_PIPELINE_EXTENSION_NAME,
+      VK_KHR_ACCELERATION_STRUCTURE_EXTENSION_NAME,
+      VK_KHR_DEFERRED_HOST_OPERATIONS_EXTENSION_NAME,
+      VK_KHR_BUFFER_DEVICE_ADDRESS_EXTENSION_NAME,
+  };
 
   VkDeviceCreateInfo device_create_info{};
   physical_device_->GetDeviceCreateInfo(&device_create_info);
@@ -227,8 +234,8 @@ VulkanDevice::VulkanDevice(const Ref<VulkanPhysicalDevice>& physical_device,
     device_create_info.ppEnabledExtensionNames = device_extensions.data();
   }
 
-  vkCreateDevice(physical_device_->GetVulkanPhysicalDevice(),
-                 &device_create_info, nullptr, &logical_device_);
+  auto re = vkCreateDevice(physical_device_->GetVulkanPhysicalDevice(),
+                           &device_create_info, nullptr, &logical_device_);
 
   physical_device_->GetGraphicDeviceQueue(logical_device_, &graphics_queue_);
 }
@@ -269,6 +276,11 @@ VkCommandBuffer VulkanDevice::CreateSecondaryCommandBuffer(
 VkCommandBuffer VulkanDevice::GetCommandBuffer(const bool begin) {
   return GetOrCreateThreadLocalCommandPool()->AllocateCommandBuffer(begin,
                                                                     false);
+}
+
+VkCommandBuffer VulkanDevice::GetComputeCommandBuffer(bool begin) {
+  return GetOrCreateThreadLocalCommandPool()->AllocateCommandBuffer(begin,
+                                                                    true);
 }
 
 void VulkanDevice::FlushCommandBuffer(const VkCommandBuffer command_buffer) {

@@ -11,6 +11,7 @@
 
 #include "Buffer.h"
 #include "VertexBuffer.h"
+#include "VulkanDevice.h"
 
 namespace base_engine {
 class VulkanVertexBuffer : public VertexBuffer {
@@ -35,4 +36,5 @@ class VulkanVertexBuffer : public VertexBuffer {
   VkBuffer vulkan_buffer_ = VK_NULL_HANDLE;
   VmaAllocation memory_allocation_;
 };
+
 }  // namespace base_engine

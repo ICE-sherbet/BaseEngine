@@ -1,6 +1,5 @@
 ﻿#include "ToolbarPanel.h"
 
-#include <Mof.h>
 
 #include "BaseEngineCore.h"
 #include "BaseEngineInput.h"
@@ -26,8 +25,8 @@ void ToolbarPanel::OnImGuiRender() {
   ImGui::Begin("Viewport");
   const auto window_size = ImGui::GetWindowSize();
 
-	const auto resource = BASE_ENGINE(Render)->GetTargetTexture();
-  texture_ = resource->GetTexture();
+	//const auto resource = BASE_ENGINE(Render)->GetTargetTexture();
+  //texture_ = resource->GetTexture();
   ImGui::Image(texture_, ImVec2{window_size.x, window_size.x * (9.0f / 16.0f)});
 
   BaseEngineInput::can_input_ =

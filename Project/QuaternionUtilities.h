@@ -42,12 +42,8 @@ inline Floating Yaw(const Quaternion& x);
 
 inline Matrix33 mat3_cast(Quaternion const& q);
 
-inline Matrix44 mat4_cast(Quaternion const& q)
-{
-  Matrix44 mat;
-  Mof::CQuaternionUtilities::ConvertMatrix(q, mat);
-	return mat;
-}
+inline Matrix44 mat4_cast(Quaternion const& q);
+
 inline Matrix44 ToMat4(Quaternion const& x) { return mat4_cast(x); }
 
 }  // namespace base_engine

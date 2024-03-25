@@ -1,8 +1,9 @@
 ﻿#include "MofAudio.h"
 
 #include "MofSoundBuffer.h"
-#include "Mof.h"
 #if defined(__MOF__)
+
+#include "Mof.h"
 namespace base_engine {
 
 struct MofAudio::Deleter {

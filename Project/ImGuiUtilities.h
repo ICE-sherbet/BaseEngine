@@ -11,8 +11,24 @@
 
 #include "imgui.h"
 #include "imgui_internal.h"
+#include "RendererApi.h"
+#include "VulkanTexture.h"
+#include "backends/imgui_impl_vulkan.h"
 
 namespace base_engine::editor::ui {
+inline ImTextureID GetTextureID(Ref<Texture> texture) {
+  if constexpr (RendererApi::Current() == RendererApiType::kVulkan) {
+    Ref<VulkanTexture2D> vulkanTexture = texture.As<VulkanTexture2D>();
+    const VkDescriptorImageInfo& imageInfo =
+        vulkanTexture->GetDescriptorInfoVulkan();
+    if (!imageInfo.imageView) return nullptr;
+
+    return ImGui_ImplVulkan_AddTexture(imageInfo.sampler, imageInfo.imageView,
+                                       imageInfo.imageLayout);
+  }
+
+  return (ImTextureID)0;
+}
 
 const char* GenerateID();
 const char* GenerateLabelID(std::string_view label);

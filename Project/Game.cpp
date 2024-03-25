@@ -1,7 +1,5 @@
 #include "Game.h"
 
-#include <Mof.h>
-#include <Utilities/GraphicsUtilities.h>
 
 #include <iostream>
 
@@ -60,7 +58,7 @@ bool Game::Initialize() {
   auto result = m.call(&hoge,nullptr,0);
   make_callable_function_pointer(&hoge, &Hoge::Get).Call(nullptr,0,a);
   scene_ = Ref<Scene>::Create("Sample");
-  BASE_ENGINE(Render)->Initialize();
+  //BASE_ENGINE(Render)->Initialize();
   BASE_ENGINE(AssetManager)->Initialize();
   ComponentDB::Initialize();
   
@@ -109,16 +107,7 @@ void Game::Update() {
 
   editor_layer_->OnUpdate();
 
-  scene_->OnUpdate(Mof::CUtilities::GetFrameSecond());
-
-  if (g_pInput->IsKeyPush(MOFKEY_P) && g_pInput->IsKeyHold(MOFKEY_LCONTROL)) {
-    SceneSerializer serializer(scene_);
-    serializer.Serialize("Test.bscene");
-  }
-  if (g_pInput->IsKeyPush(MOFKEY_L) && g_pInput->IsKeyHold(MOFKEY_LCONTROL)) {
-    SceneSerializer serializer(scene_);
-    serializer.Deserialize("Test.bscene");
-  }
+  scene_->OnUpdate(0.016f);
 }
 
 void Game::Shutdown()
@@ -128,11 +117,8 @@ void Game::Shutdown()
 
 void Game::Render() {
   BE_PROFILE_SCOPE("GameRender");
-  BASE_ENGINE(Render)->Begin();
   scene_->OnRender(0);
-  BASE_ENGINE(Render)->Next();
   editor_layer_->OnRender();
-  BASE_ENGINE(Render)->End();
 }
 Game::~Game() {}
 

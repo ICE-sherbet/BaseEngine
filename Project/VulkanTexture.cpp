@@ -47,6 +47,8 @@ static size_t GetMemorySize(ImageFormat format, uint32_t width,
       return width * height * sizeof(float);
     case ImageFormat::RED8UN:
       return width * height;
+    case ImageFormat::RED8SN:
+      return width * height;
     case ImageFormat::RED8UI:
       return width * height;
     case ImageFormat::RGBA:
@@ -418,8 +420,7 @@ Buffer VulkanTexture2D::GetWriteableBuffer() { return image_data_; }
 const std::filesystem::path& VulkanTexture2D::GetPath() const { return path_; }
 
 uint32_t VulkanTexture2D::GetMipLevelCount() const {
-  return Utils::CalculateMipCount(specification_.Width,
-                                  specification_.Height);
+  return Utils::CalculateMipCount(specification_.Width, specification_.Height);
 }
 
 std::pair<uint32_t, uint32_t> VulkanTexture2D::GetMipSize(uint32_t mip) const {

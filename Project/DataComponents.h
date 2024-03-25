@@ -14,3 +14,4 @@
 #include "ScriptComponent.h"
 #include "AudioComponent.h"
 #include "PrefabComponent.h"
+#include "MeshComponent.h"

@@ -84,6 +84,7 @@ class VulkanDevice : public RefCounted {
                VkPhysicalDeviceFeatures enabled_features);
 
   VkQueue GetGraphicsQueue() const { return graphics_queue_; }
+  VkQueue GetComputeQueue() const { return compute_queue_; }
 
   void CreatePool(const VkCommandPoolCreateInfo& pool_info,
                   VkCommandPool* pool) const;
@@ -108,6 +109,7 @@ class VulkanDevice : public RefCounted {
 
   VkCommandBuffer CreateSecondaryCommandBuffer(const char* debug_name);
   VkCommandBuffer GetCommandBuffer(bool begin);
+  VkCommandBuffer GetComputeCommandBuffer(bool begin);
   void FlushCommandBuffer(VkCommandBuffer command_buffer);
 
  private:

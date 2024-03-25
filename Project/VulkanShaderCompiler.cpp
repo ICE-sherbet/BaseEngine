@@ -8,6 +8,7 @@
 #include <spirv_cross/spirv_glsl.hpp>
 
 #include "Assert.h"
+#include "GlslIncluder.h"
 #include "RendererApi.h"
 #include "ShaderPreprocessor.h"
 
@@ -49,7 +50,7 @@ static std::unordered_map<uint32_t,
                           std::unordered_map<uint32_t, shader::StorageBuffer>>
     s_StorageBuffers;  // set -> binding point -> buffer
 
-int SkipBOM(std::istream& in) {
+inline int SkipBOM(std::istream& in) {
   char test[4] = {0};
   in.seekg(0, std::ios::beg);
   in.read(test, 3);
@@ -62,7 +63,7 @@ int SkipBOM(std::istream& in) {
 }
 
 // Returns an empty string when failing.
-std::string ReadFileAndSkipBOM(const std::filesystem::path& filepath) {
+inline std::string ReadFileAndSkipBOM(const std::filesystem::path& filepath) {
   std::string result;
   std::ifstream in(filepath, std::ios::in | std::ios::binary);
   if (in) {
@@ -354,6 +355,27 @@ void VulkanShaderCompiler::Reflect(VkShaderStageFlagBits shaderStage,
     imageSampler.ArraySize = arraySize;
     imageSampler.ShaderStage = shaderStage;
   }
+  for (const auto& resource : resources.acceleration_structures) {
+    const auto& name = resource.name;
+    auto& type = compiler.get_type(resource.type_id);
+    uint32_t arraySize = type.array[0];
+    if (arraySize == 0) arraySize = 1;
+    uint32_t binding =
+        compiler.get_decoration(resource.id, spv::DecorationBinding);
+    uint32_t descriptorSet =
+        compiler.get_decoration(resource.id, spv::DecorationDescriptorSet);
+    if (descriptorSet >= reflection_data_.ShaderDescriptorSets.size())
+      reflection_data_.ShaderDescriptorSets.resize(descriptorSet + 1);
+
+    shader::ShaderDescriptorSet& shaderDescriptorSet =
+        reflection_data_.ShaderDescriptorSets[descriptorSet];
+    auto& accelerationStructure =
+        shaderDescriptorSet.AccelerationStructures[binding];
+    accelerationStructure.ArraySize = arraySize;
+    accelerationStructure.BindingPoint = binding;
+    accelerationStructure.Name = name;
+    accelerationStructure.ShaderStage = shaderStage;
+  }
 }
 
 bool VulkanShaderCompiler::Compile(std::vector<uint32_t>& outputBinary,
@@ -384,7 +406,8 @@ bool VulkanShaderCompiler::Compile(std::vector<uint32_t>& outputBinary,
   return true;
 }
 
-bool VulkanShaderCompiler::CompileOrGetVulkanBinaries(ShaderDate& outputBinary) {
+bool VulkanShaderCompiler::CompileOrGetVulkanBinaries(
+    ShaderDate& outputBinary) {
   bool compileSucceeded = true;
   for (const auto stage : shader_source_ | std::views::keys) {
     compileSucceeded &= CompileOrGetVulkanBinary(stage, outputBinary[stage]);
@@ -404,15 +427,29 @@ std::map<VkShaderStageFlagBits, std::string> VulkanShaderCompiler::PreProcess(
       ShaderPreprocessor::PreprocessShader(source, specialMacros);
 
   static shaderc::Compiler compiler;
-
+  shaderc_util::FileFinder fileFinder;
+  fileFinder.search_path().emplace_back("Resources/");
   for (auto& [stage, shaderSource] : shaderSources) {
     shaderc::CompileOptions options;
     options.AddMacroDefinition("__GLSL__");
     options.AddMacroDefinition(
         std::string(shader_utils::VKStageToShaderMacro(stage)));
+
+    // Deleted by shaderc and created per stage
+    GlslIncluder* includer = new GlslIncluder(&fileFinder);
+
+    options.SetIncluder(std::unique_ptr<GlslIncluder>(includer));
+
     const auto preProcessingResult = compiler.PreprocessGlsl(
         shaderSource, shader_utils::ShaderStageToShaderC(stage),
         shader_source_path_.string().c_str(), options);
+    if (preProcessingResult.GetCompilationStatus() !=
+        shaderc_compilation_status_success) {
+      auto msg = preProcessingResult.GetErrorMessage();
+      BE_CORE_ERROR(msg);
+      return shaderSources;
+    }
+
     shaderSource =
         std::string(preProcessingResult.begin(), preProcessingResult.end());
   }

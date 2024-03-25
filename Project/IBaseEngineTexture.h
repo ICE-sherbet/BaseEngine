@@ -1,5 +1,7 @@
 #pragma once
+#if defined(__MOF__)
 #include <Graphics/Texture.h>
+#endif
 
 #include <string>
 
@@ -8,7 +10,11 @@ struct TextureHandle {
   size_t handle;
 };
 
+#if defined(__MOF__)
 using TexturePtr = Mof::LPTexture;
+#else
+using TexturePtr = TextureHandle;
+#endif
 
 class IBaseEngineTexture {
  public:

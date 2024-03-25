@@ -5,8 +5,11 @@
 #include <glm/ext/matrix_clip_space.hpp>
 #include <glm/ext/matrix_transform.hpp>
 
+#include "AssetManager.h"
 #include "EditorCamera.h"
 #include "IWindow.h"
+#include "PrimitiveMeshFactory.h"
+#include "Raytracer.h"
 #include "Platform/Windows/Window.h"
 #include "RenderCommandBuffer.h"
 #include "Renderer2D.h"
@@ -36,6 +39,13 @@ Application::Application(const ApplicationSpecification& spec)
   window_->Init();
 }
 
+inline VkTransformMatrixKHR toTransformMatrix(glm::mat4 matrix) {
+  glm::mat4 temp = glm::transpose(matrix);
+  VkTransformMatrixKHR out_matrix;
+  memcpy(&out_matrix, &temp, sizeof(VkTransformMatrixKHR));
+  return out_matrix;
+}
+
 void Application::Run() {
   is_running_ = true;
   VulkanImGuiLayer layer;
@@ -61,6 +71,19 @@ void Application::Run() {
                        100.0f);  // 遠くのクリッピング平面
 
   auto viewProjection = projectionMat * viewMat;
+
+  Raytracer raytracer{};
+  auto sphere = PrimitiveMeshFactory::CreateSphere(1);
+
+  auto mesh = AssetManager::GetAsset<Mesh>(sphere);
+  raytracer.SetupBottomLevelAS({mesh});
+
+  ObjInstance instance{};
+  instance.matrix = toTransformMatrix(glm::mat4{});
+  instance.instanceId = 0;
+  instance.mesh = sphere;
+  std::vector instances{instance};
+  raytracer.SetupTopLevelAS(instances);
   while (is_running_) {
     render_thread_.BlockUntilRenderComplete();
 
@@ -71,6 +94,8 @@ void Application::Run() {
 
     Application* app = this;
 
+    raytracer.SetupTopLevelAS(instances);
+    raytracer.UpdateRenderTarget();
     // Renderer::Submit([&layer]() { layer.Begin(); });
     // Renderer::Submit([&layer]() { layer.End(); });
     renderer2d->BeginScene(viewProjection, viewMat);

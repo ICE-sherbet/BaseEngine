@@ -20,9 +20,9 @@ enum class TextureFilter { None = 0, Linear, Nearest, Cubic };
 
 enum class TextureType { None = 0, Texture2D, TextureCube };
 
-class RendererTexture : public RendererResource {
+class Texture : public RendererResource {
  public:
-  virtual ~RendererTexture() {}
+  virtual ~Texture() {}
 
   virtual void Bind(uint32_t slot = 0) const = 0;
 
@@ -54,7 +54,7 @@ struct TextureSpecification {
   std::string DebugName;
 };
 
-class RendererTexture2D : public RendererTexture {
+class RendererTexture2D : public Texture {
  public:
   static Ref<RendererTexture2D> Create(
       const TextureSpecification& specification);

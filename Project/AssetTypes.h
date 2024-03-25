@@ -24,7 +24,12 @@ enum class AssetType : uint16_t {
   kScript,
   kAudio,
   kPrefab,
-
+  kMeshSource,
+  kSkeleton,
+  kAnimation,
+  kMesh,
+  kStaticMesh,
+  kMaterial,
   kCount
 };
 
@@ -44,18 +49,21 @@ class AssetUtilities {
         AssetNVP{AssetType::kScript, "Script"},
         AssetNVP{AssetType::kAudio, "Audio"},
         AssetNVP{AssetType::kPrefab, "Prefab"},
+        AssetNVP{AssetType::kMeshSource, "MeshSource"},
+        AssetNVP{AssetType::kStaticMesh, "StaticMesh"},
+        AssetNVP{AssetType::kSkeleton, "Skeleton"},
+        AssetNVP{AssetType::kAnimation, "Animation"},
+        AssetNVP{AssetType::kMesh, "Mesh"},
+        AssetNVP{AssetType::kMaterial, "kMaterial"},
     };
   }
 
  public:
   AssetUtilities() = delete;
 
-  constexpr static AssetType AssetTypeFromString(
-      std::string_view asset_type)
-  {
+  constexpr static AssetType AssetTypeFromString(std::string_view asset_type) {
     const auto& NVPs = GetAssetsNVP();
-    for (const auto & pair : NVPs)
-    {
+    for (const auto& pair : NVPs) {
       if (pair.name == asset_type) return pair.type;
     }
     BE_CORE_ASSERT(false, "Unknown Asset Type");
@@ -74,6 +82,16 @@ class AssetUtilities {
       case AssetType::kCount:
         break;
       case AssetType::kPrefab:
+        break;
+      case AssetType::kMeshSource:
+        break;
+      case AssetType::kSkeleton:
+        break;
+      case AssetType::kAnimation:
+        break;
+      case AssetType::kMesh:
+        break;
+      case AssetType::kMaterial:
         break;
       case AssetType::kNone:
       default:

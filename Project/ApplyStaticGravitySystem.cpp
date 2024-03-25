@@ -5,7 +5,7 @@
 
 namespace base_engine::physics {
 void ApplyStaticGravitySystem::OnUpdate() {
-	const Vector2 gravity = Vector2{0, 0} * 5;
+	const Vector2 gravity = Vector2{0, 0} * 5.0f;
   for (const auto bodies =
            GetScene()
                ->GetAllEntitiesWith<RigidBodyComponent, VelocityComponent>();

@@ -1,4 +1,6 @@
-﻿#pragma once
+﻿#if defined(__MOF__)
+
+#pragma once
 
 #include <Graphics/DirectX11/DX11Texture.h>
 
@@ -42,3 +44,4 @@ class RenderMof final : public IBaseEngineRender {
 private:
 };
 }  // namespace base_engine
+#endif

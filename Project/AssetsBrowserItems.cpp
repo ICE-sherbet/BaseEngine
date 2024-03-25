@@ -2,15 +2,20 @@
 
 #include "AssetsBrowserSetting.h"
 #include "EditorTextureResource.h"
+#include "RendererApi.h"
 #include "SelectManager.h"
+#include "VulkanTexture.h"
+#include "backends/imgui_impl_vulkan.h"
 #include "imgui.h"
+#include "ImGuiUtilities.h"
 #include "imgui_internal.h"
 
 namespace base_engine::editor {
+
 AssetsBrowserItem::AssetsBrowserItem(const ItemType type,
-                                       const AssetHandle& handle,
-                                       const std::string& name,
-                                       const Ref<Texture>& icon)
+                                     const AssetHandle& handle,
+                                     const std::string& name,
+                                     const Ref<Texture>& icon)
     : type_(type), handle_(handle), icon_(icon), filename_(name) {
   display_name_ = filename_;
   constexpr auto kFileNameMaxLength = 20;
@@ -49,8 +54,8 @@ AssetsBrowserItemActionResult AssetsBrowserItem::OnRender() {
     const ImRect item_rect =
         RectOffset(ImRect(top_left, bottom_right), 1.0f, 1.0f);
     draw_list->AddRect(item_rect.Min, item_rect.Max, IM_COL32(15, 15, 15, 255),
-                      6.0f, directory ? 0 : ImDrawFlags_RoundCornersBottom,
-                      2.0f);
+                       6.0f, directory ? 0 : ImDrawFlags_RoundCornersBottom,
+                       2.0f);
   };
   const float thumbnail_size = AssetsBrowserSetting::Get().thumbnail_size;
 
@@ -73,7 +78,7 @@ AssetsBrowserItemActionResult AssetsBrowserItem::OnRender() {
   const auto size = RectExpanded(
       ImRect(ImGui::GetItemRectMin(), ImGui::GetItemRectMax()), -6.0f, -6.0f);
   ImGui::GetWindowDrawList()->AddImage(
-      icon_->GetTexture(), size.Min, size.Max, ImVec2(0, 0), ImVec2(1, 1),
+	  ui::GetTextureID(icon_), size.Min, size.Max, ImVec2(0, 0), ImVec2(1, 1),
       ImGui::IsItemHovered() ? ImColor(255, 255, 255, 255)
                              : ImColor(255, 255, 255, 225));
 
@@ -96,32 +101,31 @@ AssetsBrowserItemActionResult AssetsBrowserItem::OnRender() {
   if (const bool dragging =
           ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID)) {
     is_dragging_ = true;
-    ImGui::Image(icon_->GetTexture(), ImVec2(20, 20));
+    ImGui::Image(ui::GetTextureID(icon_), ImVec2(20, 20));
     ImGui::SameLine();
     const auto& name = display_name_;
     ImGui::TextUnformatted(name.c_str());
     result.Set(AssetsBrowserAction::kSelect, true);
 
-  	ImGui::SetDragDropPayload("asset_payload", &handle_, sizeof(AssetHandle));
+    ImGui::SetDragDropPayload("asset_payload", &handle_, sizeof(AssetHandle));
 
     ImGui::EndDragDropSource();
   }
   if (ImGui::IsItemHovered()) {
     if (ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left)) {
       result.Set(AssetsBrowserAction::kActivated, true);
-    }else
-    {
-	    const bool action = ImGui::IsMouseClicked(ImGuiMouseButton_Left);
-	    is_selected = SelectManager::Instance()->IsSelectItem("", handle_);
-	    const bool skip_because_dragging = is_dragging_ && is_selected;
-	    if (action && !skip_because_dragging) {
-		    if (just_selected_) just_selected_ = false;
+    } else {
+      const bool action = ImGui::IsMouseClicked(ImGuiMouseButton_Left);
+      is_selected = SelectManager::Instance()->IsSelectItem("", handle_);
+      const bool skip_because_dragging = is_dragging_ && is_selected;
+      if (action && !skip_because_dragging) {
+        if (just_selected_) just_selected_ = false;
 
-		    if (!is_selected) {
-			    result.Set(AssetsBrowserAction::kSelect, true);
-			    just_selected_ = true;
-		    }
-	    }
+        if (!is_selected) {
+          result.Set(AssetsBrowserAction::kSelect, true);
+          just_selected_ = true;
+        }
+      }
     }
   }
   is_dragging_ = dragging;
@@ -134,15 +138,14 @@ void AssetsBrowserItem::OnRenderEnd() { ImGui::PopID(); }
 AssetsBrowserDirectory::AssetsBrowserDirectory(
     const Ref<DirectoryInfo>& directory_info)
     : AssetsBrowserItem(ItemType::kDirectory, directory_info->handle,
-                         directory_info->filepath.filename().string(),
-                         ThemeDB::GetInstance()->GetIcon("DefaultFolder")),
+                        directory_info->filepath.filename().string(),
+                        ThemeDB::GetInstance()->GetIcon("DefaultFolder")),
       directory_info_(directory_info) {}
-
 
 AssetsBrowserAsset::AssetsBrowserAsset(const AssetMetadata& asset_info,
                                        const Ref<Texture>& icon)
     : AssetsBrowserItem(ItemType::kAsset, asset_info.handle,
-                         asset_info.file_path.filename().string(), icon),
+                        asset_info.file_path.filename().string(), icon),
       asset_info_(asset_info) {}
 
 }  // namespace base_engine::editor

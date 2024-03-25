@@ -47,9 +47,14 @@ class RendererApi {
       RendererApiType::kVulkan;
 };
 
+class ShaderRegistry;
+
 class Renderer {
  public:
   static void Init();
+
+  static Ref<ShaderRegistry> GetShaderLibrary();
+
   static void Shutdown();
 
   static void BeginFrame();
@@ -88,6 +93,7 @@ class Renderer {
 
  private:
   static inline RendererSubmit* submit_ = nullptr;
+  static inline Ref<ShaderRegistry> shader_registry_;
 };
 
 }  // namespace base_engine

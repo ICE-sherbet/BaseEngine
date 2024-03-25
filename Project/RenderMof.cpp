@@ -1,4 +1,6 @@
-﻿#include "RenderMof.h"
+﻿#if defined(__MOF__)
+
+#include "RenderMof.h"
 
 #include <Mof.h>
 #include <Utilities/GraphicsUtilities.h>
@@ -131,3 +133,4 @@ void RenderMof::Next() {
 
 }
 }  // namespace base_engine
+#endif

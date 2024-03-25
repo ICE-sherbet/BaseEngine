@@ -130,7 +130,6 @@ void VulkanImage2D::RT_Invalidate() {
       fmt::format("{} default image view", specification_.DebugName),
       info_.ImageView);
 
-  // TODO: Renderer should contain some kind of sampler cache
   if (specification_.CreateSampler) {
     VkSamplerCreateInfo samplerCreateInfo = {};
     samplerCreateInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;

@@ -6,7 +6,10 @@
 // @details
 
 #pragma once
+#if defined(__MOF__)
 #include <Framework/Window/Windows/DefWindowProc.h>
+#endif
+
 
 namespace base_engine::editor {
 class SetupEditorImGui {
@@ -24,10 +27,16 @@ class SetupEditorImGui {
 
   static void Cleanup();
 };
+
+#if defined(__MOF__)
 class CMofImGuiProc : public Mof::CDefWindowProc {
  public:
   virtual MofProcResult WindowProc(MofWindowHandle hWnd, MofUInt msg,
                                    MofProcParamW wpar,
                                    MofProcParamL lpar) override;
 };
+#else
+
+#endif
+
 }  // namespace base_engine::editor

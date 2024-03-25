@@ -129,6 +129,8 @@ static VkFormat VulkanImageFormat(const ImageFormat format) {
   switch (format) {
     case ImageFormat::RED8UN:
       return VK_FORMAT_R8_UNORM;
+    case ImageFormat::RED8SN:
+			return VK_FORMAT_R8_SNORM;
     case ImageFormat::RED8UI:
       return VK_FORMAT_R8_UINT;
     case ImageFormat::RED16UI:

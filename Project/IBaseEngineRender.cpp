@@ -1,3 +1,6 @@
+
+#if defined(__MOF__)
+
 #include "IBaseEngineRender.h"
 
 #include "RenderMof.h"
@@ -8,3 +11,5 @@ IBaseEngineRender* IBaseEngineRender::Create() {
 
 IBaseEngineRender::~IBaseEngineRender() = default;
 }  // namespace base_engine
+
+#endif

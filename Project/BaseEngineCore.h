@@ -17,10 +17,7 @@ class BaseEngineCore {
   inline static BaseEngineCore* engine_ = nullptr;
 
   std::tuple<BaseEngineComponent<IBaseEngineEmpty>,
-             BaseEngineComponent<IBaseEngineTexture>,
-             BaseEngineComponent<IBaseEngineRender>,
              BaseEngineComponent<IBaseEngineRendererContext>,
-             BaseEngineComponent<IBaseEngineCanvasRender>,
              BaseEngineComponent<IBaseEngineAssetManager>,
              BaseEngineComponent<IBaseEngineAudioEngine>>
       components_;

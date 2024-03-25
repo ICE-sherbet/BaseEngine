@@ -1,4 +1,6 @@
 ﻿#pragma once
+#if defined(__MOF__)
+
 #include <Graphics/DirectX11/DX11Texture.h>
 #include <Graphics/Texture.h>
 
@@ -23,3 +25,4 @@ class TextureMof final : public IBaseEngineTexture {
   bool Release(std::string_view name) override;
 };
 }  // namespace base_engine
+#endif

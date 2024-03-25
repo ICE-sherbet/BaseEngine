@@ -77,14 +77,14 @@ void TransformComponent::SetGlobalTranslation(const Vector3& pos) {
   global_position_ = pos;
   UpdateGlobalTransform();
   auto transfrom = GetGlobalTransform();
-  transfrom.rc[3][0] = pos.x;
-  transfrom.rc[3][1] = pos.y;
-  transfrom.rc[3][2] = pos.z;
+  transfrom[3][0] = pos.x;
+  transfrom[3][1] = pos.y;
+  transfrom[3][2] = pos.z;
   SetGlobalTransform(transfrom);
 }
 
 Vector3 TransformComponent::GetGlobalTranslation() const {
-  return {const_cast<MofFloat*>(global_transform_.rc[3])};
+  return global_transform_[3];
 }
 
 Vector3 TransformComponent::GetGlobalRotationEuler() const {

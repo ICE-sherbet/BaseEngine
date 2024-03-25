@@ -268,6 +268,7 @@ TransformComponent Scene::GetWorldSpaceTransform(
 }
 
 void Scene::OnInit() {
+  
   const auto physics_engine_data = Ref<physics::PhysicsEngineData>::Create();
   systems_.emplace_back(std::make_unique<physics::ApplyStaticGravitySystem>(
       this, physics_engine_data));
@@ -369,7 +370,11 @@ void Scene::OnRuntimeStop() {
 }
 
 void Scene::OnRender(float time) {
-  for (const auto view =
+
+
+
+
+	for (const auto view =
            registry_.view<TransformComponent, SpriteRendererComponent>();
        const auto entity : view) {
     auto [transform, spriteRendererComponent] =
@@ -378,7 +383,8 @@ void Scene::OnRender(float time) {
       continue;
     }
     if (AssetManager::IsAssetHandleValid(spriteRendererComponent.texture)) {
-      Ref<MofTexture> texture =
+      /*
+    	Ref<MofTexture> texture =
           AssetManager::GetAsset<MofTexture>(spriteRendererComponent.texture);
       BASE_ENGINE(Render)->AddTexture(
           texture->texture_, transform.GetGlobalTransform(),
@@ -387,7 +393,7 @@ void Scene::OnRender(float time) {
           Mof::CVector4Utilities::ToU32Color(spriteRendererComponent.color),
           {spriteRendererComponent.Pivot().x, spriteRendererComponent.Pivot().y,
            0});
-
+			*/
     } else {
       BE_CORE_INFO("UUID:{0} テクスチャデータの参照がありません。",
                    spriteRendererComponent.texture);

@@ -2,6 +2,7 @@
 
 #include "AssetManager.h"
 #include "Audio.h"
+#include "MeshSerializer.h"
 #include "Prefab.h"
 #include "SceneAssetSerializer.h"
 #include "Texture.h"
@@ -12,6 +13,9 @@ void AssetImporter::Init() {
   serializers_[AssetType::kAudio] = std::make_unique<AudioSerializer>();
   serializers_[AssetType::kScene] = std::make_unique<SceneAssetSerializer>();
   serializers_[AssetType::kPrefab] = std::make_unique<PrefabSerializer>();
+  serializers_[AssetType::kMesh] = std::make_unique<MeshSerializer>();
+  serializers_[AssetType::kMeshSource] = std::make_unique<MeshSourceSerializer>();
+  serializers_[AssetType::kStaticMesh] = std::make_unique<StaticMeshSerializer>();
 }
 
 void AssetImporter::Serialize(const AssetMetadata& metadata,

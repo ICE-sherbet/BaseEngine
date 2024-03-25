@@ -4,7 +4,7 @@
 // @date 2023/01/14
 //
 // @details
-
+#if defined(__MOF__)
 #pragma once
 #include <Graphics/Texture.h>
 
@@ -52,3 +52,4 @@ protected:
   [[nodiscard]] Mof::IShaderBind* GetShaderBind() const;
 };
 }  // namespace base_engine
+#endif

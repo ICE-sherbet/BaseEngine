@@ -90,9 +90,6 @@
     <Filter Include="BaseEngine\Render\CameraBaseRenderer">
       <UniqueIdentifier>{d597426a-4531-49c8-b8fc-9fd5d0ca0e4b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="BaseEngine\Render\CanvasRenderer">
-      <UniqueIdentifier>{ca742881-e499-469a-9158-4c9b3681f4cd}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Utilities\Extensions\Variant">
       <UniqueIdentifier>{7b5ca211-93ff-47be-bac6-2ef41f8ed522}</UniqueIdentifier>
     </Filter>
@@ -541,12 +538,42 @@
     <Filter Include="BaseEngine\Audio\BEAudio">
       <UniqueIdentifier>{22ee18e4-98ba-4551-a6d5-f60abe2400f2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="BaseEngine\Render\Mesh">
+      <UniqueIdentifier>{cbe8337b-09b0-42b0-a86b-8c39e52d19ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BaseEngine\Render\Mesh\Bone">
+      <UniqueIdentifier>{f4771e79-e66a-4b7e-a550-096f5f5b6e07}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BaseEngine\Math\Box">
+      <UniqueIdentifier>{866a87c8-14a4-46a6-bf17-581fb495f8aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BaseEngine\Animation">
+      <UniqueIdentifier>{0e94b5a2-ba66-468f-b253-aa54331a1aa9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BaseEngine\Asset\AssetImporter\MeshImport">
+      <UniqueIdentifier>{34644342-59be-4bd9-aa12-01e35ebfb32b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BaseEngine\Asset\AssetImporter\MeshImport\Private">
+      <UniqueIdentifier>{11a746b8-c741-4e4d-916a-6b54347a1771}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BaseEngine\Render\Mesh\Serializer">
+      <UniqueIdentifier>{0c9fb288-fd32-4ce9-a334-698417df7223}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BaseEngine\Render\Raytrace">
+      <UniqueIdentifier>{ede29635-5088-4f0d-9721-5b10695f988c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BaseEngine\Platform\Vulkan\ShaderCompiler\ShaderPreprocessing">
+      <UniqueIdentifier>{840b3b59-f5e7-412e-b359-3ab00076e98c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BaseEngine\Platform\Vulkan\Pipeline\Raytrace">
+      <UniqueIdentifier>{f1da53d5-9ca2-4085-bb64-153ad37e3d1a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BaseEngine\Platform\Vulkan\Extensions">
+      <UniqueIdentifier>{74679631-a91e-4d32-83e1-b2857b507bc8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="GameApp.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Vector2.cpp">
@@ -567,9 +594,6 @@
     <ClCompile Include="TextureMof.cpp">
       <Filter>BaseEngine\Texture\Mof</Filter>
     </ClCompile>
-    <ClCompile Include="Sprite.cpp">
-      <Filter>BaseEngine\Texture</Filter>
-    </ClCompile>
     <ClCompile Include="VectorUtilities.cpp">
       <Filter>BaseEngine\Math\Vector</Filter>
     </ClCompile>
@@ -587,12 +611,6 @@
     </ClCompile>
     <ClCompile Include="RenderMof.cpp">
       <Filter>BaseEngine\Render\CameraBaseRenderer</Filter>
-    </ClCompile>
-    <ClCompile Include="IBaseEngineCanvasRender.cpp">
-      <Filter>BaseEngine\Render\CanvasRenderer</Filter>
-    </ClCompile>
-    <ClCompile Include="CanvasRender.cpp">
-      <Filter>BaseEngine\Render\CanvasRenderer</Filter>
     </ClCompile>
     <ClCompile Include="ShaderBase.cpp">
       <Filter>BaseEngine\Shader</Filter>
@@ -1227,11 +1245,77 @@
     <ClCompile Include="BESoundBuffer.cpp">
       <Filter>BaseEngine\Audio\BEAudio</Filter>
     </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>BaseEngine\Render\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshSource.cpp">
+      <Filter>BaseEngine\Render\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Bone.cpp">
+      <Filter>BaseEngine\Render\Mesh\Bone</Filter>
+    </ClCompile>
+    <ClCompile Include="SubMesh.cpp">
+      <Filter>BaseEngine\Render\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="AABB.cpp">
+      <Filter>BaseEngine\Math\Box</Filter>
+    </ClCompile>
+    <ClCompile Include="Skeleton.cpp">
+      <Filter>BaseEngine\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Animation.cpp">
+      <Filter>BaseEngine\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="MaterialAsset.cpp">
+      <Filter>BaseEngine\Render\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationImporter.cpp">
+      <Filter>BaseEngine\Asset\AssetImporter\MeshImport</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshImporter.cpp">
+      <Filter>BaseEngine\Asset\AssetImporter\MeshImport</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshSerializer.cpp">
+      <Filter>BaseEngine\Render\Mesh\Serializer</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticMesh.cpp">
+      <Filter>BaseEngine\Render\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="PrimitiveMeshFactory.cpp">
+      <Filter>BaseEngine\Render\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Raytracer.cpp">
+      <Filter>BaseEngine\Render\Raytrace</Filter>
+    </ClCompile>
+    <ClCompile Include="GlslIncluder.cpp">
+      <Filter>BaseEngine\Platform\Vulkan\ShaderCompiler\ShaderPreprocessing</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanRaytraceRenderPipeline.cpp">
+      <Filter>BaseEngine\Platform\Vulkan\Pipeline\Raytrace</Filter>
+    </ClCompile>
+    <ClCompile Include="DescriptorSet.cpp">
+      <Filter>BaseEngine\Platform\Vulkan\DescriptorSetManager</Filter>
+    </ClCompile>
+    <ClCompile Include="TopLevelAS.cpp">
+      <Filter>BaseEngine\Render\Raytrace</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanBuffer.cpp">
+      <Filter>BaseEngine\Platform\Vulkan\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshComponent.cpp">
+      <Filter>BaseEngine\DataComponents\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="BottomLevelAS.cpp">
+      <Filter>BaseEngine\Render\Raytrace</Filter>
+    </ClCompile>
+    <ClCompile Include="VkExtensions.cpp">
+      <Filter>BaseEngine\Platform\Vulkan\Extensions</Filter>
+    </ClCompile>
+    <ClCompile Include="RaytraceMaterial.cpp">
+      <Filter>BaseEngine\Render\Raytrace</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="GameApp.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Vector2.h">
       <Filter>BaseEngine\Math\Vector</Filter>
     </ClInclude>
@@ -1258,9 +1342,6 @@
     </ClInclude>
     <ClInclude Include="TextureMof.h">
       <Filter>BaseEngine\Texture\Mof</Filter>
-    </ClInclude>
-    <ClInclude Include="Sprite.h">
-      <Filter>BaseEngine\Texture</Filter>
     </ClInclude>
     <ClInclude Include="YesNo.h">
       <Filter>BaseEngine\Utilities</Filter>
@@ -1327,12 +1408,6 @@
     </ClInclude>
     <ClInclude Include="RenderMof.h">
       <Filter>BaseEngine\Render\CameraBaseRenderer</Filter>
-    </ClInclude>
-    <ClInclude Include="IBaseEngineCanvasRender.h">
-      <Filter>BaseEngine\Render\CanvasRenderer</Filter>
-    </ClInclude>
-    <ClInclude Include="CanvasRender.h">
-      <Filter>BaseEngine\Render\CanvasRenderer</Filter>
     </ClInclude>
     <ClInclude Include="VectorFrozen.h">
       <Filter>Utilities\Frozen\Types</Filter>
@@ -2171,9 +2246,6 @@
     <ClInclude Include="VulkanReflectionData.h">
       <Filter>BaseEngine\Platform\Vulkan\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="ShaderPreprocessor.h">
-      <Filter>BaseEngine\Platform\Vulkan\Shader</Filter>
-    </ClInclude>
     <ClInclude Include="VulkanShaderUtilities.h">
       <Filter>BaseEngine\Platform\Vulkan\Shader</Filter>
     </ClInclude>
@@ -2269,6 +2341,87 @@
     </ClInclude>
     <ClInclude Include="BESoundBuffer.h">
       <Filter>BaseEngine\Audio\BEAudio</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>BaseEngine\Render\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshSource.h">
+      <Filter>BaseEngine\Render\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Bone.h">
+      <Filter>BaseEngine\Render\Mesh\Bone</Filter>
+    </ClInclude>
+    <ClInclude Include="SubMesh.h">
+      <Filter>BaseEngine\Render\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="AABB.h">
+      <Filter>BaseEngine\Math\Box</Filter>
+    </ClInclude>
+    <ClInclude Include="Skeleton.h">
+      <Filter>BaseEngine\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Animation.h">
+      <Filter>BaseEngine\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="MaterialAsset.h">
+      <Filter>BaseEngine\Render\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationImporter.h">
+      <Filter>BaseEngine\Asset\AssetImporter\MeshImport</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshImporter.h">
+      <Filter>BaseEngine\Asset\AssetImporter\MeshImport</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshImporterUtilities.h">
+      <Filter>BaseEngine\Asset\AssetImporter\MeshImport\Private</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshSerializer.h">
+      <Filter>BaseEngine\Render\Mesh\Serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticMesh.h">
+      <Filter>BaseEngine\Render\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="PrimitiveMeshFactory.h">
+      <Filter>BaseEngine\Render\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="RendererTieringSetting.h">
+      <Filter>BaseEngine\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Raytracer.h">
+      <Filter>BaseEngine\Render\Raytrace</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderPreprocessor.h">
+      <Filter>BaseEngine\Platform\Vulkan\ShaderCompiler\ShaderPreprocessing</Filter>
+    </ClInclude>
+    <ClInclude Include="GlslIncluder.h">
+      <Filter>BaseEngine\Platform\Vulkan\ShaderCompiler\ShaderPreprocessing</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanRaytraceRenderPipeline.h">
+      <Filter>BaseEngine\Platform\Vulkan\Pipeline\Raytrace</Filter>
+    </ClInclude>
+    <ClInclude Include="DescriptorSet.h">
+      <Filter>BaseEngine\Platform\Vulkan\DescriptorSetManager</Filter>
+    </ClInclude>
+    <ClInclude Include="TopLevelAS.h">
+      <Filter>BaseEngine\Render\Raytrace</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanBuffer.h">
+      <Filter>BaseEngine\Platform\Vulkan\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshComponent.h">
+      <Filter>BaseEngine\DataComponents\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="BottomLevelAS.h">
+      <Filter>BaseEngine\Render\Raytrace</Filter>
+    </ClInclude>
+    <ClInclude Include="VkExtensions.h">
+      <Filter>BaseEngine\Platform\Vulkan\Extensions</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectDesc.h">
+      <Filter>BaseEngine\Render\Raytrace</Filter>
+    </ClInclude>
+    <ClInclude Include="RaytraceMaterial.h">
+      <Filter>BaseEngine\Render\Raytrace</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

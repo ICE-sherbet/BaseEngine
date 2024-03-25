@@ -6,6 +6,7 @@
 // @details
 
 #pragma once
+#include <filesystem>
 #include <functional>
 #include <string>
 
@@ -64,5 +65,29 @@ class Shader : public RefCounted {
   static Ref<Shader> Create(const std::string& filepath,
                             bool forceCompile = false,
                             bool disableOptimization = false);
+};
+
+class ShaderRegistry : public RefCounted {
+ public:
+  ShaderRegistry();
+  ~ShaderRegistry();
+
+  void Add(const Ref<Shader>& shader);
+  void Load(std::string_view path, bool forceCompile = false,
+            bool disableOptimization = false);
+  void Load(std::string_view name, const std::string& path);
+
+  const Ref<Shader>& Get(const std::string& name) const;
+  size_t GetSize() const { return m_Shaders.size(); }
+
+  std::unordered_map<std::string, Ref<Shader>>& GetShaders() {
+    return m_Shaders;
+  }
+  const std::unordered_map<std::string, Ref<Shader>>& GetShaders() const {
+    return m_Shaders;
+  }
+
+ private:
+  std::unordered_map<std::string, Ref<Shader>> m_Shaders;
 };
 }  // namespace base_engine

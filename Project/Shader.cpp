@@ -2,6 +2,7 @@
 
 #include "RendererApi.h"
 #include "VulkanShader.h"
+#include "VulkanShaderCompiler.h"
 
 namespace base_engine {
 ShaderUniform::ShaderUniform(const std::string& name,
@@ -22,5 +23,31 @@ Ref<Shader> Shader::Create(const std::string& filepath, bool forceCompile,
       return Ref<VulkanShader>::Create(filepath, forceCompile,
                                        disableOptimization);
   }
+}
+
+ShaderRegistry::ShaderRegistry() = default;
+
+ShaderRegistry::~ShaderRegistry() = default;
+
+void ShaderRegistry::Add(const Ref<Shader>& shader) {
+  auto& name = shader->GetName();
+  m_Shaders[name] = shader;
+}
+
+void ShaderRegistry::Load(std::string_view path, bool forceCompile,
+                          bool disableOptimization) {
+  Ref<Shader> shader;
+  VulkanShaderCompiler::Compile(path, forceCompile, disableOptimization);
+
+  auto& name = shader->GetName();
+  m_Shaders[name] = shader;
+}
+
+void ShaderRegistry::Load(std::string_view name, const std::string& path) {
+  m_Shaders[std::string(name)] = Shader::Create(path);
+}
+
+const Ref<Shader>& ShaderRegistry::Get(const std::string& name) const {
+  return m_Shaders.at(name);
 }
 }  // namespace base_engine

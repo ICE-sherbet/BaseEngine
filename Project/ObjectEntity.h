@@ -9,8 +9,8 @@
 #include <string_view>
 
 #include "DataComponents.h"
-#include "Scene.h"
 namespace base_engine {
+class Scene;
 
 class ObjectEntity {
  public:
@@ -31,14 +31,7 @@ class ObjectEntity {
    */
   template <typename T, typename... Args>
     requires std::is_constructible_v<T, Args...>
-  T& AddComponent(Args&&... args) const {
-    BE_CORE_ASSERT(!HasComponent<T>(), "Entity already has component!");
-    if (HasComponent<T>()) {
-      __debugbreak();
-    }
-    return scene_->registry_.emplace<T>(entity_handle_,
-                                        std::forward<Args>(args)...);
-  }
+  T& AddComponent(Args&&... args) const;
 
   /**
    * \brief 自身のEntityが所持しているコンポーネントの取得を行う
@@ -46,27 +39,13 @@ class ObjectEntity {
    * \return 指定のコンポーネント
    */
   template <typename T>
-  T& GetComponent() {
-    BE_CORE_ASSERT(HasComponent<T>(), "Entity doesn't have component!");
-    if (!HasComponent<T>())
-    {
-      __debugbreak();
-    }
-    return scene_->registry_.get<T>(entity_handle_);
-  }
+  T& GetComponent();
 
   template <typename T>
-  [[nodiscard]] const T& GetComponent() const {
-    BE_CORE_ASSERT(HasComponent<T>(), "Entity doesn't have component!");
-    if (!HasComponent<T>()) {
-      __debugbreak();
-    }
-    return scene_->registry_.get<T>(entity_handle_);
-  }
+  [[nodiscard]] const T& GetComponent() const;
+
   template <typename... T>
-  [[nodiscard]] bool HasComponent() const {
-    return scene_->registry_.all_of<T...>(entity_handle_);
-  }
+  [[nodiscard]] bool HasComponent() const;
   operator uint32_t() const { return static_cast<uint32_t>(entity_handle_); }
   operator becs::Entity() const { return entity_handle_; }
   operator bool() const { return (entity_handle_ != becs::null) && scene_; }
@@ -75,9 +54,7 @@ class ObjectEntity {
   }
   bool operator!=(const ObjectEntity& other) const { return !(*this == other); }
 
-  [[nodiscard]] ObjectEntity GetParent() const {
-    return scene_->TryGetEntityWithUUID(GetParentUUID());
-  }
+  [[nodiscard]] ObjectEntity GetParent() const;
 
   [[nodiscard]] UUID GetParentUUID() const {
     return GetComponent<component::HierarchyComponent>().parent_handle;
@@ -121,8 +98,8 @@ class ObjectEntity {
   [[nodiscard]] UUID GetUUID() const {
     return GetComponent<component::IdComponent>().uuid;
   }
-  [[nodiscard]] UUID GetSceneUUID() const { return scene_->GetUUID(); }
-  [[nodiscard]] Ref<Scene> GetScene() const { return scene_; }
+  [[nodiscard]] UUID GetSceneUUID() const;
+  [[nodiscard]] Scene* GetScene() const { return scene_; }
 
   [[nodiscard]] becs::Entity GetHandle() const { return entity_handle_; }
 
@@ -208,4 +185,5 @@ private:
    */
   inline static std::string NoName = "No Name";
 };
+
 }  // namespace base_engine

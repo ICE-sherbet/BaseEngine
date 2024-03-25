@@ -22,11 +22,17 @@ static RendererApi* renderer_api_ = nullptr;
 
 void Renderer::Init() {
   submit_ = new RendererSubmit;
+  shader_registry_ = Ref<ShaderRegistry>::Create();
   renderer_api_ = InitRendererAPI();
 
   renderer_api_->Init();
   sWhiteTexture =
       RendererTexture2D::Create(TextureSpecification(), "no-texture.png");
+}
+
+Ref<ShaderRegistry> Renderer::GetShaderLibrary()
+{
+  return shader_registry_;
 }
 
 void Renderer::Shutdown() {

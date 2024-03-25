@@ -260,6 +260,25 @@ void VulkanShader::CreateDescriptors() {
       writeDescriptorSet.dstBinding = layoutBinding.binding;
     }
 
+    for (auto& [binding, acceleration_structure] :
+         shaderDescriptorSet.AccelerationStructures) {
+      auto& layoutBinding = layoutBindings.emplace_back();
+      layoutBinding.descriptorType =
+          VK_DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR;
+      layoutBinding.descriptorCount = acceleration_structure.ArraySize;
+      layoutBinding.stageFlags = acceleration_structure.ShaderStage;
+      layoutBinding.pImmutableSamplers = nullptr;
+      layoutBinding.binding = binding;
+
+      VkWriteDescriptorSet& writeDescriptorSet =
+          shaderDescriptorSet.WriteDescriptorSets[acceleration_structure.Name];
+      writeDescriptorSet = {};
+      writeDescriptorSet.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+      writeDescriptorSet.descriptorType = layoutBinding.descriptorType;
+      writeDescriptorSet.descriptorCount = layoutBinding.descriptorCount;
+      writeDescriptorSet.dstBinding = layoutBinding.binding;
+    }
+
     VkDescriptorSetLayoutCreateInfo descriptorLayout = {};
     descriptorLayout.sType =
         VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
@@ -284,13 +303,12 @@ void VulkanShader::CreateDescriptors() {
   }
 }
 
-std::vector<VkDescriptorSetLayout> VulkanShader::GetAllDescriptorSetLayouts()
-{
-	std::vector<VkDescriptorSetLayout> result;
-	result.reserve(descriptor_set_layouts_.size());
-	for (auto& layout : descriptor_set_layouts_) result.emplace_back(layout);
+std::vector<VkDescriptorSetLayout> VulkanShader::GetAllDescriptorSetLayouts() {
+  std::vector<VkDescriptorSetLayout> result;
+  result.reserve(descriptor_set_layouts_.size());
+  for (auto& layout : descriptor_set_layouts_) result.emplace_back(layout);
 
-	return result;
+  return result;
 }
 
 void VulkanShader::SetReflectionData(const ReflectionData& reflection_data) {

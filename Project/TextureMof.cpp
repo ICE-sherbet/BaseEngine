@@ -1,4 +1,6 @@
-﻿#include "TextureMof.h"
+﻿#if defined(__MOF__)
+
+#include "TextureMof.h"
 
 #include <filesystem>
 #include <fstream>
@@ -73,3 +75,4 @@ bool TextureMof::Release(std::string_view name) {
 };
 
 }  // namespace base_engine
+#endif

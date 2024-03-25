@@ -1,17 +1,21 @@
 ﻿#include "SetupEditorImGui.h"
 
-#include <Mof.h>
 
 #include "imgui.h"
 
 #include "backends/imgui_impl_win32.h"
 #include "backends/imgui_impl_dx11.h"
+
+#if defined(__MOF__)
+
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd,
                                                              UINT msg,
                                                              WPARAM wParam,
                                                              LPARAM lParam);
-
+#endif
 namespace base_engine::editor {
+#if defined(__MOF__)
+
 void SetupEditorImGui::Setup(bool input_keyboard, bool input_controller) {
   // Setup Dear ImGui context
   IMGUI_CHECKVERSION();
@@ -64,4 +68,27 @@ MofProcResult CMofImGuiProc::WindowProc(MofWindowHandle hWnd, MofUInt msg,
   if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wpar, lpar)) return true;
   return CDefWindowProc::WindowProc(hWnd, msg, wpar, lpar);
 }
+
+#else
+void SetupEditorImGui::Setup(bool input_keyboard, bool input_controller)
+{
+}
+
+void SetupEditorImGui::Refresh()
+{
+}
+
+void SetupEditorImGui::RenderSetup()
+{
+}
+
+void SetupEditorImGui::RenderGui()
+{
+}
+
+void SetupEditorImGui::Cleanup()
+{
+}
+
+#endif
 }  // namespace base_engine::editor

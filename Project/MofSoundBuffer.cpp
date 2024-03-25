@@ -1,4 +1,6 @@
 ﻿#include "MofSoundBuffer.h"
+#if defined(__MOF__)
+
 namespace base_engine {
 bool MofSoundBuffer::Load(const char* path) { return sound_buffer_.Load(path); }
 
@@ -17,3 +19,4 @@ void MofSoundBuffer::SetLoop(const bool loop) { sound_buffer_.SetLoop(loop); }
 
 bool MofSoundBuffer::IsLoop() { return sound_buffer_.IsLoop(); }
 }  // namespace base_engine
+#endif

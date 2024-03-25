@@ -4,7 +4,7 @@
 // @date 2023/01/14
 //
 // @details
-
+#if defined(__MOF__)
 #pragma once
 #include <Graphics/DirectX11/DX11Shader.h>
 #include <Graphics/DirectX11/DX11ShaderBind_2DPrimitiveBase.h>
@@ -69,3 +69,4 @@ class MofShader::MofShaderImpl {
 };
 
 }  // namespace base_engine
+#endif

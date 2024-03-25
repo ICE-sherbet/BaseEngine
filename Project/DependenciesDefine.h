@@ -7,4 +7,5 @@
 
 #pragma once
 
-#define _USE_MOF_LIBRARY_
+//#define _USE_MOF_LIBRARY_
+#define _USE_GLM_LIBRARY_

@@ -3,7 +3,6 @@
 #include "IBaseEngineEmpty.h"
 #include "IBaseEngineTexture.h"
 #include "IBaseEngineRender.h"
-#include "IBaseEngineCanvasRender.h"
 #include "IBaseEngineAssetManager.h"
 #include "IBaseEngineAudioEngine.h"
 #include "BaseEngineRenderer.h"

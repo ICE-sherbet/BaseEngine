@@ -1,8 +1,14 @@
 ﻿#include "ObjectEntity.h"
 
 #include "CSharpScriptEngine.h"
+#include "Scene.h"
 
 namespace base_engine {
+ObjectEntity ObjectEntity::GetParent() const
+{
+	return scene_->TryGetEntityWithUUID(GetParentUUID());
+}
+
 void ObjectEntity::SetParent(const ObjectEntity parent) {
   SetParent(parent, true);
 }
@@ -40,6 +46,9 @@ void ObjectEntity::SetParentUUID(const UUID& parent) {
   GetComponent<component::HierarchyComponent>().parent_handle = parent;
   GetComponent<component::TransformComponent>().SetParent(parent);
 }
+
+UUID ObjectEntity::GetSceneUUID() const
+{ return scene_->GetUUID(); }
 
 void ObjectEntity::GetPropertyList(std::list<PropertyInfo>* list) {
   if (!scene_) return;

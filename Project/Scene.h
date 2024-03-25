@@ -11,13 +11,12 @@
 #include "Becs/Registry.h"
 #include "IBecsSystem.h"
 #include "Matrix44.h"
+#include "ObjectEntity.h"
 #include "Ref.h"
-#include "TransformComponent.h"
 #include "UUID.h"
 
 namespace base_engine {
 class Prefab;
-class ObjectEntity;
 using EntityMap = std::unordered_map<UUID, becs::Entity>;
 using ObjectEntityMap = std::unordered_map<UUID, ObjectEntity>;
 namespace internal {
@@ -120,4 +119,39 @@ class Scene final : public Asset {
   Matrix44 InternalGetWorldSpaceTransformMatrix(
       const ObjectEntity entity) const;
 };
+
+
+template <typename T, typename... Args>
+  requires std::is_constructible_v<T, Args...>
+T& ObjectEntity::AddComponent(Args&&... args) const {
+  BE_CORE_ASSERT(!HasComponent<T>(), "Entity already has component!");
+  if (HasComponent<T>()) {
+    __debugbreak();
+  }
+  return scene_->registry_.emplace<T>(entity_handle_,
+                                      std::forward<Args>(args)...);
+}
+
+template <typename T>
+T& ObjectEntity::GetComponent() {
+  BE_CORE_ASSERT(HasComponent<T>(), "Entity doesn't have component!");
+  if (!HasComponent<T>()) {
+    __debugbreak();
+  }
+  return scene_->registry_.get<T>(entity_handle_);
+}
+
+template <typename T>
+const T& ObjectEntity::GetComponent() const {
+  BE_CORE_ASSERT(HasComponent<T>(), "Entity doesn't have component!");
+  if (!HasComponent<T>()) {
+    __debugbreak();
+  }
+  return scene_->registry_.get<T>(entity_handle_);
+}
+
+template <typename... T>
+bool ObjectEntity::HasComponent() const {
+  return scene_->registry_.all_of<T...>(entity_handle_);
+}
 }  // namespace base_engine

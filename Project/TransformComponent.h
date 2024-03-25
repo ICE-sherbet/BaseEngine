@@ -16,6 +16,7 @@
 
 #include "ComponentDB.h"
 #include "ComponentProperty.h"
+#include "Asset.h"
 
 namespace base_engine {
 class Scene;

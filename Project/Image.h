@@ -21,10 +21,13 @@ class RendererResource : public Asset {
 enum class ImageFormat {
   None = 0,
   RED8UN,
+  RED8SN,
   RED8UI,
   RED16UI,
   RED32UI,
   RED32F,
+
+
   RG8,
   RG16F,
   RG32F,
@@ -113,6 +116,8 @@ inline uint32_t GetImageFormatBPP(const ImageFormat format) {
       return 4;
     case ImageFormat::RED32F:
       return 4;
+    case ImageFormat::RED8SN:
+			return 1;
     case ImageFormat::RGB:
     case ImageFormat::SRGB:
       return 3;
@@ -134,6 +139,7 @@ inline bool IsIntegerBased(const ImageFormat format) {
     case ImageFormat::RED32UI:
     case ImageFormat::RED8UI:
     case ImageFormat::DEPTH32FSTENCIL8UINT:
+    case ImageFormat::RED8SN:
       return true;
     case ImageFormat::DEPTH32F:
     case ImageFormat::RED8UN:

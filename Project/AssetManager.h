@@ -46,6 +46,32 @@ class AssetManager {
     return asset->handle_;
   }
 
+  template <typename TAsset, typename... TArgs>
+  static AssetHandle CreateMemoryOnlyAsset(TArgs&&... args) {
+    static_assert(
+        std::is_base_of_v<Asset, TAsset>,
+        "CreateMemoryOnlyAsset は Asset から派生した型に対してのみ機能します");
+
+    Ref<TAsset> asset = Ref<TAsset>::Create(std::forward<TArgs>(args)...);
+    asset->handle_ = AssetHandle();
+
+    BASE_ENGINE(AssetManager)->AddMemoryOnlyAsset(asset);
+    return asset->handle_;
+  }
+
+  template <typename TAsset, typename... TArgs>
+  static AssetHandle CreateMemoryOnlyRendererAsset(TArgs&&... args) {
+    static_assert(
+        std::is_base_of_v<Asset, TAsset>,
+        "CreateMemoryOnlyAsset は Asset から派生した型に対してのみ機能します");
+
+    Ref<TAsset> asset = TAsset::Create(std::forward<TArgs>(args)...);
+    asset->handle_ = AssetHandle();
+
+    BASE_ENGINE(AssetManager)->AddMemoryOnlyAsset(asset);
+    return asset->handle_;
+  }
+
   // Editor
   static const AssetRegistry& GetAssetRegistry();
   static EditorAssetManager* GetEditorAssetManager();

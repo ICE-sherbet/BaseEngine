@@ -1,5 +1,7 @@
 ﻿#include "MofShader.h"
 
+#if defined(__MOF__)
+
 #include "MofShaderImpl.h"
 base_engine::MofShader::MofShader(const std::string_view file_path) {
   impl_ = std::make_unique<MofShaderImpl>();
@@ -15,7 +17,8 @@ bool base_engine::MofShader::SetBuffer(const size_t index, void* buffer) const {
   return impl_->SetBuffer(index, buffer);
 }
 
-bool base_engine::MofShader::CreateParameter(const ShaderPropertyInfo& parameter) {
+bool base_engine::MofShader::CreateParameter(
+    const ShaderPropertyInfo& parameter) {
   return impl_->CreateParameter(parameter);
 }
 
@@ -34,3 +37,5 @@ Mof::IShader* base_engine::MofShader::GetShader() const {
 Mof::IShaderBind* base_engine::MofShader::GetShaderBind() const {
   return impl_->GetShaderBind();
 }
+
+#endif  // defined(__MOF__)

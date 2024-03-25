@@ -8,15 +8,10 @@
 #pragma once
 #include "Asset.h"
 #include "AssetSerializer.h"
+#include "RendererTexture.h"
 
 namespace base_engine {
-class Texture : public Asset {
- public:
-  virtual AssetType GetAssetType() const override {
-    return AssetType::kTexture;
-  }
-  virtual void* GetTexture() = 0;
-};
+
 class TextureUtility {
  public:
   static Ref<Texture> Create(const std::filesystem::path& path);

@@ -6,6 +6,9 @@
 // @details
 
 #pragma once
+
+#if defined(__MOF__)
+
 #include <Graphics/DirectX11/DX11Texture.h>
 #include <Graphics/Texture.h>
 
@@ -22,3 +25,5 @@ class MofTexture final : public Texture {
   Mof::LPTexture texture_;
 };
 }  // namespace base_engine
+
+#endif

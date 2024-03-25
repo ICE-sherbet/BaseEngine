@@ -1,4 +1,6 @@
 #pragma once
+#if defined(__MOF__)
+
 #include <memory>
 #include <Graphics/Texture.h>
 
@@ -47,3 +49,5 @@ class IBaseEngineRender {
   virtual Vector GetCameraPosition() = 0;
 };
 }  // namespace base_engine
+
+#endif

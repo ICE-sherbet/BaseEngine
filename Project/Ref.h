@@ -43,7 +43,7 @@ class Ref {
   Ref(std::nullptr_t n) : instance_(nullptr) {}
 
   Ref(T* instance) : instance_(instance) {
-    static_assert(std::is_base_of_v<RefCounted, T>, "Class is not RefCounted!");
+    //static_assert(std::is_base_of_v<RefCounted, T>, "Class is not RefCounted!");
 
     IncRef();
   }

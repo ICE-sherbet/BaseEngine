@@ -248,6 +248,7 @@ void VulkanAllocator::Init(Ref<VulkanDevice> device) {
   s_Data = new VulkanAllocatorData();
 
   VmaAllocatorCreateInfo allocatorInfo = {};
+  allocatorInfo.flags = VMA_ALLOCATOR_CREATE_BUFFER_DEVICE_ADDRESS_BIT;
   allocatorInfo.vulkanApiVersion = VK_API_VERSION_1_2;
   allocatorInfo.physicalDevice = device->GetVulkanPhysicalDevice();
   allocatorInfo.device = device->GetVulkanDevice();

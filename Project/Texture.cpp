@@ -4,7 +4,13 @@
 
 namespace base_engine {
 Ref<Texture> TextureUtility::Create(const std::filesystem::path& path) {
-  const auto result = new MofTexture(path.string());
+  Ref<Texture> result;
+
+#if defined(__MOF__)
+  result = new MofTexture(path.string());
+#else
+
+#endif
   return result;
 }
 
